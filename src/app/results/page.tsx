@@ -226,23 +226,32 @@ function ResultsContent() {
         {/* Annotated image */}
         <div className="mb-5 overflow-hidden rounded-2xl border shadow-sm" style={{ borderColor: "#dde4ee" }}>
           {capturedImage ? (
-            <div className="relative w-full overflow-hidden" style={{ background: "#0a1020" }}>
+            /* Real uploaded image with AI label overlays */
+            <div className="relative w-full" style={{ background: "#000" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={capturedImage} alt="Analyzed ultrasound" className="w-full object-contain max-h-80" />
-              {/* Overlay labels */}
+              <img
+                src={capturedImage}
+                alt="Analyzed ultrasound"
+                className="w-full"
+                style={{ display: "block", maxHeight: "420px", objectFit: "contain" }}
+              />
+              {/* Label overlays — positioned as % of the img element */}
               <div className="absolute inset-0 pointer-events-none">
                 {analysis.labels.map((label) => (
                   <div key={label.id} className="absolute"
                     style={{ left: `${label.x}%`, top: `${label.y}%`, transform: "translate(-50%,-50%)" }}>
-                    <div className="rounded-md px-2 py-1 text-xs font-bold whitespace-nowrap shadow"
-                      style={{ background: "rgba(0,0,0,0.72)", border: `1px solid ${label.color}`, color: label.color }}>
+                    {/* Dot marker */}
+                    <div className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white"
+                      style={{ background: label.color }} />
+                    <div className="rounded-md px-2 py-1 text-xs font-bold whitespace-nowrap shadow-lg mt-3"
+                      style={{ background: "rgba(0,0,0,0.80)", border: `1.5px solid ${label.color}`, color: label.color }}>
                       {label.name}
                     </div>
                   </div>
                 ))}
-                <div className="absolute bottom-3 right-3">
+                <div className="absolute bottom-2 right-2">
                   <span className="rounded-full text-xs font-semibold text-white px-2.5 py-1"
-                    style={{ background: "rgba(0,0,0,0.65)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                    style={{ background: "rgba(0,0,0,0.70)", border: "1px solid rgba(255,255,255,0.2)" }}>
                     AI Analysis Active
                   </span>
                 </div>

@@ -58,32 +58,55 @@ function ScanContent() {
     if (file) handleFile(file);
   }
 
+  /** Resize + re-encode to JPEG to keep well under sessionStorage 5 MB limit */
+  function compressImage(dataUrl: string, maxPx = 1024, quality = 0.82): Promise<{ dataUrl: string; base64: string; mediaType: string }> {
+    return new Promise((resolve) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+        const compressed = canvas.toDataURL("image/jpeg", quality);
+        const base64 = compressed.split(",")[1];
+        resolve({ dataUrl: compressed, base64, mediaType: "image/jpeg" });
+      };
+      img.src = dataUrl;
+    });
+  }
+
   const runAnalysis = useCallback(async () => {
     if (!selectedProtocolId) return;
     setIsAnalyzing(true);
     setAnalysisStep(1);
 
-    // Kick off the API call immediately
     let imageBase64: string | null = null;
     let mediaType: string | null = null;
+    let compressedDataUrl: string | null = null;
 
     if (image) {
-      // image is a data URL: "data:image/jpeg;base64,<data>"
-      const match = image.match(/^data:([^;]+);base64,(.+)$/);
-      if (match) {
-        mediaType = match[1];
-        imageBase64 = match[2];
+      try {
+        const compressed = await compressImage(image);
+        imageBase64 = compressed.base64;
+        mediaType = compressed.mediaType;
+        compressedDataUrl = compressed.dataUrl;
+      } catch {
+        // If compression fails, extract from original
+        const match = image.match(/^data:([^;]+);base64,(.+)$/);
+        if (match) { mediaType = match[1]; imageBase64 = match[2]; compressedDataUrl = image; }
       }
     }
 
-    // Animate steps while waiting for the real API
     const stepInterval = setInterval(() => {
       setAnalysisStep((prev) => {
         if (prev < ANALYSIS_STEPS.length - 1) return prev + 1;
         clearInterval(stepInterval);
         return prev;
       });
-    }, 800);
+    }, 900);
 
     try {
       const res = await fetch("/api/analyze", {
@@ -102,9 +125,8 @@ function ScanContent() {
 
       const analysis = await res.json();
 
-      // Store result and original image in sessionStorage for results page
       sessionStorage.setItem("lastAnalysis", JSON.stringify(analysis));
-      if (image) sessionStorage.setItem("lastImage", image);
+      if (compressedDataUrl) sessionStorage.setItem("lastImage", compressedDataUrl);
       else sessionStorage.removeItem("lastImage");
 
       await new Promise((r) => setTimeout(r, 300));
@@ -112,12 +134,13 @@ function ScanContent() {
     } catch (err) {
       clearInterval(stepInterval);
       console.error("Analysis error:", err);
-      // Fallback: navigate to results with mock data
       sessionStorage.removeItem("lastAnalysis");
-      sessionStorage.removeItem("lastImage");
+      if (compressedDataUrl) sessionStorage.setItem("lastImage", compressedDataUrl);
+      else sessionStorage.removeItem("lastImage");
       router.push(`/results?protocol=${selectedProtocolId}`);
     }
-  }, [selectedProtocolId, router, image, ANALYSIS_STEPS.length]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProtocolId, router, image]);
 
   const pill = selectedProtocol ? CATEGORY_PILL[selectedProtocol.category] ?? { bg: "#f1f5f9", text: "#64748b" } : null;
 
@@ -331,18 +354,46 @@ function ScanContent() {
         {/* Analyze button */}
         <div className="mt-5">
           {isAnalyzing ? (
-            <div className="rounded-2xl border p-6 text-center"
+            <div className="rounded-2xl border overflow-hidden"
               style={{ borderColor: "#bfdbfe", background: "#eff6ff" }}>
-              <Loader2 size={30} className="mx-auto mb-3 animate-spin" style={{ color: "#2563eb" }} />
-              <p className="font-semibold" style={{ color: "#1a2235" }}>Analyzing your image...</p>
-              <p className="mt-1 text-sm" style={{ color: "#5a6a85" }}>
-                {ANALYSIS_STEPS[analysisStep] ?? "Finalizing..."}
-              </p>
-              <div className="mt-4 flex justify-center gap-1">
-                {ANALYSIS_STEPS.map((_, i) => (
-                  <div key={i} className="h-1.5 w-8 rounded-full transition-all"
-                    style={{ background: i < analysisStep ? "#2563eb" : "#dde4ee" }} />
-                ))}
+              {/* Show the actual image while Claude analyses it */}
+              {image && (
+                <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={image} alt="Analyzing..." className="w-full object-contain max-h-72"
+                    style={{ background: "#000" }} />
+                  {/* Scanning overlay */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center"
+                    style={{ background: "rgba(10,16,32,0.55)" }}>
+                    <div className="rounded-xl px-5 py-3 text-center"
+                      style={{ background: "rgba(0,0,0,0.65)", border: "1px solid rgba(37,99,235,0.5)" }}>
+                      <Loader2 size={22} className="mx-auto mb-1.5 animate-spin" style={{ color: "#60a5fa" }} />
+                      <p className="text-sm font-semibold text-white">
+                        {ANALYSIS_STEPS[analysisStep] ?? "Finalizing..."}
+                      </p>
+                    </div>
+                    {/* Animated scan line */}
+                    <div className="pointer-events-none absolute left-0 right-0 h-0.5 animate-bounce"
+                      style={{ background: "rgba(37,99,235,0.6)", top: "50%" }} />
+                  </div>
+                </div>
+              )}
+              <div className="px-5 py-4">
+                {!image && (
+                  <>
+                    <Loader2 size={28} className="mx-auto mb-2 animate-spin" style={{ color: "#2563eb" }} />
+                    <p className="text-center font-semibold" style={{ color: "#1a2235" }}>Analyzing...</p>
+                  </>
+                )}
+                <p className="mt-1 text-center text-sm" style={{ color: "#5a6a85" }}>
+                  {image ? "Claude is reviewing your image with protocol context" : (ANALYSIS_STEPS[analysisStep] ?? "Finalizing...")}
+                </p>
+                <div className="mt-3 flex justify-center gap-1">
+                  {ANALYSIS_STEPS.map((_, i) => (
+                    <div key={i} className="h-1.5 rounded-full transition-all"
+                      style={{ width: i < analysisStep ? "2rem" : "0.5rem", background: i < analysisStep ? "#2563eb" : "#dde4ee" }} />
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
