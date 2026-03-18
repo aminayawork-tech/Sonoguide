@@ -3,23 +3,48 @@
 import { Suspense, useCallback, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
+  Activity,
   AlertCircle,
   ArrowLeft,
+  Baby,
+  Bone,
+  Brain,
   Camera,
   CheckCircle,
   ChevronRight,
+  Crosshair,
+  Droplets,
   Edit3,
+  Heart,
   ImageIcon,
   Info,
   Loader2,
+  Microscope,
+  Scan,
+  ScanLine,
   Upload,
+  Wind,
   X,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import { CATEGORY_PILL, PROTOCOLS, getProtocolById } from "@/lib/protocols";
+
+const CATEGORY_ICON: Record<string, LucideIcon> = {
+  Trauma:     Crosshair,
+  Cardiac:    Heart,
+  Lung:       Wind,
+  "OB/GYN":   Baby,
+  Abdominal:  Scan,
+  Vascular:   Droplets,
+  Neuro:      Brain,
+  Thyroid:    ScanLine,
+  MSK:        Bone,
+  Procedural: Microscope,
+};
 
 function ScanContent() {
   const searchParams = useSearchParams();
@@ -178,7 +203,7 @@ function ScanContent() {
             <div className="rounded-xl border p-4" style={{ background: "#eff6ff", borderColor: "#bfdbfe" }}>
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">{selectedProtocol.icon}</span>
+                  {(() => { const I = CATEGORY_ICON[selectedProtocol.category] ?? Activity; return <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: pill.bg }}><I size={20} style={{ color: pill.text }} /></div>; })()}
                   <div>
                     <p className="font-semibold" style={{ color: "#1a2235" }}>{selectedProtocol.name}</p>
                     <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
@@ -224,7 +249,7 @@ function ScanContent() {
                   <button key={p.id} onClick={() => setSelectedProtocolId(p.id)}
                     className="flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all hover:border-blue-200"
                     style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
-                    <span className="text-lg">{p.icon}</span>
+                    {(() => { const I = CATEGORY_ICON[p.category] ?? Activity; return <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: ppill.bg }}><I size={16} style={{ color: ppill.text }} /></div>; })()}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate" style={{ color: "#1a2235" }}>{p.name}</p>
                       <p className="text-xs truncate" style={{ color: "#94a3b8" }}>{p.indication}</p>
