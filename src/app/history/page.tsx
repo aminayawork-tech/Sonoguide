@@ -18,99 +18,102 @@ import {
 import NavBar from "@/components/NavBar";
 import { getSavedScans } from "@/lib/mock-analysis";
 
-const ALERT_STYLES: Record<string, { icon: React.ElementType; color: string; bg: string; label: string }> = {
-  critical: { icon: XCircle, color: "text-red-400", bg: "bg-red-500/10 border-red-500/30", label: "Critical" },
-  high: { icon: AlertTriangle, color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/30", label: "High" },
-  moderate: { icon: AlertTriangle, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/30", label: "Moderate" },
-  low: { icon: Info, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/30", label: "Low" },
-  none: { icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/30", label: "Normal" },
+const ALERT_CFG: Record<string, {
+  icon: React.ElementType; iconColor: string; border: string; bg: string; badge: string; badgeText: string; label: string;
+}> = {
+  critical: { icon: XCircle,      iconColor: "#dc2626", border: "#fca5a5", bg: "#fef2f2", badge: "#fee2e2", badgeText: "#dc2626", label: "Critical" },
+  high:     { icon: AlertTriangle, iconColor: "#ea580c", border: "#fdba74", bg: "#fff7ed", badge: "#fed7aa", badgeText: "#ea580c", label: "High" },
+  moderate: { icon: AlertTriangle, iconColor: "#ca8a04", border: "#fcd34d", bg: "#fefce8", badge: "#fef9c3", badgeText: "#ca8a04", label: "Moderate" },
+  low:      { icon: Info,          iconColor: "#2563eb", border: "#93c5fd", bg: "#eff6ff", badge: "#dbeafe", badgeText: "#2563eb", label: "Low" },
+  none:     { icon: CheckCircle,   iconColor: "#059669", border: "#6ee7b7", bg: "#f0fdf4", badge: "#d1fae5", badgeText: "#059669", label: "Normal" },
 };
 
 export default function HistoryPage() {
   const scans = getSavedScans();
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<string>("all");
+  const [filter, setFilter] = useState("all");
 
   const filtered = scans.filter((s) => {
     const matchesSearch =
       search === "" ||
       s.protocol.toLowerCase().includes(search.toLowerCase()) ||
       s.finding.toLowerCase().includes(search.toLowerCase());
-    const matchesFilter =
-      filter === "all" || s.alertLevel === filter;
-    return matchesSearch && matchesFilter;
+    return matchesSearch && (filter === "all" || s.alertLevel === filter);
   });
 
   const stats = {
     total: scans.length,
-    critical: scans.filter((s) => s.alertLevel === "critical").length,
-    normal: scans.filter((s) => s.alertLevel === "none").length,
     thisWeek: scans.length,
+    normal: scans.filter((s) => s.alertLevel === "none").length,
+    critical: scans.filter((s) => s.alertLevel === "critical").length,
   };
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8 md:pt-16" style={{ background: "#0a0f1e" }}>
+    <div className="min-h-screen pb-24 md:pb-8 md:pt-16" style={{ background: "#eef3f8" }}>
       <NavBar />
 
-      <div className="mx-auto max-w-3xl px-4 py-8">
+      <div className="mx-auto max-w-2xl px-4 py-8">
         {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="mb-2 text-3xl font-bold text-white">Scan History</h1>
-            <p className="text-slate-400">Review and export your saved scans.</p>
+            <h1 className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>Scan History</h1>
+            <p className="text-sm" style={{ color: "#5a6a85" }}>Review and export your saved scans.</p>
           </div>
-          <Link
-            href="/scan"
-            className="flex items-center gap-1.5 rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-400 transition-all"
-          >
+          <Link href="/scan"
+            className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-90"
+            style={{ background: "#2563eb" }}>
             New Scan <ArrowRight size={14} />
           </Link>
         </div>
 
         {/* Stats */}
-        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
-            { label: "Total Scans", value: stats.total, color: "text-white" },
-            { label: "This Week", value: stats.thisWeek, color: "text-cyan-400" },
-            { label: "Normal Findings", value: stats.normal, color: "text-emerald-400" },
-            { label: "Critical Findings", value: stats.critical, color: "text-red-400" },
+            { label: "Total Scans", value: stats.total, color: "#1a2235" },
+            { label: "This Week", value: stats.thisWeek, color: "#2563eb" },
+            { label: "Normal", value: stats.normal, color: "#059669" },
+            { label: "Critical", value: stats.critical, color: "#dc2626" },
           ].map(({ label, value, color }) => (
-            <div key={label} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-              <p className={`text-2xl font-bold ${color}`}>{value}</p>
-              <p className="text-xs text-slate-500">{label}</p>
+            <div key={label} className="rounded-2xl border p-4 text-center shadow-sm"
+              style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+              <p className="text-2xl font-extrabold" style={{ color }}>{value}</p>
+              <p className="text-xs" style={{ color: "#94a3b8" }}>{label}</p>
             </div>
           ))}
         </div>
 
         {/* Free tier notice */}
-        <div className="mb-6 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-          <div className="flex items-center gap-2 text-sm text-slate-400">
+        <div className="mb-5 flex items-center justify-between rounded-xl border px-4 py-3"
+          style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+          <div className="flex items-center gap-2 text-sm" style={{ color: "#5a6a85" }}>
             <Clock size={14} />
-            <span>Free tier: Scans retained for <strong className="text-white">30 days</strong></span>
+            Free tier: Scans retained for <strong style={{ color: "#1a2235" }}>30 days</strong>
           </div>
-          <Link href="/" className="text-xs text-cyan-400 hover:underline">
+          <Link href="/" className="text-xs font-semibold" style={{ color: "#2563eb" }}>
             Upgrade to Pro →
           </Link>
         </div>
 
-        {/* Search & filter */}
-        <div className="mb-4 flex gap-3">
+        {/* Search + filter */}
+        <div className="mb-5 flex gap-3">
           <div className="relative flex-1">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }} />
             <input
               type="text"
               placeholder="Search scans..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-9 pr-4 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-500/50"
+              className="w-full rounded-xl border py-2.5 pl-9 pr-4 text-sm outline-none"
+              style={{ background: "#ffffff", borderColor: "#dde4ee", color: "#1a2235" }}
             />
           </div>
           <div className="relative">
-            <Filter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <Filter size={13} className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#94a3b8" }} />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="rounded-xl border border-white/10 bg-white/5 py-2.5 pl-9 pr-8 text-sm text-white outline-none focus:border-cyan-500/50 appearance-none"
+              className="rounded-xl border py-2.5 pl-9 pr-7 text-sm outline-none appearance-none"
+              style={{ background: "#ffffff", borderColor: "#dde4ee", color: "#5a6a85" }}
             >
               <option value="all">All</option>
               <option value="critical">Critical</option>
@@ -125,48 +128,50 @@ export default function HistoryPage() {
         {/* Scan list */}
         <div className="space-y-3">
           {filtered.length === 0 ? (
-            <div className="py-16 text-center">
-              <FileText size={32} className="mx-auto mb-3 text-slate-600" />
-              <p className="text-slate-500">No scans found</p>
+            <div className="py-20 text-center">
+              <FileText size={32} className="mx-auto mb-3" style={{ color: "#dde4ee" }} />
+              <p style={{ color: "#94a3b8" }}>No scans found</p>
             </div>
           ) : (
             filtered.map((scan) => {
-              const style = ALERT_STYLES[scan.alertLevel] ?? ALERT_STYLES.none;
-              const AlertIcon = style.icon;
+              const cfg = ALERT_CFG[scan.alertLevel] ?? ALERT_CFG.none;
+              const AlertIcon = cfg.icon;
               return (
-                <div
-                  key={scan.id}
-                  className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 transition-all hover:border-white/20"
-                >
-                  {/* Alert icon */}
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border ${style.bg}`}>
-                    <AlertIcon size={18} className={style.color} />
+                <div key={scan.id}
+                  className="group flex items-center gap-4 rounded-2xl border p-4 shadow-sm transition-all hover:shadow-md"
+                  style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+                  {/* Icon */}
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border"
+                    style={{ borderColor: cfg.border, background: cfg.bg }}>
+                    <AlertIcon size={17} style={{ color: cfg.iconColor }} />
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <p className="font-semibold text-white">{scan.protocol}</p>
-                      <span className={`rounded-full border px-2 py-0.5 text-xs ${style.bg} ${style.color}`}>
-                        {style.label}
+                      <p className="font-semibold" style={{ color: "#1a2235" }}>{scan.protocol}</p>
+                      <span className="rounded-full px-2 py-0.5 text-xs font-semibold"
+                        style={{ background: cfg.badge, color: cfg.badgeText }}>
+                        {cfg.label}
                       </span>
                     </div>
-                    <p className="text-sm text-slate-400 truncate">{scan.finding}</p>
-                    <p className="mt-0.5 text-xs text-slate-600">{scan.date}</p>
+                    <p className="text-sm truncate" style={{ color: "#5a6a85" }}>{scan.finding}</p>
+                    <p className="mt-0.5 text-xs" style={{ color: "#94a3b8" }}>{scan.date}</p>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex shrink-0 gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Link
-                      href={`/results?protocol=${scan.protocol.toLowerCase().replace(/ /g, "-").replace(/\//g, "-")}`}
-                      className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 hover:bg-white/10"
-                    >
-                      <ArrowRight size={12} /> View
+                  {/* Hover actions */}
+                  <div className="flex shrink-0 gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Link href={`/results?protocol=${scan.protocol.toLowerCase().replace(/ /g, "-")}`}
+                      className="flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium"
+                      style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
+                      <ArrowRight size={11} /> View
                     </Link>
-                    <button className="flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 hover:bg-white/10">
+                    <button className="flex items-center rounded-lg border px-2.5 py-1.5 text-xs"
+                      style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
                       <Download size={12} />
                     </button>
-                    <button className="flex items-center gap-1 rounded-lg border border-red-500/20 bg-red-500/10 px-2.5 py-1.5 text-xs text-red-400 hover:bg-red-500/20">
+                    <button className="flex items-center rounded-lg border px-2.5 py-1.5 text-xs"
+                      style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
                       <Trash2 size={12} />
                     </button>
                   </div>
@@ -179,17 +184,18 @@ export default function HistoryPage() {
         {/* Export all */}
         {filtered.length > 0 && (
           <div className="mt-6 flex justify-center">
-            <button className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm text-slate-300 hover:bg-white/10 transition-all">
-              <Download size={16} />
-              Export All as PDF
+            <button className="flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-medium transition-all hover:bg-white"
+              style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#f8fafc" }}>
+              <Download size={15} /> Export All as PDF
             </button>
           </div>
         )}
 
         {/* HIPAA note */}
-        <div className="mt-8 flex items-start gap-3 rounded-xl border border-slate-700/50 bg-slate-800/30 p-4 text-xs text-slate-500">
-          <Info size={14} className="mt-0.5 shrink-0 text-slate-600" />
-          <p>
+        <div className="mt-8 flex items-start gap-3 rounded-xl border p-4"
+          style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
+          <Info size={14} className="mt-0.5 shrink-0" style={{ color: "#94a3b8" }} />
+          <p className="text-xs" style={{ color: "#94a3b8" }}>
             All scans are stored locally on this device and anonymized by default. No PHI is stored
             in the cloud unless you explicitly opt in. Scan data is encrypted at rest.
           </p>

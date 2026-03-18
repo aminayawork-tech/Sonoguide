@@ -6,50 +6,63 @@ import { ArrowRight, ChevronRight, Clock, Search, Star } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import {
   CATEGORIES,
-  CATEGORY_COLORS,
-  CATEGORY_DOT,
   PROTOCOLS,
   type Category,
   type Protocol,
 } from "@/lib/protocols";
 
+const CATEGORY_PILL: Record<Category, { bg: string; text: string; dot: string }> = {
+  Trauma:     { bg: "#fee2e2", text: "#dc2626", dot: "#ef4444" },
+  Cardiac:    { bg: "#fce7f3", text: "#db2777", dot: "#ec4899" },
+  Lung:       { bg: "#e0f2fe", text: "#0284c7", dot: "#38bdf8" },
+  OB:         { bg: "#f3e8ff", text: "#9333ea", dot: "#a855f7" },
+  Abdominal:  { bg: "#fef9c3", text: "#a16207", dot: "#fbbf24" },
+  Vascular:   { bg: "#dbeafe", text: "#2563eb", dot: "#60a5fa" },
+  Neuro:      { bg: "#d1fae5", text: "#059669", dot: "#34d399" },
+  Procedural: { bg: "#f1f5f9", text: "#64748b", dot: "#94a3b8" },
+};
+
 const DIFFICULTY_COLOR: Record<string, string> = {
-  Basic: "text-emerald-400",
-  Intermediate: "text-amber-400",
-  Advanced: "text-red-400",
+  Basic:        "#059669",
+  Intermediate: "#d97706",
+  Advanced:     "#dc2626",
 };
 
 function ProtocolCard({ protocol }: { protocol: Protocol }) {
+  const pill = CATEGORY_PILL[protocol.category];
   return (
     <Link
       href={`/scan?protocol=${protocol.id}`}
-      className="group flex flex-col rounded-2xl border border-white/10 bg-white/5 p-5 transition-all hover:border-cyan-500/40 hover:bg-white/8"
+      className="group flex flex-col rounded-2xl border p-5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+      style={{ background: "#ffffff", borderColor: "#dde4ee" }}
     >
       <div className="mb-3 flex items-start justify-between">
         <span className="text-2xl">{protocol.icon}</span>
-        <span
-          className={`rounded-full border px-2 py-0.5 text-xs font-medium ${CATEGORY_COLORS[protocol.category]}`}
-        >
+        <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+          style={{ background: pill.bg, color: pill.text }}>
           {protocol.category}
         </span>
       </div>
 
-      <h3 className="mb-1 font-semibold text-white group-hover:text-cyan-300 transition-colors">
+      <h3 className="mb-1 font-semibold transition-colors group-hover:text-blue-600"
+        style={{ color: "#1a2235" }}>
         {protocol.name}
       </h3>
-      <p className="mb-3 text-xs leading-relaxed text-slate-400 line-clamp-2">
+      <p className="mb-3 text-xs leading-relaxed line-clamp-2" style={{ color: "#5a6a85" }}>
         {protocol.indication}
       </p>
 
-      <div className="mt-auto flex items-center justify-between text-xs text-slate-500">
+      <div className="mt-auto flex items-center justify-between text-xs">
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1">
-            <Clock size={11} />
-            {protocol.estimatedTime}
+          <span className="flex items-center gap-1" style={{ color: "#94a3b8" }}>
+            <Clock size={11} />{protocol.estimatedTime}
           </span>
-          <span className={DIFFICULTY_COLOR[protocol.difficulty]}>{protocol.difficulty}</span>
+          <span className="font-medium" style={{ color: DIFFICULTY_COLOR[protocol.difficulty] }}>
+            {protocol.difficulty}
+          </span>
         </div>
-        <ChevronRight size={14} className="text-slate-600 group-hover:text-cyan-400 transition-colors" />
+        <ChevronRight size={14} className="transition-colors group-hover:text-blue-500"
+          style={{ color: "#cbd5e1" }} />
       </div>
     </Link>
   );
@@ -76,65 +89,76 @@ export default function ProtocolsPage() {
     e.preventDefault();
     setFavorites((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8 md:pt-16" style={{ background: "#0a0f1e" }}>
+    <div className="min-h-screen pb-24 md:pb-8 md:pt-16" style={{ background: "#eef3f8" }}>
       <NavBar />
 
       <div className="mx-auto max-w-5xl px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-bold text-white">Protocol Library</h1>
-          <p className="text-slate-400">
+          <h1 className="mb-1.5 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
+            Protocol Library
+          </h1>
+          <p style={{ color: "#5a6a85" }}>
             Select a protocol to begin your AI-guided ultrasound analysis.
           </p>
         </div>
 
         {/* Search */}
-        <div className="relative mb-6">
-          <Search
-            size={16}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"
-          />
+        <div className="relative mb-5">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2"
+            style={{ color: "#94a3b8" }} />
           <input
             type="text"
-            placeholder="Search protocols, indications..."
+            placeholder="Search protocols or indications..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20"
+            className="w-full rounded-xl border py-3 pl-10 pr-4 text-sm outline-none transition-all"
+            style={{
+              background: "#ffffff",
+              borderColor: "#dde4ee",
+              color: "#1a2235",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#2563eb")}
+            onBlur={(e) => (e.target.style.borderColor = "#dde4ee")}
           />
         </div>
 
         {/* Category filter */}
-        <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
+        <div className="mb-8 flex gap-2 overflow-x-auto pb-1">
           <button
             onClick={() => setActiveCategory("All")}
-            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
+            className="shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-all"
+            style={
               activeCategory === "All"
-                ? "bg-cyan-500 text-white"
-                : "border border-white/10 bg-white/5 text-slate-400 hover:text-white"
-            }`}
+                ? { background: "#2563eb", color: "#ffffff" }
+                : { background: "#ffffff", color: "#5a6a85", border: "1px solid #dde4ee" }
+            }
           >
             All ({PROTOCOLS.length})
           </button>
           {CATEGORIES.map((cat) => {
             const count = PROTOCOLS.filter((p) => p.category === cat).length;
+            const pill = CATEGORY_PILL[cat];
+            const active = activeCategory === cat;
             return (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`shrink-0 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-all ${
-                  activeCategory === cat
-                    ? "bg-cyan-500 text-white"
-                    : "border border-white/10 bg-white/5 text-slate-400 hover:text-white"
-                }`}
+                className="shrink-0 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold transition-all"
+                style={
+                  active
+                    ? { background: "#2563eb", color: "#ffffff" }
+                    : { background: "#ffffff", color: "#5a6a85", border: "1px solid #dde4ee" }
+                }
               >
-                <span className={`h-2 w-2 rounded-full ${CATEGORY_DOT[cat]}`} />
+                <span className="h-2 w-2 rounded-full"
+                  style={{ background: active ? "#ffffff" : pill.dot }} />
                 {cat} ({count})
               </button>
             );
@@ -144,18 +168,18 @@ export default function ProtocolsPage() {
         {/* Favorites */}
         {favoriteProtocols.length > 0 && activeCategory === "All" && search === "" && (
           <section className="mb-8">
-            <div className="mb-3 flex items-center gap-2">
-              <Star size={14} className="text-amber-400 fill-amber-400" />
-              <h2 className="text-sm font-semibold text-slate-300">Favorites</h2>
+            <div className="mb-3 flex items-center gap-1.5">
+              <Star size={14} style={{ color: "#f59e0b", fill: "#f59e0b" }} />
+              <h2 className="text-sm font-semibold" style={{ color: "#5a6a85" }}>Favorites</h2>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {favoriteProtocols.map((p) => (
                 <div key={p.id} className="relative">
                   <button
                     onClick={(e) => toggleFavorite(p.id, e)}
-                    className="absolute right-3 top-3 z-10 text-amber-400"
+                    className="absolute right-3 top-3 z-10"
                   >
-                    <Star size={14} className="fill-amber-400" />
+                    <Star size={14} style={{ color: "#f59e0b", fill: "#f59e0b" }} />
                   </button>
                   <ProtocolCard protocol={p} />
                 </div>
@@ -166,19 +190,17 @@ export default function ProtocolsPage() {
 
         {/* Protocol grid */}
         <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-300">
+          <div className="mb-3">
+            <h2 className="text-sm font-semibold" style={{ color: "#5a6a85" }}>
               {activeCategory === "All" ? "All Protocols" : activeCategory} ({filtered.length})
             </h2>
           </div>
 
           {filtered.length === 0 ? (
-            <div className="py-16 text-center">
-              <p className="text-slate-500">No protocols found for &ldquo;{search}&rdquo;</p>
-              <button
-                onClick={() => setSearch("")}
-                className="mt-2 text-sm text-cyan-400 hover:underline"
-              >
+            <div className="py-20 text-center">
+              <p style={{ color: "#94a3b8" }}>No protocols found for &ldquo;{search}&rdquo;</p>
+              <button onClick={() => setSearch("")} className="mt-2 text-sm font-medium"
+                style={{ color: "#2563eb" }}>
                 Clear search
               </button>
             </div>
@@ -186,16 +208,13 @@ export default function ProtocolsPage() {
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {filtered.map((p) => (
                 <div key={p.id} className="relative">
-                  <button
-                    onClick={(e) => toggleFavorite(p.id, e)}
-                    className="absolute right-3 top-3 z-10"
-                  >
+                  <button onClick={(e) => toggleFavorite(p.id, e)} className="absolute right-3 top-3 z-10">
                     <Star
                       size={14}
-                      className={
+                      style={
                         favorites.has(p.id)
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-slate-600 hover:text-amber-400"
+                          ? { color: "#f59e0b", fill: "#f59e0b" }
+                          : { color: "#cbd5e1" }
                       }
                     />
                   </button>
@@ -206,22 +225,23 @@ export default function ProtocolsPage() {
           )}
         </section>
 
-        {/* Quick start CTA */}
-        <div className="mt-12 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-6 text-center">
-          <h3 className="mb-2 font-semibold text-white">Not sure where to start?</h3>
-          <p className="mb-4 text-sm text-slate-400">
+        {/* Quick start */}
+        <div className="mt-12 rounded-2xl border p-6 text-center"
+          style={{ background: "#eff6ff", borderColor: "#bfdbfe" }}>
+          <h3 className="mb-1.5 font-semibold" style={{ color: "#1a2235" }}>
+            Not sure where to start?
+          </h3>
+          <p className="mb-4 text-sm" style={{ color: "#5a6a85" }}>
             Try eFAST for trauma, PLAX for cardiac, or OB First Trimester for pregnancy dating.
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {["efast", "cardiac-plax", "ob-first-trimester"].map((id) => {
               const p = PROTOCOLS.find((x) => x.id === id)!;
               return (
-                <Link
-                  key={id}
-                  href={`/scan?protocol=${id}`}
-                  className="flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-medium text-cyan-300 hover:bg-cyan-500/20 transition-all"
-                >
-                  {p.icon} {p.shortName} <ArrowRight size={11} />
+                <Link key={id} href={`/scan?protocol=${id}`}
+                  className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80"
+                  style={{ borderColor: "#93c5fd", background: "#dbeafe", color: "#1d4ed8" }}>
+                  {p.icon} {p.shortName} <ArrowRight size={10} />
                 </Link>
               );
             })}

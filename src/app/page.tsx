@@ -1,40 +1,34 @@
 import Link from "next/link";
-import { Activity, ArrowRight, CheckCircle, Search, Shield, Zap } from "lucide-react";
+import { ArrowRight, CheckCircle, Search, Shield, Zap } from "lucide-react";
 import NavBar from "@/components/NavBar";
 
 const features = [
   {
     icon: Search,
     title: "Protocol-First Intelligence",
-    desc: "Select your exam type first — our AI tailors every analysis to the specific anatomy, measurements, and pathologies of your chosen protocol.",
-    color: "text-cyan-400",
-    bg: "bg-cyan-500/10 border-cyan-500/20",
+    desc: "Select your exam type first — AI tailors every analysis to the specific anatomy, measurements, and pathologies of your chosen protocol.",
   },
   {
     icon: Zap,
     title: "Instant AI Analysis",
-    desc: "Upload a photo of any ultrasound screen. Receive structure labels, automated measurements, and anomaly detection in under 2 seconds.",
-    color: "text-purple-400",
-    bg: "bg-purple-500/10 border-purple-500/20",
+    desc: "Upload a photo of any ultrasound screen. Structure labels, automated measurements, and anomaly detection in under 2 seconds.",
   },
   {
     icon: Shield,
-    title: "Privacy-First & HIPAA-Compliant",
-    desc: "Auto-anonymization, end-to-end encryption, and optional offline models for sensitive cases. Your patients' data never leaves without your permission.",
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10 border-emerald-500/20",
+    title: "Privacy-First & HIPAA-Ready",
+    desc: "Auto-anonymization, end-to-end encryption, and optional offline models. Your patients' data never leaves without permission.",
   },
 ];
 
 const protocols = [
-  { name: "eFAST", color: "bg-red-500/20 text-red-300" },
-  { name: "Cardiac PLAX", color: "bg-rose-500/20 text-rose-300" },
-  { name: "BLUE Protocol", color: "bg-cyan-500/20 text-cyan-300" },
-  { name: "OB Dating", color: "bg-purple-500/20 text-purple-300" },
-  { name: "AAA Screening", color: "bg-blue-500/20 text-blue-300" },
-  { name: "IVC Collapsibility", color: "bg-rose-500/20 text-rose-300" },
-  { name: "DVT Compression", color: "bg-blue-500/20 text-blue-300" },
-  { name: "Gallbladder", color: "bg-amber-500/20 text-amber-300" },
+  { name: "eFAST", color: "#fee2e2", text: "#dc2626" },
+  { name: "Cardiac PLAX", color: "#fce7f3", text: "#db2777" },
+  { name: "BLUE Protocol", color: "#e0f2fe", text: "#0284c7" },
+  { name: "OB Dating", color: "#f3e8ff", text: "#9333ea" },
+  { name: "AAA Screening", color: "#dbeafe", text: "#2563eb" },
+  { name: "IVC Collapsibility", color: "#fce7f3", text: "#db2777" },
+  { name: "DVT Compression", color: "#dbeafe", text: "#2563eb" },
+  { name: "Gallbladder", color: "#fef9c3", text: "#a16207" },
 ];
 
 const personas = [
@@ -42,76 +36,68 @@ const personas = [
     role: "Emergency Physician",
     quote: "I use Sonoguide every shift. It caught a FAST-positive I almost missed at 3AM.",
     initials: "AEM",
-    color: "bg-red-500",
+    color: "#ef4444",
   },
   {
     role: "OB/GYN Resident",
-    quote: "The first-trimester dating flow is incredible. CRL with GA in 2 seconds — exactly what I need.",
+    quote: "The first-trimester dating flow is incredible. CRL with GA in 2 seconds.",
     initials: "SK",
-    color: "bg-purple-500",
+    color: "#9333ea",
   },
   {
     role: "Rural Family Medicine",
     quote: "No radiologist for 90 miles. Sonoguide gave me the confidence to catch a AAA before transfer.",
     initials: "JT",
-    color: "bg-cyan-500",
+    color: "#2563eb",
   },
 ];
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen" style={{ background: "#0a0f1e" }}>
+    <div className="min-h-screen" style={{ background: "#eef3f8" }}>
       <NavBar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24">
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-[500px] w-[500px] rounded-full bg-cyan-500/10 blur-[120px]" />
-        </div>
+      <section className="pt-20 pb-16 md:pt-36 md:pb-24">
+        <div className="mx-auto max-w-4xl px-4 text-center">
 
-        <div className="relative mx-auto max-w-5xl px-4 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-sm text-cyan-300">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-400" />
+          {/* Badge */}
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium"
+            style={{ borderColor: "#bfdbfe", background: "#eff6ff", color: "#2563eb" }}>
+            <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: "#2563eb" }} />
             AI-Powered Point-of-Care Ultrasound
           </div>
 
-          <h1 className="mb-6 text-4xl font-bold leading-tight text-white md:text-6xl">
+          <h1 className="mb-5 text-4xl font-extrabold leading-tight tracking-tight md:text-6xl"
+            style={{ color: "#1a2235" }}>
             Scan with confidence.{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Understand in seconds.
-            </span>
+            <span style={{ color: "#2563eb" }}>Understand in seconds.</span>
           </h1>
 
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-slate-400 md:text-xl">
+          <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
+            style={{ color: "#5a6a85" }}>
             Sonoguide is the AI ultrasound interpreter that works with any probe, any device, any
-            protocol — delivering real-time image analysis, automated measurements, and educational
-            guidance at the point of care.
+            protocol — delivering real-time analysis, automated measurements, and educational
+            guidance at the bedside.
           </p>
 
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Link
-              href="/protocols"
-              className="flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-white transition-all hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/25"
-            >
-              Start a Scan <ArrowRight size={18} />
+            <Link href="/protocols"
+              className="flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-sm transition-all hover:opacity-90"
+              style={{ background: "#2563eb" }}>
+              Start a Scan <ArrowRight size={17} />
             </Link>
-            <Link
-              href="/protocols"
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-semibold text-slate-300 transition-all hover:bg-white/10"
-            >
+            <Link href="/protocols"
+              className="flex items-center gap-2 rounded-xl border px-6 py-3 font-semibold transition-all hover:bg-white"
+              style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "transparent" }}>
               Browse Protocols
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-slate-500">
-            {[
-              "26+ POCUS protocols",
-              "Any probe, any device",
-              "HIPAA-compliant",
-              "Not FDA-cleared for primary diagnosis",
-            ].map((item) => (
+          <div className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-2.5 text-sm" style={{ color: "#94a3b8" }}>
+            {["26+ POCUS protocols", "Any probe, any device", "HIPAA-ready", "Not FDA-cleared for primary diagnosis"].map((item) => (
               <span key={item} className="flex items-center gap-1.5">
-                <CheckCircle size={14} className="text-cyan-500" />
+                <CheckCircle size={13} style={{ color: "#2563eb" }} />
                 {item}
               </span>
             ))}
@@ -120,35 +106,47 @@ export default function HomePage() {
       </section>
 
       {/* Protocol chips */}
-      <section className="py-8 border-y border-white/5">
-        <div className="mx-auto max-w-5xl px-4">
-          <p className="mb-4 text-center text-sm text-slate-500">20+ protocols across every specialty</p>
+      <section className="py-8 border-y" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+        <div className="mx-auto max-w-4xl px-4">
+          <p className="mb-4 text-center text-sm" style={{ color: "#94a3b8" }}>
+            20+ protocols across every specialty
+          </p>
           <div className="flex flex-wrap justify-center gap-2">
             {protocols.map((p) => (
-              <span key={p.name} className={`rounded-full px-3 py-1 text-xs font-medium ${p.color}`}>
+              <span key={p.name} className="rounded-full px-3 py-1 text-xs font-semibold"
+                style={{ background: p.color, color: p.text }}>
                 {p.name}
               </span>
             ))}
-            <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">+12 more</span>
+            <span className="rounded-full px-3 py-1 text-xs font-medium"
+              style={{ background: "#f1f5f9", color: "#94a3b8" }}>
+              +12 more
+            </span>
           </div>
         </div>
       </section>
 
       {/* Features */}
       <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-5xl px-4">
+        <div className="mx-auto max-w-4xl px-4">
           <div className="mb-12 text-center">
-            <h2 className="mb-3 text-3xl font-bold text-white">Built for clinicians, not hardware vendors</h2>
-            <p className="text-slate-400">Every competitor locks you to their probe. Sonoguide works with everything.</p>
+            <h2 className="mb-3 text-3xl font-bold" style={{ color: "#1a2235" }}>
+              Built for clinicians, not hardware vendors
+            </h2>
+            <p style={{ color: "#5a6a85" }}>
+              Every competitor locks you to their probe. Sonoguide works with everything.
+            </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {features.map(({ icon: Icon, title, desc, color, bg }) => (
-              <div key={title} className={`rounded-2xl border p-6 ${bg}`}>
-                <div className={`mb-4 w-fit rounded-lg p-2 ${bg}`}>
-                  <Icon size={22} className={color} />
+          <div className="grid gap-5 md:grid-cols-3">
+            {features.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="rounded-2xl border p-6 shadow-sm"
+                style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
+                  style={{ background: "#eff6ff" }}>
+                  <Icon size={20} style={{ color: "#2563eb" }} />
                 </div>
-                <h3 className="mb-2 font-semibold text-white">{title}</h3>
-                <p className="text-sm leading-relaxed text-slate-400">{desc}</p>
+                <h3 className="mb-2 font-semibold" style={{ color: "#1a2235" }}>{title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "#5a6a85" }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -156,22 +154,25 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="py-16 border-y border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
-        <div className="mx-auto max-w-5xl px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold text-white">How it works</h2>
+      <section className="py-16 border-y" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+        <div className="mx-auto max-w-4xl px-4">
+          <h2 className="mb-12 text-center text-3xl font-bold" style={{ color: "#1a2235" }}>
+            How it works
+          </h2>
           <div className="grid gap-8 md:grid-cols-4">
             {[
-              { step: "01", title: "Select Protocol", desc: "Choose from 26+ POCUS protocols. AI loads the right analysis context." },
-              { step: "02", title: "Capture Image", desc: "Photo your ultrasound screen or upload from gallery. Works with any device." },
-              { step: "03", title: "AI Analyzes", desc: "Structures labeled, measurements taken, anomalies flagged — in under 2 seconds." },
-              { step: "04", title: "Review & Export", desc: "Clinical summary, annotated image, and PDF report ready to share." },
+              { step: "01", title: "Select Protocol", desc: "Choose from 26+ POCUS protocols. AI loads the right context." },
+              { step: "02", title: "Capture Image", desc: "Photo your ultrasound screen or upload from gallery. Any device." },
+              { step: "03", title: "AI Analyzes", desc: "Structures labeled, measurements taken, anomalies flagged in <2s." },
+              { step: "04", title: "Review & Export", desc: "Clinical summary, annotated image, PDF report ready to share." },
             ].map(({ step, title, desc }) => (
               <div key={step} className="text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-500/30 bg-cyan-500/10 text-lg font-bold text-cyan-400">
+                <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full text-sm font-bold text-white"
+                  style={{ background: "#2563eb" }}>
                   {step}
                 </div>
-                <h3 className="mb-2 font-semibold text-white">{title}</h3>
-                <p className="text-sm text-slate-400">{desc}</p>
+                <h3 className="mb-1.5 font-semibold" style={{ color: "#1a2235" }}>{title}</h3>
+                <p className="text-sm" style={{ color: "#5a6a85" }}>{desc}</p>
               </div>
             ))}
           </div>
@@ -180,17 +181,23 @@ export default function HomePage() {
 
       {/* Testimonials */}
       <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-5xl px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold text-white">Trusted by clinicians everywhere</h2>
-          <div className="grid gap-6 md:grid-cols-3">
+        <div className="mx-auto max-w-4xl px-4">
+          <h2 className="mb-12 text-center text-3xl font-bold" style={{ color: "#1a2235" }}>
+            Trusted by clinicians everywhere
+          </h2>
+          <div className="grid gap-5 md:grid-cols-3">
             {personas.map(({ role, quote, initials, color }) => (
-              <div key={role} className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                <p className="mb-4 text-sm leading-relaxed text-slate-300">&ldquo;{quote}&rdquo;</p>
+              <div key={role} className="rounded-2xl border p-6 shadow-sm"
+                style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+                <p className="mb-4 text-sm leading-relaxed" style={{ color: "#5a6a85" }}>
+                  &ldquo;{quote}&rdquo;
+                </p>
                 <div className="flex items-center gap-3">
-                  <div className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white ${color}`}>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white"
+                    style={{ background: color }}>
                     {initials}
                   </div>
-                  <span className="text-sm text-slate-400">{role}</span>
+                  <span className="text-sm font-medium" style={{ color: "#1a2235" }}>{role}</span>
                 </div>
               </div>
             ))}
@@ -199,44 +206,56 @@ export default function HomePage() {
       </section>
 
       {/* Pricing */}
-      <section className="py-16 border-y border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
-        <div className="mx-auto max-w-5xl px-4">
-          <h2 className="mb-4 text-center text-3xl font-bold text-white">Simple pricing</h2>
-          <p className="mb-12 text-center text-slate-400">Free to start. Powerful when you need more.</p>
-          <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <p className="mb-1 text-sm text-slate-400">Basic</p>
-              <p className="mb-4 text-3xl font-bold text-white">Free</p>
-              <ul className="mb-6 space-y-2 text-sm text-slate-300">
+      <section className="py-16 border-y" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+        <div className="mx-auto max-w-4xl px-4">
+          <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#1a2235" }}>
+            Simple pricing
+          </h2>
+          <p className="mb-12 text-center" style={{ color: "#5a6a85" }}>
+            Free to start. Powerful when you need more.
+          </p>
+          <div className="mx-auto grid max-w-2xl gap-5 md:grid-cols-2">
+            {/* Free */}
+            <div className="rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
+              <p className="mb-1 text-sm font-medium" style={{ color: "#94a3b8" }}>Basic</p>
+              <p className="mb-5 text-3xl font-extrabold" style={{ color: "#1a2235" }}>Free</p>
+              <ul className="mb-6 space-y-2.5 text-sm">
                 {["15 AI analyses/month", "16 core protocols", "Structure labeling", "Anomaly detection", "30-day scan history"].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <CheckCircle size={14} className="shrink-0 text-emerald-400" />
+                  <li key={f} className="flex items-center gap-2.5" style={{ color: "#5a6a85" }}>
+                    <CheckCircle size={14} style={{ color: "#2563eb", flexShrink: 0 }} />
                     {f}
                   </li>
                 ))}
               </ul>
-              <Link href="/protocols" className="block w-full rounded-xl border border-white/10 py-2.5 text-center text-sm font-semibold text-slate-300 transition-all hover:bg-white/10">
+              <Link href="/protocols"
+                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-slate-50"
+                style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
                 Get Started Free
               </Link>
             </div>
-            <div className="relative rounded-2xl border border-cyan-500/40 bg-cyan-500/5 p-6">
-              <div className="absolute -top-3 right-4 rounded-full bg-cyan-500 px-3 py-0.5 text-xs font-bold text-white">
+            {/* Pro */}
+            <div className="relative rounded-2xl border p-6 shadow-md"
+              style={{ borderColor: "#93c5fd", background: "#eff6ff" }}>
+              <div className="absolute -top-3 right-4 rounded-full px-3 py-0.5 text-xs font-bold text-white"
+                style={{ background: "#2563eb" }}>
                 Most Popular
               </div>
-              <p className="mb-1 text-sm text-cyan-400">Pro</p>
-              <p className="mb-1 text-3xl font-bold text-white">
-                $14.99<span className="text-base font-normal text-slate-400">/mo</span>
+              <p className="mb-1 text-sm font-medium" style={{ color: "#2563eb" }}>Pro</p>
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
+                $14.99<span className="text-base font-normal" style={{ color: "#94a3b8" }}>/mo</span>
               </p>
-              <p className="mb-4 text-xs text-slate-500">or $119/year (save 34%)</p>
-              <ul className="mb-6 space-y-2 text-sm text-slate-300">
+              <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>or $119/year (save 34%)</p>
+              <ul className="mb-6 space-y-2.5 text-sm">
                 {["Unlimited AI analyses", "All 26+ protocols", "Full measurements suite", "PDF report export", "Secure sharing", "Offline mode (8 protocols)", "Priority AI queue"].map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <CheckCircle size={14} className="shrink-0 text-cyan-400" />
+                  <li key={f} className="flex items-center gap-2.5" style={{ color: "#1e40af" }}>
+                    <CheckCircle size={14} style={{ color: "#2563eb", flexShrink: 0 }} />
                     {f}
                   </li>
                 ))}
               </ul>
-              <Link href="/protocols" className="block w-full rounded-xl bg-cyan-500 py-2.5 text-center text-sm font-semibold text-white transition-all hover:bg-cyan-400">
+              <Link href="/protocols"
+                className="block w-full rounded-xl py-2.5 text-center text-sm font-semibold text-white transition-all hover:opacity-90"
+                style={{ background: "#2563eb" }}>
                 Start Pro Trial
               </Link>
             </div>
@@ -246,28 +265,24 @@ export default function HomePage() {
 
       {/* CTA */}
       <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-2xl px-4 text-center">
-          <div className="mb-6 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-500">
-              <Activity size={32} className="text-white" />
-            </div>
-          </div>
-          <h2 className="mb-4 text-3xl font-bold text-white">Ready to scan smarter?</h2>
-          <p className="mb-8 text-slate-400">
+        <div className="mx-auto max-w-xl px-4 text-center">
+          <h2 className="mb-4 text-3xl font-bold" style={{ color: "#1a2235" }}>Ready to scan smarter?</h2>
+          <p className="mb-8" style={{ color: "#5a6a85" }}>
             Join thousands of clinicians using Sonoguide to deliver better care at the bedside.
           </p>
-          <Link href="/protocols" className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 px-8 py-3 font-semibold text-white transition-all hover:bg-cyan-400">
-            Start Your First Scan <ArrowRight size={18} />
+          <Link href="/protocols"
+            className="inline-flex items-center gap-2 rounded-xl px-8 py-3 font-semibold text-white shadow-sm transition-all hover:opacity-90"
+            style={{ background: "#2563eb" }}>
+            Start Your First Scan <ArrowRight size={17} />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-8 pb-24 md:pb-8">
-        <div className="mx-auto max-w-5xl px-4 text-center text-xs text-slate-600">
-          <p className="mb-2">
-            Sonoguide is not FDA-cleared for primary diagnosis. For educational and supportive use
-            only. All findings require qualified clinician review.
+      <footer className="border-t py-8 pb-24 md:pb-8" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+        <div className="mx-auto max-w-4xl px-4 text-center text-xs" style={{ color: "#94a3b8" }}>
+          <p className="mb-1">
+            Sonoguide is not FDA-cleared for primary diagnosis. For educational and supportive use only.
           </p>
           <p>© 2026 Sonoguide. All rights reserved.</p>
         </div>

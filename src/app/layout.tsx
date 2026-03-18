@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className="antialiased min-h-screen"
-        style={{ background: "#0a0f1e", color: "#e8edf5", fontFamily: "system-ui, -apple-system, sans-serif" }}
+        style={{ background: "#eef3f8", color: "#1a2235", fontFamily: "system-ui, -apple-system, sans-serif" }}
       >
         {children}
       </body>

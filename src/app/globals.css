@@ -1,51 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0f1e;
-  --foreground: #e8edf5;
+  --bg: #eef3f8;
+  --surface: #ffffff;
+  --border: #dde4ee;
+  --text-primary: #1a2235;
+  --text-secondary: #5a6a85;
+  --text-muted: #94a3b8;
+  --blue: #2563eb;
+  --blue-light: #eff6ff;
+  --blue-mid: #bfdbfe;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0f1829;
-}
-::-webkit-scrollbar-thumb {
-  background: #2a3a5c;
-  border-radius: 3px;
-}
-
-/* Animations */
-@keyframes pulse-ring {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.shimmer {
-  background: linear-gradient(90deg, #1a2640 25%, #2a3a5c 50%, #1a2640 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
+/* Smooth scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.fade-in { animation: fadeIn 0.25s ease-out forwards; }
 
-.fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
 }
