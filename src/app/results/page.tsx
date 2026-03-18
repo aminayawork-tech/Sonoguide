@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -100,11 +100,29 @@ function AnnotatedImagePlaceholder({ labels, alertLevel }: { labels: AnalysisRes
 function ResultsContent() {
   const searchParams = useSearchParams();
   const protocolId = searchParams.get("protocol") ?? "efast";
-  const analysis = getMockAnalysis(protocolId);
   const protocol = getProtocolById(protocolId);
 
+  const [analysis, setAnalysis] = useState<AnalysisResult>(() => getMockAnalysis(protocolId));
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [reviewConfirmed, setReviewConfirmed] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem("lastAnalysis");
+      if (stored) {
+        setAnalysis(JSON.parse(stored));
+        sessionStorage.removeItem("lastAnalysis");
+      }
+      const img = sessionStorage.getItem("lastImage");
+      if (img) {
+        setCapturedImage(img);
+        sessionStorage.removeItem("lastImage");
+      }
+    } catch {
+      // sessionStorage unavailable or parse error — keep mock
+    }
+  }, []);
 
   const cfg = ALERT_CONFIG[analysis.alertLevel] ?? ALERT_CONFIG.none;
   const AlertIcon = cfg.icon;
@@ -160,7 +178,32 @@ function ResultsContent() {
 
         {/* Annotated image */}
         <div className="mb-5 overflow-hidden rounded-2xl border shadow-sm" style={{ borderColor: "#dde4ee" }}>
-          <AnnotatedImagePlaceholder labels={analysis.labels} alertLevel={analysis.alertLevel} />
+          {capturedImage ? (
+            <div className="relative w-full overflow-hidden" style={{ background: "#0a1020" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={capturedImage} alt="Analyzed ultrasound" className="w-full object-contain max-h-80" />
+              {/* Overlay labels */}
+              <div className="absolute inset-0 pointer-events-none">
+                {analysis.labels.map((label) => (
+                  <div key={label.id} className="absolute"
+                    style={{ left: `${label.x}%`, top: `${label.y}%`, transform: "translate(-50%,-50%)" }}>
+                    <div className="rounded-md px-2 py-1 text-xs font-bold whitespace-nowrap shadow"
+                      style={{ background: "rgba(0,0,0,0.72)", border: `1px solid ${label.color}`, color: label.color }}>
+                      {label.name}
+                    </div>
+                  </div>
+                ))}
+                <div className="absolute bottom-3 right-3">
+                  <span className="rounded-full text-xs font-semibold text-white px-2.5 py-1"
+                    style={{ background: "rgba(0,0,0,0.65)", border: "1px solid rgba(255,255,255,0.15)" }}>
+                    AI Analysis Active
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <AnnotatedImagePlaceholder labels={analysis.labels} alertLevel={analysis.alertLevel} />
+          )}
           <div className="flex items-center justify-between border-t px-4 py-2.5"
             style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
             <span className="text-xs font-semibold"

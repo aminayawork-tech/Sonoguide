@@ -61,14 +61,63 @@ function ScanContent() {
   const runAnalysis = useCallback(async () => {
     if (!selectedProtocolId) return;
     setIsAnalyzing(true);
-    setAnalysisStep(0);
-    for (let i = 0; i < ANALYSIS_STEPS.length; i++) {
-      await new Promise((r) => setTimeout(r, 500 + Math.random() * 400));
-      setAnalysisStep(i + 1);
+    setAnalysisStep(1);
+
+    // Kick off the API call immediately
+    let imageBase64: string | null = null;
+    let mediaType: string | null = null;
+
+    if (image) {
+      // image is a data URL: "data:image/jpeg;base64,<data>"
+      const match = image.match(/^data:([^;]+);base64,(.+)$/);
+      if (match) {
+        mediaType = match[1];
+        imageBase64 = match[2];
+      }
     }
-    await new Promise((r) => setTimeout(r, 300));
-    router.push(`/results?protocol=${selectedProtocolId}`);
-  }, [selectedProtocolId, router, ANALYSIS_STEPS.length]);
+
+    // Animate steps while waiting for the real API
+    const stepInterval = setInterval(() => {
+      setAnalysisStep((prev) => {
+        if (prev < ANALYSIS_STEPS.length - 1) return prev + 1;
+        clearInterval(stepInterval);
+        return prev;
+      });
+    }, 800);
+
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64, mediaType, protocolId: selectedProtocolId }),
+      });
+
+      clearInterval(stepInterval);
+      setAnalysisStep(ANALYSIS_STEPS.length);
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error ?? "Analysis failed");
+      }
+
+      const analysis = await res.json();
+
+      // Store result and original image in sessionStorage for results page
+      sessionStorage.setItem("lastAnalysis", JSON.stringify(analysis));
+      if (image) sessionStorage.setItem("lastImage", image);
+      else sessionStorage.removeItem("lastImage");
+
+      await new Promise((r) => setTimeout(r, 300));
+      router.push(`/results?protocol=${selectedProtocolId}`);
+    } catch (err) {
+      clearInterval(stepInterval);
+      console.error("Analysis error:", err);
+      // Fallback: navigate to results with mock data
+      sessionStorage.removeItem("lastAnalysis");
+      sessionStorage.removeItem("lastImage");
+      router.push(`/results?protocol=${selectedProtocolId}`);
+    }
+  }, [selectedProtocolId, router, image, ANALYSIS_STEPS.length]);
 
   const pill = selectedProtocol ? CATEGORY_PILL[selectedProtocol.category] ?? { bg: "#f1f5f9", text: "#64748b" } : null;
 
