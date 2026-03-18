@@ -22,13 +22,17 @@ const features = [
 
 const protocols = [
   { name: "eFAST", color: "#fee2e2", text: "#dc2626" },
-  { name: "Cardiac PLAX", color: "#fce7f3", text: "#db2777" },
+  { name: "Carotid Duplex", color: "#dbeafe", text: "#2563eb" },
+  { name: "TTE Echo", color: "#fce7f3", text: "#db2777" },
   { name: "BLUE Protocol", color: "#e0f2fe", text: "#0284c7" },
-  { name: "OB Dating", color: "#f3e8ff", text: "#9333ea" },
+  { name: "OB 1st Tri", color: "#f3e8ff", text: "#9333ea" },
+  { name: "Thyroid US", color: "#ccfbf1", text: "#0d9488" },
   { name: "AAA Screening", color: "#dbeafe", text: "#2563eb" },
-  { name: "IVC Collapsibility", color: "#fce7f3", text: "#db2777" },
-  { name: "DVT Compression", color: "#dbeafe", text: "#2563eb" },
-  { name: "Gallbladder", color: "#fef9c3", text: "#a16207" },
+  { name: "DVT Duplex", color: "#dbeafe", text: "#2563eb" },
+  { name: "Rotator Cuff", color: "#fef3c7", text: "#d97706" },
+  { name: "Pelvic US", color: "#f3e8ff", text: "#9333ea" },
+  { name: "ABI", color: "#dbeafe", text: "#2563eb" },
+  { name: "Gallbladder / RUQ", color: "#fef9c3", text: "#a16207" },
 ];
 
 const personas = [
@@ -95,7 +99,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-2.5 text-sm" style={{ color: "#94a3b8" }}>
-            {["26+ POCUS protocols", "Any probe, any device", "HIPAA-ready", "Not FDA-cleared for primary diagnosis"].map((item) => (
+            {["31 POCUS protocols", "Any probe, any device", "HIPAA-ready", "Not FDA-cleared for primary diagnosis"].map((item) => (
               <span key={item} className="flex items-center gap-1.5">
                 <CheckCircle size={13} style={{ color: "#2563eb" }} />
                 {item}
@@ -109,7 +113,7 @@ export default function HomePage() {
       <section className="py-8 border-y" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
         <div className="mx-auto max-w-4xl px-4">
           <p className="mb-4 text-center text-sm" style={{ color: "#94a3b8" }}>
-            20+ protocols across every specialty
+            31 protocols across 10 specialties
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {protocols.map((p) => (
@@ -120,7 +124,7 @@ export default function HomePage() {
             ))}
             <span className="rounded-full px-3 py-1 text-xs font-medium"
               style={{ background: "#f1f5f9", color: "#94a3b8" }}>
-              +12 more
+              +19 more
             </span>
           </div>
         </div>
@@ -161,7 +165,7 @@ export default function HomePage() {
           </h2>
           <div className="grid gap-8 md:grid-cols-4">
             {[
-              { step: "01", title: "Select Protocol", desc: "Choose from 26+ POCUS protocols. AI loads the right context." },
+              { step: "01", title: "Select Protocol", desc: "Choose from 31 POCUS protocols. AI loads the right context." },
               { step: "02", title: "Capture Image", desc: "Photo your ultrasound screen or upload from gallery. Any device." },
               { step: "03", title: "AI Analyzes", desc: "Structures labeled, measurements taken, anomalies flagged in <2s." },
               { step: "04", title: "Review & Export", desc: "Clinical summary, annotated image, PDF report ready to share." },
@@ -246,7 +250,7 @@ export default function HomePage() {
               </p>
               <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>or $119/year (save 34%)</p>
               <ul className="mb-6 space-y-2.5 text-sm">
-                {["Unlimited AI analyses", "All 26+ protocols", "Full measurements suite", "PDF report export", "Secure sharing", "Offline mode (8 protocols)", "Priority AI queue"].map((f) => (
+                {["Unlimited AI analyses", "All 31 protocols", "Full measurements suite", "PDF report export", "Secure sharing", "Offline mode (8 protocols)", "Priority AI queue"].map((f) => (
                   <li key={f} className="flex items-center gap-2.5" style={{ color: "#1e40af" }}>
                     <CheckCircle size={14} style={{ color: "#2563eb", flexShrink: 0 }} />
                     {f}

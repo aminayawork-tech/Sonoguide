@@ -6,21 +6,11 @@ import { ArrowRight, ChevronRight, Clock, Search, Star } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import {
   CATEGORIES,
+  CATEGORY_PILL,
   PROTOCOLS,
   type Category,
   type Protocol,
 } from "@/lib/protocols";
-
-const CATEGORY_PILL: Record<Category, { bg: string; text: string; dot: string }> = {
-  Trauma:     { bg: "#fee2e2", text: "#dc2626", dot: "#ef4444" },
-  Cardiac:    { bg: "#fce7f3", text: "#db2777", dot: "#ec4899" },
-  Lung:       { bg: "#e0f2fe", text: "#0284c7", dot: "#38bdf8" },
-  OB:         { bg: "#f3e8ff", text: "#9333ea", dot: "#a855f7" },
-  Abdominal:  { bg: "#fef9c3", text: "#a16207", dot: "#fbbf24" },
-  Vascular:   { bg: "#dbeafe", text: "#2563eb", dot: "#60a5fa" },
-  Neuro:      { bg: "#d1fae5", text: "#059669", dot: "#34d399" },
-  Procedural: { bg: "#f1f5f9", text: "#64748b", dot: "#94a3b8" },
-};
 
 const DIFFICULTY_COLOR: Record<string, string> = {
   Basic:        "#059669",

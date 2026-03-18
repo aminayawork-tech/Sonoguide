@@ -19,18 +19,7 @@ import {
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
-import { PROTOCOLS, getProtocolById } from "@/lib/protocols";
-
-const CATEGORY_PILL: Record<string, { bg: string; text: string }> = {
-  Trauma:     { bg: "#fee2e2", text: "#dc2626" },
-  Cardiac:    { bg: "#fce7f3", text: "#db2777" },
-  Lung:       { bg: "#e0f2fe", text: "#0284c7" },
-  OB:         { bg: "#f3e8ff", text: "#9333ea" },
-  Abdominal:  { bg: "#fef9c3", text: "#a16207" },
-  Vascular:   { bg: "#dbeafe", text: "#2563eb" },
-  Neuro:      { bg: "#d1fae5", text: "#059669" },
-  Procedural: { bg: "#f1f5f9", text: "#64748b" },
-};
+import { CATEGORY_PILL, PROTOCOLS, getProtocolById } from "@/lib/protocols";
 
 function ScanContent() {
   const searchParams = useSearchParams();
