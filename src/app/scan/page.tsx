@@ -31,6 +31,7 @@ function ScanContent() {
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState(0);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [selectedView, setSelectedView] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -119,8 +120,13 @@ function ScanContent() {
       setAnalysisStep(ANALYSIS_STEPS.length);
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error ?? "Analysis failed");
+        const data = await res.json();
+        const msg = data.error ?? "Analysis failed";
+        // Surface auth errors clearly
+        if (msg.toLowerCase().includes("auth") || msg.toLowerCase().includes("api") || msg.toLowerCase().includes("key")) {
+          throw new Error("API key error: Make sure ANTHROPIC_API_KEY is set in your Vercel environment variables.");
+        }
+        throw new Error(msg);
       }
 
       const analysis = await res.json();
@@ -133,11 +139,10 @@ function ScanContent() {
       router.push(`/results?protocol=${selectedProtocolId}`);
     } catch (err) {
       clearInterval(stepInterval);
-      console.error("Analysis error:", err);
-      sessionStorage.removeItem("lastAnalysis");
-      if (compressedDataUrl) sessionStorage.setItem("lastImage", compressedDataUrl);
-      else sessionStorage.removeItem("lastImage");
-      router.push(`/results?protocol=${selectedProtocolId}`);
+      const msg = err instanceof Error ? err.message : "Analysis failed. Please try again.";
+      console.error("Analysis error:", msg);
+      setIsAnalyzing(false);
+      setAnalysisError(msg);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProtocolId, router, image]);
@@ -397,8 +402,24 @@ function ScanContent() {
               </div>
             </div>
           ) : (
+            <>
+            {analysisError && (
+              <div className="mb-3 rounded-xl border p-4 text-sm"
+                style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
+                <p className="font-bold mb-1">Analysis Failed</p>
+                <p className="leading-relaxed" style={{ opacity: 0.9 }}>{analysisError}</p>
+                {analysisError.includes("API key") && (
+                  <p className="mt-2 text-xs font-medium" style={{ color: "#991b1b" }}>
+                    → Go to Vercel → Your project → Settings → Environment Variables → add <code className="rounded px-1" style={{ background: "#fee2e2" }}>ANTHROPIC_API_KEY</code>
+                  </p>
+                )}
+                <button onClick={() => setAnalysisError(null)} className="mt-2 text-xs underline" style={{ color: "#dc2626" }}>
+                  Dismiss
+                </button>
+              </div>
+            )}
             <button
-              onClick={runAnalysis}
+              onClick={() => { setAnalysisError(null); runAnalysis(); }}
               disabled={!image || !selectedProtocolId}
               className="flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
               style={{ background: "#2563eb" }}
@@ -410,6 +431,7 @@ function ScanContent() {
                 ? "Upload an image to analyze"
                 : "Run AI Analysis"}
             </button>
+            </>
           )}
         </div>
 
