@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,11 +13,14 @@ import {
   Flag,
   Info,
   Loader2,
+  MessageCircle,
   RefreshCw,
+  Send,
   Share2,
   ShieldAlert,
   XCircle,
 } from "lucide-react";
+import type { ChatMessage } from "@/app/api/chat/route";
 import NavBar from "@/components/NavBar";
 import ConfidenceBadge from "@/components/ConfidenceBadge";
 import { getProtocolById } from "@/lib/protocols";
@@ -106,6 +109,50 @@ function ResultsContent() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [reviewConfirmed, setReviewConfirmed] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+
+  // Follow-up chat
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [chatInput, setChatInput] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  async function sendChatMessage() {
+    const question = chatInput.trim();
+    if (!question || chatLoading) return;
+    setChatInput("");
+    const newHistory: ChatMessage[] = [...chatHistory, { role: "user", content: question }];
+    setChatHistory(newHistory);
+    setChatLoading(true);
+    setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+    try {
+      const isFirst = chatHistory.length === 0;
+      let imageBase64: string | null = null;
+      let mediaType: string | null = null;
+      if (isFirst && capturedImage) {
+        const match = capturedImage.match(/^data:([^;]+);base64,(.+)$/);
+        if (match) { mediaType = match[1]; imageBase64 = match[2]; }
+      }
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question,
+          analysisContext: analysis,
+          history: chatHistory,
+          imageBase64,
+          mediaType,
+        }),
+      });
+      const data = await res.json();
+      const answer = data.answer ?? data.error ?? "Something went wrong.";
+      setChatHistory([...newHistory, { role: "assistant", content: answer }]);
+    } catch {
+      setChatHistory([...newHistory, { role: "assistant", content: "Sorry, I couldn't connect. Please try again." }]);
+    } finally {
+      setChatLoading(false);
+      setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+    }
+  }
 
   useEffect(() => {
     try {
@@ -381,6 +428,79 @@ function ResultsContent() {
             </div>
           </Card>
         )}
+
+        {/* Follow-up chat */}
+        <div className="mt-5 rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+          <div className="flex items-center gap-2.5 border-b px-5 py-4" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
+            <MessageCircle size={16} style={{ color: "#2563eb" }} />
+            <div>
+              <p className="text-sm font-semibold" style={{ color: "#1a2235" }}>Ask a Follow-up Question</p>
+              <p className="text-xs" style={{ color: "#94a3b8" }}>Ask Claude anything about this scan or protocol</p>
+            </div>
+          </div>
+
+          {/* Message list */}
+          {chatHistory.length > 0 && (
+            <div className="max-h-80 overflow-y-auto px-4 py-4 space-y-3">
+              {chatHistory.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className="max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
+                    style={msg.role === "user"
+                      ? { background: "#2563eb", color: "#ffffff", borderBottomRightRadius: "4px" }
+                      : { background: "#f1f5f9", color: "#1a2235", borderBottomLeftRadius: "4px" }}>
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              {chatLoading && (
+                <div className="flex justify-start">
+                  <div className="flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm"
+                    style={{ background: "#f1f5f9", color: "#5a6a85", borderBottomLeftRadius: "4px" }}>
+                    <Loader2 size={13} className="animate-spin" />
+                    Thinking...
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+          )}
+
+          {/* Input */}
+          <div className="border-t px-4 py-3" style={{ borderColor: "#dde4ee" }}>
+            {chatHistory.length === 0 && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {[
+                  "What does this finding mean?",
+                  "Should I be concerned?",
+                  "What view should I get next?",
+                  "Explain the measurements",
+                ].map((q) => (
+                  <button key={q} onClick={() => setChatInput(q)}
+                    className="rounded-full border px-3 py-1 text-xs font-medium transition-all hover:bg-blue-50"
+                    style={{ borderColor: "#bfdbfe", color: "#2563eb", background: "#eff6ff" }}>
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendChatMessage()}
+                placeholder="Ask about findings, measurements, next steps..."
+                className="flex-1 rounded-xl border px-4 py-2.5 text-sm outline-none transition-all"
+                style={{ borderColor: "#dde4ee", background: "#f8fafc", color: "#1a2235" }}
+              />
+              <button onClick={sendChatMessage} disabled={!chatInput.trim() || chatLoading}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white transition-all hover:opacity-90 disabled:opacity-40"
+                style={{ background: "#2563eb" }}>
+                <Send size={15} />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Export modal */}

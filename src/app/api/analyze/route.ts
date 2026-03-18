@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     const hasImage = imageBase64 && mediaType;
 
-    const systemPrompt = `You are Sonoguide, an expert AI ultrasound interpreter. You analyze point-of-care ultrasound (POCUS) images and provide structured clinical findings. You always respond with valid JSON only — no markdown, no explanation outside the JSON.
+    const systemPrompt = `You are Sonoguide, an expert AI ultrasound interpreter. You analyze point-of-care ultrasound (POCUS) images and provide structured clinical findings. You always respond with valid JSON only — no markdown fences, no explanation outside the JSON object.
 
 IMPORTANT: You are not FDA-cleared for primary diagnosis. Your output is for educational and clinical decision support only.`;
 
@@ -34,7 +34,7 @@ IMPORTANT: You are not FDA-cleared for primary diagnosis. Your output is for edu
 
 ${hasImage ? "Analyze the provided ultrasound image carefully." : "No image was provided — generate a realistic normal-variant example analysis for this protocol for demonstration purposes."}
 
-Respond ONLY with a JSON object in this exact shape:
+Respond ONLY with a raw JSON object (no markdown, no backticks) in this exact shape:
 {
   "protocolId": "${protocolId}",
   "protocolName": "${protocol.name}",
@@ -43,7 +43,7 @@ Respond ONLY with a JSON object in this exact shape:
   "imageQualityNote": "<1-2 sentence note on image quality, depth, gain, or acoustic windows>",
   "confidence": <integer 50-99>,
   "alertLevel": "<none|low|moderate|high|critical>",
-  "alertMessage": "<if alertLevel is not none: concise urgent clinical message, else omit>",
+  "alertMessage": "<if alertLevel is not none: concise urgent clinical message, else omit this key>",
   "findings": [
     { "label": "<structure name>", "value": "<finding description>", "severity": "<normal|info|warning|critical>" }
   ],
@@ -60,13 +60,12 @@ Respond ONLY with a JSON object in this exact shape:
 
 Rules:
 - findings: 3-6 items covering all major structures visible
-- measurements: include ALL relevant measurements for this protocol (1-6 items)
+- measurements: 1-6 relevant measurements for this protocol
 - recommendations: 2-4 practical next steps
 - nextViews: 2-3 views to obtain next
-- labels: 3-6 anatomical labels with x/y as percentage positions (x=0 left, x=100 right, y=0 top, y=100 bottom)
-- Use hex colors for labels: normal structures #6ee7b7, abnormal #ef4444, info #60a5fa
-- confidence should reflect actual image quality and certainty
-- alertLevel: none=no abnormality, low=minor/incidental, moderate=clinically relevant, high=urgent, critical=immediate action needed`;
+- labels: 3-6 anatomical labels (x=0 left, x=100 right, y=0 top, y=100 bottom)
+- Label colors: normal structures #6ee7b7, abnormal #ef4444, info #60a5fa
+- alertLevel: none=no abnormality, low=minor, moderate=clinically relevant, high=urgent, critical=immediate action`;
 
     const messageContent: Anthropic.MessageParam["content"] = hasImage
       ? [
@@ -84,23 +83,24 @@ Rules:
 
     const response = await client.messages.create({
       model: "claude-opus-4-6",
-      max_tokens: 4096,
-      thinking: { type: "adaptive" },
+      max_tokens: 8000,
       system: systemPrompt,
       messages: [{ role: "user", content: messageContent }],
     });
 
-    // Extract the text block (thinking blocks are separate)
     const textBlock = response.content.find((b): b is Anthropic.TextBlock => b.type === "text");
     if (!textBlock) {
       return NextResponse.json({ error: "No text response from AI" }, { status: 500 });
     }
 
-    // Parse JSON — strip any accidental markdown fences
-    const raw = textBlock.text.replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
-    const analysis = JSON.parse(raw);
+    // Strip any accidental markdown fences, then parse
+    const raw = textBlock.text
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/```\s*$/i, "")
+      .trim();
 
-    // Ensure timestamp is always fresh
+    const analysis = JSON.parse(raw);
     analysis.timestamp = analysis.timestamp ?? new Date().toISOString();
 
     return NextResponse.json(analysis);
