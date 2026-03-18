@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -18,6 +18,8 @@ import {
 import NavBar from "@/components/NavBar";
 import { getSavedScans } from "@/lib/mock-analysis";
 
+const LS_KEY = "sonoguide_history";
+
 const ALERT_CFG: Record<string, {
   icon: React.ElementType; iconColor: string; border: string; bg: string; badge: string; badgeText: string; label: string;
 }> = {
@@ -29,9 +31,26 @@ const ALERT_CFG: Record<string, {
 };
 
 export default function HistoryPage() {
-  const scans = getSavedScans();
+  const [scans, setScans] = useState(() => getSavedScans());
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(LS_KEY);
+      if (stored) setScans(JSON.parse(stored));
+      else localStorage.setItem(LS_KEY, JSON.stringify(getSavedScans()));
+    } catch { /* ignore */ }
+  }, []);
+
+  function handleDelete(id: string) {
+    setScans((prev) => {
+      const next = prev.filter((s) => s.id !== id);
+      try { localStorage.setItem(LS_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+      return next;
+    });
+  }
 
   const filtered = scans.filter((s) => {
     const matchesSearch =
@@ -170,7 +189,8 @@ export default function HistoryPage() {
                       style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
                       <Download size={12} />
                     </button>
-                    <button className="flex items-center rounded-lg border px-2.5 py-1.5 text-xs"
+                    <button onClick={() => handleDelete(scan.id)}
+                      className="flex items-center rounded-lg border px-2.5 py-1.5 text-xs transition-colors hover:bg-red-100"
                       style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
                       <Trash2 size={12} />
                     </button>
