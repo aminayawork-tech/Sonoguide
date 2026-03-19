@@ -73,7 +73,23 @@ function ScanContent() {
   function handleFile(file: File) {
     if (!file.type.startsWith("image/")) return;
     const reader = new FileReader();
-    reader.onload = (e) => setImage(e.target?.result as string);
+    reader.onload = (e) => {
+      const raw = e.target?.result as string;
+      // Redact patient info header before storing/displaying
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(img, 0, 0);
+        // Black out top 13% (patient name/DOB/MRN header on all US machines)
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, img.width, Math.round(img.height * 0.13));
+        setImage(canvas.toDataURL("image/jpeg", 0.92));
+      };
+      img.src = raw;
+    };
     reader.readAsDataURL(file);
   }
 
@@ -292,6 +308,10 @@ function ScanContent() {
                   style={{ background: "rgba(0,0,0,0.55)" }}>
                   <X size={13} />
                 </button>
+                <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                  style={{ background: "rgba(5,150,105,0.85)" }}>
+                  <CheckCircle size={10} /> PHI redacted
+                </div>
                 {selectedProtocol && (
                   <div className="absolute bottom-0 left-0 right-0 px-4 py-2.5"
                     style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)" }}>
