@@ -211,58 +211,140 @@ export default function HomePage() {
 
       {/* Pricing */}
       <section className="py-16 border-y" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-        <div className="mx-auto max-w-4xl px-4">
+        <div className="mx-auto max-w-5xl px-4">
           <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#1a2235" }}>
             Simple pricing
           </h2>
           <p className="mb-12 text-center" style={{ color: "#5a6a85" }}>
             Free to start. Powerful when you need more.
           </p>
-          <div className="mx-auto grid max-w-2xl gap-5 md:grid-cols-2">
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
             {/* Free */}
-            <div className="rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
-              <p className="mb-1 text-sm font-medium" style={{ color: "#94a3b8" }}>Basic</p>
-              <p className="mb-5 text-3xl font-extrabold" style={{ color: "#1a2235" }}>Free</p>
-              <ul className="mb-6 space-y-2.5 text-sm">
-                {["15 AI analyses/month", "16 core protocols", "Structure labeling", "Anomaly detection", "30-day scan history"].map((f) => (
-                  <li key={f} className="flex items-center gap-2.5" style={{ color: "#5a6a85" }}>
-                    <CheckCircle size={14} style={{ color: "#2563eb", flexShrink: 0 }} />
+            <div className="flex flex-col rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
+              <p className="mb-1 text-sm font-medium" style={{ color: "#94a3b8" }}>Free</p>
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>$0</p>
+              <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>forever</p>
+              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
+                {[
+                  "5 AI analyses/month",
+                  "All 31 protocols",
+                  "Structure labeling",
+                  "Anomaly detection",
+                  "30-day scan history",
+                  "PHI auto-redaction",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#5a6a85" }}>
+                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#94a3b8" }} />
                     {f}
                   </li>
                 ))}
               </ul>
-              <Link href="/protocols"
-                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-slate-50"
+              <Link href="/scan"
+                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-white"
                 style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
                 Get Started Free
               </Link>
             </div>
-            {/* Pro */}
-            <div className="relative rounded-2xl border p-6 shadow-md"
-              style={{ borderColor: "#93c5fd", background: "#eff6ff" }}>
-              <div className="absolute -top-3 right-4 rounded-full px-3 py-0.5 text-xs font-bold text-white"
-                style={{ background: "#2563eb" }}>
-                Most Popular
-              </div>
-              <p className="mb-1 text-sm font-medium" style={{ color: "#2563eb" }}>Pro</p>
+
+            {/* Student */}
+            <div className="flex flex-col rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+              <p className="mb-1 text-sm font-medium" style={{ color: "#5a6a85" }}>Student</p>
               <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
                 $14.99<span className="text-base font-normal" style={{ color: "#94a3b8" }}>/mo</span>
               </p>
               <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>or $119/year (save 34%)</p>
-              <ul className="mb-6 space-y-2.5 text-sm">
-                {["Unlimited AI analyses", "All 31 protocols", "Full measurements suite", "PDF report export", "Secure sharing", "Offline mode (8 protocols)", "Priority AI queue"].map((f) => (
-                  <li key={f} className="flex items-center gap-2.5" style={{ color: "#1e40af" }}>
-                    <CheckCircle size={14} style={{ color: "#2563eb", flexShrink: 0 }} />
+              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
+                {[
+                  "50 AI analyses/month",
+                  "All 31 protocols",
+                  "Full measurements suite",
+                  "AI chat (150 msgs/mo)",
+                  "90-day scan history",
+                  "PHI auto-redaction",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#5a6a85" }}>
+                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#2563eb" }} />
                     {f}
                   </li>
                 ))}
               </ul>
-              <Link href="/protocols"
+              <Link href="/scan"
+                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-slate-50"
+                style={{ borderColor: "#2563eb", color: "#2563eb" }}>
+                Start Free Trial
+              </Link>
+            </div>
+
+            {/* Professional — Most Popular */}
+            <div className="relative flex flex-col rounded-2xl border p-6 shadow-lg"
+              style={{ borderColor: "#93c5fd", background: "#eff6ff" }}>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-0.5 text-xs font-bold text-white"
+                style={{ background: "#2563eb" }}>
+                Most Popular
+              </div>
+              <p className="mb-1 text-sm font-medium" style={{ color: "#2563eb" }}>Professional</p>
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
+                $34.99<span className="text-base font-normal" style={{ color: "#64748b" }}>/mo</span>
+              </p>
+              <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $279/year (save 33%)</p>
+              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
+                {[
+                  "150 AI analyses/month",
+                  "All 31 protocols",
+                  "Full measurements suite",
+                  "AI chat (500 msgs/mo)",
+                  "PDF report export",
+                  "1-year scan history",
+                  "PHI auto-redaction",
+                  "Priority AI queue",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#1e40af" }}>
+                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#2563eb" }} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/scan"
                 className="block w-full rounded-xl py-2.5 text-center text-sm font-semibold text-white transition-all hover:opacity-90"
                 style={{ background: "#2563eb" }}>
                 Start Pro Trial
               </Link>
             </div>
+
+            {/* Clinic */}
+            <div className="flex flex-col rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
+              <p className="mb-1 text-sm font-medium" style={{ color: "#5a6a85" }}>Clinic</p>
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
+                $89.99<span className="text-base font-normal" style={{ color: "#94a3b8" }}>/mo</span>
+              </p>
+              <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>or $719/year (save 33%)</p>
+              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
+                {[
+                  "600 AI analyses/month",
+                  "3 user seats",
+                  "All 31 protocols",
+                  "Full measurements suite",
+                  "AI chat (2,000 msgs/mo)",
+                  "PDF export",
+                  "Unlimited history",
+                  "PHI auto-redaction",
+                  "Priority support",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#5a6a85" }}>
+                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#059669" }} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/scan"
+                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-white"
+                style={{ borderColor: "#dde4ee", color: "#1a2235" }}>
+                Contact Sales
+              </Link>
+            </div>
+
           </div>
         </div>
       </section>
