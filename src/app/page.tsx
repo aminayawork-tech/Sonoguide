@@ -69,7 +69,7 @@ export default function HomePage() {
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium"
             style={{ borderColor: "#bfdbfe", background: "#eff6ff", color: "#2563eb" }}>
             <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: "#2563eb" }} />
-            AI-Powered Point-of-Care Ultrasound
+            AI-Powered Ultrasound Interpretation
           </div>
 
           <h1 className="mb-5 text-4xl font-extrabold leading-tight tracking-tight md:text-6xl"
@@ -80,7 +80,7 @@ export default function HomePage() {
 
           <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
             style={{ color: "#5a6a85" }}>
-            Sonoguide is the AI ultrasound interpreter that works with any probe, any device, any
+            Sonoguide is the AI ultrasound interpreter that works with any ultrasound image, any
             protocol — delivering real-time analysis, automated measurements, and educational
             guidance at the bedside.
           </p>
@@ -99,7 +99,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-2.5 text-sm" style={{ color: "#94a3b8" }}>
-            {["31 POCUS protocols", "Any probe, any device", "HIPAA-ready", "Not FDA-cleared for primary diagnosis"].map((item) => (
+            {["31 ultrasound protocols", "Upload from any device", "HIPAA-ready", "Not FDA-cleared for primary diagnosis"].map((item) => (
               <span key={item} className="flex items-center gap-1.5">
                 <CheckCircle size={13} style={{ color: "#2563eb" }} />
                 {item}
@@ -138,7 +138,7 @@ export default function HomePage() {
               Built for clinicians, not hardware vendors
             </h2>
             <p style={{ color: "#5a6a85" }}>
-              Every competitor locks you to their probe. Sonoguide works with everything.
+              Built around your workflow — upload an image and get instant AI interpretation.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
@@ -165,8 +165,8 @@ export default function HomePage() {
           </h2>
           <div className="grid gap-8 md:grid-cols-4">
             {[
-              { step: "01", title: "Select Protocol", desc: "Choose from 31 POCUS protocols. AI loads the right context." },
-              { step: "02", title: "Capture Image", desc: "Photo your ultrasound screen or upload from gallery. Any device." },
+              { step: "01", title: "Select Protocol", desc: "Choose from 31 ultrasound protocols. AI loads the right context." },
+              { step: "02", title: "Capture Image", desc: "Photo your ultrasound screen or upload from your gallery." },
               { step: "03", title: "AI Analyzes", desc: "Structures labeled, measurements taken, anomalies flagged in <2s." },
               { step: "04", title: "Review & Export", desc: "Clinical summary, annotated image, PDF report ready to share." },
             ].map(({ step, title, desc }) => (
