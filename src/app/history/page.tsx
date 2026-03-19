@@ -178,14 +178,14 @@ export default function HistoryPage() {
                     <p className="mt-0.5 text-xs" style={{ color: "#94a3b8" }}>{scan.date}</p>
                   </div>
 
-                  {/* Hover actions */}
-                  <div className="flex shrink-0 gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {/* Actions — always visible on mobile, fade-in on desktop hover */}
+                  <div className="flex shrink-0 gap-1.5 md:opacity-0 md:group-hover:opacity-100 md:transition-opacity">
                     <Link href={`/results?protocol=${scan.protocol.toLowerCase().replace(/ /g, "-")}`}
                       className="flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium"
                       style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
-                      <ArrowRight size={11} /> View
+                      <ArrowRight size={11} /> <span className="hidden sm:inline">View</span>
                     </Link>
-                    <button className="flex items-center rounded-lg border px-2.5 py-1.5 text-xs"
+                    <button className="hidden sm:flex items-center rounded-lg border px-2.5 py-1.5 text-xs"
                       style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
                       <Download size={12} />
                     </button>
