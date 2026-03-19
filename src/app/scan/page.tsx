@@ -259,7 +259,7 @@ function ScanContent() {
             </div>
           ) : (
             <div className="max-h-64 overflow-y-auto space-y-1.5">
-              {PROTOCOLS.map((p) => {
+              {[...PROTOCOLS].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name)).map((p) => {
                 const ppill = CATEGORY_PILL[p.category] ?? { bg: "#f1f5f9", text: "#64748b" };
                 return (
                   <button key={p.id} onClick={() => setSelectedProtocolId(p.id)}

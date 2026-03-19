@@ -107,7 +107,7 @@ export default function ProtocolsPage() {
       p.category.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = activeCategory === "All" || p.category === activeCategory;
     return matchesSearch && matchesCategory;
-  });
+  }).sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
 
   const favoriteProtocols = PROTOCOLS.filter((p) => favorites.has(p.id));
 
