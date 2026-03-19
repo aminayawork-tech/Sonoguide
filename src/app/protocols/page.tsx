@@ -58,15 +58,16 @@ function ProtocolCard({ protocol }: { protocol: Protocol }) {
       className="group flex flex-col rounded-2xl border p-5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
       style={{ background: "#ffffff", borderColor: "#dde4ee" }}
     >
-      <div className="mb-3 flex items-start justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl"
+      <div className="mb-3 flex items-center">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
           style={{ background: pill.bg }}>
           <IconComp size={20} style={{ color: pill.text }} />
         </div>
-        <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+        <span className="mx-auto rounded-full px-2.5 py-0.5 text-xs font-semibold"
           style={{ background: pill.bg, color: pill.text }}>
           {protocol.category}
         </span>
+        <div className="w-10 shrink-0" />
       </div>
 
       <h3 className="mb-1 font-semibold transition-colors group-hover:text-blue-600"
