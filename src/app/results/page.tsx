@@ -110,6 +110,38 @@ function ResultsContent() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [reviewConfirmed, setReviewConfirmed] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportNote, setReportNote] = useState("");
+  const [reportSent, setReportSent] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+
+  async function handleShare() {
+    const shareData = {
+      title: `Sonoguide – ${protocol?.name ?? "Ultrasound"} Report`,
+      text: `AI ultrasound analysis: ${analysis.summary}`,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try { await navigator.share(shareData); return; } catch { /* user cancelled */ }
+    }
+    // Fallback: copy link to clipboard
+    await navigator.clipboard.writeText(window.location.href);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2500);
+  }
+
+  function handleSubmitReport() {
+    if (!reportReason) return;
+    // In production this would POST to an API; for now just acknowledge
+    setReportSent(true);
+    setTimeout(() => {
+      setShowReportModal(false);
+      setReportSent(false);
+      setReportReason("");
+      setReportNote("");
+    }, 1800);
+  }
 
   function handleExportPDF() {
     setShowExportModal(false);
@@ -420,22 +452,24 @@ function ResultsContent() {
 
         {/* Actions */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" data-print="hide">
-          {[
-            { icon: Download, label: "Export PDF", onClick: () => reviewConfirmed && setShowExportModal(true) },
-            { icon: Share2, label: "Share", onClick: () => {} },
-          ].map(({ icon: Icon, label, onClick }) => (
-            <button key={label} onClick={onClick} disabled={!reviewConfirmed}
-              className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
-              <Icon size={17} /> {label}
-            </button>
-          ))}
+          <button onClick={() => reviewConfirmed && setShowExportModal(true)} disabled={!reviewConfirmed}
+            className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
+            <Download size={17} /> Export PDF
+          </button>
+          <button onClick={handleShare}
+            className="relative flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
+            style={{ borderColor: "#dde4ee", color: shareCopied ? "#059669" : "#5a6a85", background: "#ffffff" }}>
+            <Share2 size={17} />
+            {shareCopied ? "Link copied!" : "Share"}
+          </button>
           <Link href={`/scan?protocol=${protocolId}`}
             className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
             style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
             <RefreshCw size={17} /> New View
           </Link>
-          <button className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
+          <button onClick={() => setShowReportModal(true)}
+            className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
             style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
             <Flag size={17} /> Report Error
           </button>
@@ -543,6 +577,74 @@ function ResultsContent() {
           </div>
         </div>
       </div>
+
+      {/* Report Error modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          style={{ background: "rgba(0,0,0,0.4)" }}>
+          <div className="w-full max-w-sm rounded-2xl border p-6 shadow-xl"
+            style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+            {reportSent ? (
+              <div className="flex flex-col items-center gap-3 py-4">
+                <CheckCircle size={36} style={{ color: "#059669" }} />
+                <p className="font-bold" style={{ color: "#1a2235" }}>Report submitted</p>
+                <p className="text-center text-sm" style={{ color: "#5a6a85" }}>
+                  Thank you for helping improve Sonoguide.
+                </p>
+              </div>
+            ) : (
+              <>
+                <h3 className="mb-1 font-bold" style={{ color: "#1a2235" }}>Report an Error</h3>
+                <p className="mb-4 text-sm" style={{ color: "#5a6a85" }}>
+                  Help us improve AI accuracy by flagging incorrect findings.
+                </p>
+                <div className="mb-3">
+                  <label className="mb-1.5 block text-xs font-semibold" style={{ color: "#5a6a85" }}>
+                    What seems incorrect? <span style={{ color: "#dc2626" }}>*</span>
+                  </label>
+                  <select
+                    value={reportReason}
+                    onChange={(e) => setReportReason(e.target.value)}
+                    className="w-full rounded-xl border px-3 py-2.5 text-sm outline-none"
+                    style={{ borderColor: "#dde4ee", color: "#1a2235" }}>
+                    <option value="">Select a reason…</option>
+                    <option value="wrong_findings">Wrong or missing findings</option>
+                    <option value="wrong_measurements">Incorrect measurements</option>
+                    <option value="wrong_protocol">Wrong protocol detected</option>
+                    <option value="poor_quality">Poor image quality assessment</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="mb-1.5 block text-xs font-semibold" style={{ color: "#5a6a85" }}>
+                    Additional details (optional)
+                  </label>
+                  <textarea
+                    value={reportNote}
+                    onChange={(e) => setReportNote(e.target.value)}
+                    rows={3}
+                    placeholder="Describe what was incorrect…"
+                    className="w-full resize-none rounded-xl border px-3 py-2.5 text-sm outline-none"
+                    style={{ borderColor: "#dde4ee", color: "#1a2235" }}
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={() => { setShowReportModal(false); setReportReason(""); setReportNote(""); }}
+                    className="flex-1 rounded-xl border py-2.5 text-sm font-medium"
+                    style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
+                    Cancel
+                  </button>
+                  <button onClick={handleSubmitReport} disabled={!reportReason}
+                    className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ background: "#dc2626" }}>
+                    Submit
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Export modal */}
       {showExportModal && (

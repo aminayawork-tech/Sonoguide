@@ -46,7 +46,8 @@ function ScanContent() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);   // gallery – no capture
+  const cameraInputRef = useRef<HTMLInputElement>(null); // camera – with capture
 
   const effectiveProtocolId = selectedProtocolId || DEFAULT_PROTOCOL_ID;
   const selectedProtocol = getProtocolById(effectiveProtocolId);
@@ -256,7 +257,7 @@ function ScanContent() {
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className="cursor-pointer p-10 text-center transition-all"
+              className="cursor-pointer p-10 text-center transition-all select-none"
               style={{
                 background: isDragging ? "#eff6ff" : "#ffffff",
                 border: isDragging ? "2px dashed #2563eb" : "2px dashed #cbd5e1",
@@ -273,28 +274,44 @@ function ScanContent() {
                 or drag & drop an image here
               </p>
               <div className="flex justify-center gap-3">
-                <span className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium"
+                <button
+                  onClick={(e) => { e.stopPropagation(); cameraInputRef.current?.click(); }}
+                  className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium transition-all hover:bg-slate-100"
                   style={{ borderColor: "#e2e8f0", color: "#64748b", background: "#f8fafc" }}>
                   <Camera size={13} /> Camera
-                </span>
-                <span className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium"
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                  className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium transition-all hover:bg-slate-100"
                   style={{ borderColor: "#e2e8f0", color: "#64748b", background: "#f8fafc" }}>
                   <Upload size={13} /> Gallery
-                </span>
+                </button>
               </div>
             </div>
           )}
         </div>
 
+        {/* Gallery input – no capture so mobile shows photo library */}
         <input
           ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) { handleFile(f); e.target.value = ""; }
+          }}
+        />
+        {/* Camera input – capture opens camera directly on mobile */}
+        <input
+          ref={cameraInputRef}
           type="file"
           accept="image/*"
           capture="environment"
           className="hidden"
           onChange={(e) => {
             const f = e.target.files?.[0];
-            if (f) handleFile(f);
+            if (f) { handleFile(f); e.target.value = ""; }
           }}
         />
 
