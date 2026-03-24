@@ -64,7 +64,7 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
               style={{ background: "#2563eb" }}>
               <Zap size={15} className="text-white" />
             </div>
-            <span className="font-bold" style={{ color: "#0f172a" }}>Upgrade Sonoguide</span>
+            <span className="font-bold" style={{ color: "#0f172a" }}>Upgrade SonoGuide</span>
           </div>
 
           {limitReached ? (

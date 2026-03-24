@@ -22,7 +22,7 @@ export default function DisclaimerBanner({ compact = false }: { compact?: boolea
         <div className="space-y-1">
           <p className="text-sm font-bold" style={{ color: "#92400e" }}>Important Medical Disclaimer</p>
           <p className="text-xs leading-relaxed" style={{ color: "#92400e", opacity: 0.85 }}>
-            Sonoguide is an AI-powered educational and clinical decision support tool.{" "}
+            SonoGuide is an AI-powered educational and clinical decision support tool.{" "}
             <strong>It is not FDA-cleared for primary diagnosis</strong> and does not replace formal
             diagnostic imaging, radiologist interpretation, or clinical judgment by a qualified
             healthcare professional. All findings must be reviewed and validated by a licensed

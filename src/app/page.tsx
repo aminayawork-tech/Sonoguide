@@ -17,7 +17,7 @@ const personas = [
   },
   {
     role: "Rural Family Medicine",
-    quote: "No radiologist for 90 miles. Sonoguide gave me the confidence to catch a AAA before transfer.",
+    quote: "No radiologist for 90 miles. SonoGuide gave me the confidence to catch a AAA before transfer.",
     initials: "JT",
     color: "#2563eb",
   },
@@ -29,7 +29,7 @@ export default function HomePage() {
       <NavBar />
 
       {/* ── Hero ────────────────────────────────────────────────── */}
-      <section className="relative flex min-h-[90vh] flex-col items-center justify-center px-4 pt-20 pb-16 text-center md:pt-28">
+      <section className="relative flex min-h-[90vh] flex-col items-center justify-center px-4 pt-28 pb-16 text-center md:pt-32">
 
         {/* Soft radial glow */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -295,7 +295,7 @@ export default function HomePage() {
             Ready to scan smarter?
           </h2>
           <p className="mb-8" style={{ color: "#64748b" }}>
-            Join clinicians using Sonoguide to deliver better care at the bedside.
+            Join clinicians using SonoGuide to deliver better care at the bedside.
           </p>
           <Link
             href="/scan"
@@ -312,9 +312,9 @@ export default function HomePage() {
       <footer className="border-t py-8 pb-24 md:pb-8" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
         <div className="mx-auto max-w-4xl px-4 text-center text-xs" style={{ color: "#94a3b8" }}>
           <p className="mb-1">
-            Sonoguide is not FDA-cleared for primary diagnosis. For educational and supportive use only.
+            SonoGuide is not FDA-cleared for primary diagnosis. For educational and supportive use only.
           </p>
-          <p>© 2026 Sonoguide. All rights reserved.</p>
+          <p>© 2026 SonoGuide. All rights reserved.</p>
         </div>
       </footer>
     </div>

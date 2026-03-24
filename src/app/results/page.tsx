@@ -118,7 +118,7 @@ function ResultsContent() {
 
   async function handleShare() {
     const shareData = {
-      title: `Sonoguide – ${protocol?.name ?? "Ultrasound"} Report`,
+      title: `SonoGuide – ${protocol?.name ?? "Ultrasound"} Report`,
       text: `AI ultrasound analysis: ${analysis.summary}`,
       url: window.location.href,
     };
@@ -226,7 +226,7 @@ function ResultsContent() {
   );
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8 md:pt-16" style={{ background: "#f8fafc" }}>
+    <div className="min-h-screen pt-14 pb-24 md:pb-8 md:pt-16" style={{ background: "#f8fafc" }}>
       <NavBar />
 
       {/* Floating New Scan button */}
@@ -245,7 +245,7 @@ function ResultsContent() {
           style={{ borderColor: "#e2e8f0" }}>
           <div>
             <span className="text-xl font-extrabold" style={{ color: "#0f172a" }}>Sono</span>
-            <span className="text-xl font-extrabold" style={{ color: "#2563eb" }}>guide</span>
+            <span className="text-xl font-extrabold" style={{ color: "#2563eb" }}>Guide</span>
             <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>AI Ultrasound Report</p>
           </div>
           <div className="text-right text-xs" style={{ color: "#94a3b8" }}>
@@ -434,7 +434,7 @@ function ResultsContent() {
             <div>
               <p className="text-sm font-bold" style={{ color: "#92400e" }}>Important Medical Disclaimer</p>
               <p className="mt-1 text-xs leading-relaxed" style={{ color: "#92400e", opacity: 0.85 }}>
-                Sonoguide is not FDA-cleared for primary diagnosis. All findings must be reviewed by a
+                SonoGuide is not FDA-cleared for primary diagnosis. All findings must be reviewed by a
                 qualified clinician before influencing any clinical decision.
               </p>
               <label className="mt-3 flex cursor-pointer items-start gap-2">
@@ -589,7 +589,7 @@ function ResultsContent() {
                 <CheckCircle size={36} style={{ color: "#059669" }} />
                 <p className="font-bold" style={{ color: "#1a2235" }}>Report submitted</p>
                 <p className="text-center text-sm" style={{ color: "#5a6a85" }}>
-                  Thank you for helping improve Sonoguide.
+                  Thank you for helping improve SonoGuide.
                 </p>
               </div>
             ) : (

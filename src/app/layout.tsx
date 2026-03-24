@@ -3,7 +3,7 @@ import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "Sonoguide — AI Ultrasound Guide",
+  title: "SonoGuide — AI Ultrasound Guide",
   description:
     "AI-powered point-of-care ultrasound interpreter. Protocol-first image analysis, automated measurements, and educational guidance for clinicians.",
   keywords:
