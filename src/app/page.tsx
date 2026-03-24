@@ -208,83 +208,141 @@ export default function HomePage() {
 
       {/* ── Pricing ─────────────────────────────────────────────── */}
       <section className="py-20">
-        <div className="mx-auto max-w-3xl px-4">
+        <div className="mx-auto max-w-5xl px-4">
           <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
-            Free to start
+            Simple, transparent pricing
           </h2>
           <p className="mb-12 text-center" style={{ color: "#64748b" }}>
-            5 free scans every month. Go Pro when you need more.
+            Start free. Upgrade as you grow.
           </p>
 
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {/* Free */}
-            <div className="flex flex-col rounded-2xl border p-8"
-              style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
-              <p className="mb-1 text-sm font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Free</p>
-              <p className="mb-6 text-4xl font-extrabold" style={{ color: "#0f172a" }}>$0</p>
-              <ul className="mb-8 flex-1 space-y-3 text-sm" style={{ color: "#475569" }}>
+            <div className="flex flex-col rounded-2xl border p-6"
+              style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Free</p>
+              <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>$0</p>
+              <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
                 {[
                   "5 AI analyses/month",
                   "All 31 protocols",
-                  "Structure labeling & measurements",
-                  "PHI auto-redaction",
+                  "Structure labeling",
+                  "Anomaly detection",
                   "30-day scan history",
+                  "PHI auto-redaction",
                 ].map((f) => (
-                  <li key={f} className="flex items-center gap-2.5">
-                    <CheckCircle size={15} style={{ color: "#94a3b8", flexShrink: 0 }} />
+                  <li key={f} className="flex items-center gap-2">
+                    <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
                     {f}
                   </li>
                 ))}
               </ul>
               <Link href="/scan"
-                className="block w-full rounded-xl border py-3 text-center text-sm font-semibold transition-all hover:bg-white"
+                className="block w-full rounded-xl border py-2.5 text-center text-xs font-semibold transition-all hover:bg-slate-50"
                 style={{ borderColor: "#e2e8f0", color: "#475569" }}>
-                Start for free
+                Get Started Free
               </Link>
             </div>
 
-            {/* Pro */}
-            <div className="relative flex flex-col rounded-2xl border p-8 shadow-lg"
-              style={{ borderColor: "#93c5fd", background: "#eff6ff" }}>
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-4 py-1 text-xs font-bold text-white"
-                style={{ background: "#2563eb" }}>
-                Most popular
-              </div>
-              <p className="mb-1 text-sm font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Pro</p>
-              <p className="mb-1 text-4xl font-extrabold" style={{ color: "#0f172a" }}>
-                $34.99<span className="text-base font-normal" style={{ color: "#64748b" }}>/mo</span>
+            {/* Student */}
+            <div className="flex flex-col rounded-2xl border p-6"
+              style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Student</p>
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                $14.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
               </p>
-              <p className="mb-6 text-xs" style={{ color: "#64748b" }}>or $279/year — save 33%</p>
-              <ul className="mb-8 flex-1 space-y-3 text-sm" style={{ color: "#1e40af" }}>
+              <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $119/yr — save 34%</p>
+              <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
+                {[
+                  "50 AI analyses/month",
+                  "All 31 protocols",
+                  "Full measurements suite",
+                  "AI chat (150 msgs/mo)",
+                  "90-day scan history",
+                  "PHI auto-redaction",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2">
+                    <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/scan"
+                className="block w-full rounded-xl border py-2.5 text-center text-xs font-semibold transition-all hover:bg-slate-50"
+                style={{ borderColor: "#e2e8f0", color: "#475569" }}>
+                Start Free Trial
+              </Link>
+            </div>
+
+            {/* Professional — Most Popular */}
+            <div className="relative flex flex-col rounded-2xl border p-6 shadow-lg"
+              style={{ borderColor: "#93c5fd", background: "#eff6ff" }}>
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold text-white"
+                style={{ background: "#2563eb" }}>
+                Most Popular
+              </div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Professional</p>
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                $34.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
+              </p>
+              <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $279/yr — save 33%</p>
+              <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
                 {[
                   "150 AI analyses/month",
                   "All 31 protocols",
                   "Full measurements suite",
-                  "AI chat follow-up",
+                  "AI chat (500 msgs/mo)",
                   "PDF report export",
                   "1-year scan history",
+                  "PHI auto-redaction",
                   "Priority AI queue",
                 ].map((f) => (
-                  <li key={f} className="flex items-center gap-2.5">
-                    <CheckCircle size={15} style={{ color: "#2563eb", flexShrink: 0 }} />
+                  <li key={f} className="flex items-center gap-2">
+                    <CheckCircle size={13} style={{ color: "#2563eb", flexShrink: 0 }} />
                     {f}
                   </li>
                 ))}
               </ul>
               <Link href="/scan"
-                className="block w-full rounded-xl py-3 text-center text-sm font-bold text-white transition-all hover:opacity-90"
+                className="block w-full rounded-xl py-2.5 text-center text-xs font-bold text-white transition-all hover:opacity-90"
                 style={{ background: "#2563eb" }}>
-                Go Pro — Start free trial
+                Start Pro Trial
+              </Link>
+            </div>
+
+            {/* Clinic */}
+            <div className="flex flex-col rounded-2xl border p-6"
+              style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Clinic</p>
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                $89.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
+              </p>
+              <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $719/yr — save 33%</p>
+              <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
+                {[
+                  "600 AI analyses/month",
+                  "3 user seats",
+                  "All 31 protocols",
+                  "Full measurements suite",
+                  "AI chat (2,000 msgs/mo)",
+                  "PDF export",
+                  "Unlimited history",
+                  "PHI auto-redaction",
+                  "Priority support",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2">
+                    <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/scan"
+                className="block w-full rounded-xl border py-2.5 text-center text-xs font-semibold transition-all hover:bg-white"
+                style={{ borderColor: "#e2e8f0", color: "#475569" }}>
+                Contact Sales
               </Link>
             </div>
           </div>
-
-          <p className="mt-6 text-center text-xs" style={{ color: "#94a3b8" }}>
-            Need clinic-wide access?{" "}
-            <Link href="/scan" className="underline" style={{ color: "#64748b" }}>
-              Contact us for team pricing →
-            </Link>
-          </p>
         </div>
       </section>
 
