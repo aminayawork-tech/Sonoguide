@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Camera, Clock, Home, LogIn } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import UserMenu from "./UserMenu";
+import AuthModal from "./AuthModal";
 
 const desktopNavItems = [
   { href: "/", label: "Home", icon: Home },
@@ -23,16 +25,14 @@ function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
   );
 }
 
-interface NavBarProps {
-  onSignIn?: () => void;
-}
-
-export default function NavBar({ onSignIn }: NavBarProps) {
+export default function NavBar() {
   const pathname = usePathname();
   const { user, loading } = useAuth();
+  const [showAuth, setShowAuth] = useState(false);
 
   return (
     <>
+      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
       {/* ── Desktop top nav ── */}
       <header
         className="hidden md:block fixed top-0 left-0 right-0 z-50 border-b"
@@ -59,7 +59,7 @@ export default function NavBar({ onSignIn }: NavBarProps) {
               user
                 ? <UserMenu />
                 : (
-                  <button onClick={onSignIn}
+                  <button onClick={() => setShowAuth(true)}
                     className="flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-sm font-medium transition-all hover:bg-slate-50"
                     style={{ borderColor: "#e2e8f0", color: "#374151" }}>
                     <LogIn size={14} />
@@ -88,7 +88,7 @@ export default function NavBar({ onSignIn }: NavBarProps) {
               user
                 ? <UserMenu />
                 : (
-                  <button onClick={onSignIn}
+                  <button onClick={() => setShowAuth(true)}
                     className="flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all"
                     style={{ borderColor: "#e2e8f0", color: "#374151" }}>
                     <LogIn size={13} />
