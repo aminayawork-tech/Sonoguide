@@ -1,50 +1,17 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle, Search, Shield, Zap } from "lucide-react";
+import { ArrowRight, Camera, CheckCircle, Shield, Zap } from "lucide-react";
 import NavBar from "@/components/NavBar";
-
-const features = [
-  {
-    icon: Search,
-    title: "Protocol-First Intelligence",
-    desc: "Select your exam type first — AI tailors every analysis to the specific anatomy, measurements, and pathologies of your chosen protocol.",
-  },
-  {
-    icon: Zap,
-    title: "Instant AI Analysis",
-    desc: "Upload a photo of any ultrasound screen. Structure labels, automated measurements, and anomaly detection in under 2 seconds.",
-  },
-  {
-    icon: Shield,
-    title: "Privacy-First & HIPAA-Ready",
-    desc: "Auto-anonymization, end-to-end encryption, and optional offline models. Your patients' data never leaves without permission.",
-  },
-];
-
-const protocols = [
-  { name: "eFAST", color: "#fee2e2", text: "#dc2626" },
-  { name: "Carotid Duplex", color: "#dbeafe", text: "#2563eb" },
-  { name: "TTE Echo", color: "#fce7f3", text: "#db2777" },
-  { name: "BLUE Protocol", color: "#e0f2fe", text: "#0284c7" },
-  { name: "OB 1st Tri", color: "#f3e8ff", text: "#9333ea" },
-  { name: "Thyroid US", color: "#ccfbf1", text: "#0d9488" },
-  { name: "AAA Screening", color: "#dbeafe", text: "#2563eb" },
-  { name: "DVT Duplex", color: "#dbeafe", text: "#2563eb" },
-  { name: "Rotator Cuff", color: "#fef3c7", text: "#d97706" },
-  { name: "Pelvic US", color: "#f3e8ff", text: "#9333ea" },
-  { name: "ABI", color: "#dbeafe", text: "#2563eb" },
-  { name: "Gallbladder / RUQ", color: "#fef9c3", text: "#a16207" },
-];
 
 const personas = [
   {
     role: "Emergency Physician",
-    quote: "I use Sonoguide every shift. It caught a FAST-positive I almost missed at 3AM.",
+    quote: "Caught a FAST-positive I almost missed at 3AM. This is now part of every shift.",
     initials: "AEM",
     color: "#ef4444",
   },
   {
     role: "OB/GYN Resident",
-    quote: "The first-trimester dating flow is incredible. CRL with GA in 2 seconds.",
+    quote: "CRL with gestational age in 2 seconds. The OB flow is incredible.",
     initials: "SK",
     color: "#9333ea",
   },
@@ -58,142 +25,163 @@ const personas = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen" style={{ background: "#eef3f8" }}>
+    <div className="min-h-screen" style={{ background: "#ffffff" }}>
       <NavBar />
 
-      {/* Hero */}
-      <section className="pt-20 pb-16 md:pt-36 md:pb-24">
-        <div className="mx-auto max-w-4xl px-4 text-center">
+      {/* ── Hero ────────────────────────────────────────────────── */}
+      <section className="relative flex min-h-[90vh] flex-col items-center justify-center px-4 pt-20 pb-16 text-center md:pt-28">
 
-          {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium"
-            style={{ borderColor: "#bfdbfe", background: "#eff6ff", color: "#2563eb" }}>
-            <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: "#2563eb" }} />
-            AI-Powered Ultrasound Interpretation
-          </div>
-
-          <h1 className="mb-5 text-4xl font-extrabold leading-tight tracking-tight md:text-6xl"
-            style={{ color: "#1a2235" }}>
-            Scan with confidence.{" "}
-            <span style={{ color: "#2563eb" }}>Understand in seconds.</span>
-          </h1>
-
-          <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
-            style={{ color: "#5a6a85" }}>
-            Sonoguide is the AI ultrasound interpreter that works with any ultrasound image, any
-            protocol — delivering real-time analysis, automated measurements, and educational
-            guidance at the bedside.
-          </p>
-
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Link href="/protocols"
-              className="flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white shadow-sm transition-all hover:opacity-90"
-              style={{ background: "#2563eb" }}>
-              Start a Scan <ArrowRight size={17} />
-            </Link>
-            <Link href="/protocols"
-              className="flex items-center gap-2 rounded-xl border px-6 py-3 font-semibold transition-all hover:bg-white"
-              style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "transparent" }}>
-              Browse Protocols
-            </Link>
-          </div>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-2.5 text-sm" style={{ color: "#94a3b8" }}>
-            {["31 ultrasound protocols", "Upload from any device", "HIPAA-ready", "Not FDA-cleared for primary diagnosis"].map((item) => (
-              <span key={item} className="flex items-center gap-1.5">
-                <CheckCircle size={13} style={{ color: "#2563eb" }} />
-                {item}
-              </span>
-            ))}
-          </div>
+        {/* Soft radial glow */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute left-1/2 top-0 -translate-x-1/2 rounded-full opacity-30"
+            style={{ width: 700, height: 500, background: "radial-gradient(ellipse, #bfdbfe 0%, transparent 70%)" }} />
         </div>
-      </section>
 
-      {/* Protocol chips */}
-      <section className="py-8 border-y" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
-        <div className="mx-auto max-w-4xl px-4">
-          <p className="mb-4 text-center text-sm" style={{ color: "#94a3b8" }}>
-            31 protocols across 10 specialties
-          </p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {protocols.map((p) => (
-              <span key={p.name} className="rounded-full px-3 py-1 text-xs font-semibold"
-                style={{ background: p.color, color: p.text }}>
-                {p.name}
-              </span>
-            ))}
-            <span className="rounded-full px-3 py-1 text-xs font-medium"
-              style={{ background: "#f1f5f9", color: "#94a3b8" }}>
-              +19 more
+        {/* Badge */}
+        <div className="relative mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium"
+          style={{ borderColor: "#bfdbfe", background: "#eff6ff", color: "#2563eb" }}>
+          <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: "#2563eb" }} />
+          AI-Powered Ultrasound Interpretation
+        </div>
+
+        {/* Headline */}
+        <h1 className="relative mb-5 max-w-3xl text-5xl font-extrabold leading-[1.1] tracking-tight md:text-7xl"
+          style={{ color: "#0f172a" }}>
+          Snap a photo.{" "}
+          <span style={{ color: "#2563eb" }}>Understand<br />in seconds.</span>
+        </h1>
+
+        {/* Subheadline */}
+        <p className="relative mx-auto mb-10 max-w-xl text-lg leading-relaxed md:text-xl"
+          style={{ color: "#64748b" }}>
+          Point your phone at any ultrasound screen. AI labels structures,
+          takes measurements, and flags findings in under 2 seconds.
+        </p>
+
+        {/* Primary CTA */}
+        <Link
+          href="/scan"
+          className="relative inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:opacity-90 hover:shadow-xl active:scale-95"
+          style={{ background: "#2563eb" }}>
+          <Camera size={20} />
+          Start Scanning Now
+          <ArrowRight size={18} />
+        </Link>
+
+        {/* Trust bar */}
+        <div className="relative mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm"
+          style={{ color: "#94a3b8" }}>
+          {[
+            "Used by clinicians",
+            "HIPAA-ready",
+            "Not for primary diagnosis",
+          ].map((item) => (
+            <span key={item} className="flex items-center gap-1.5">
+              <CheckCircle size={13} style={{ color: "#2563eb" }} />
+              {item}
             </span>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-16 md:py-24">
+      {/* ── How it works ────────────────────────────────────────── */}
+      <section className="border-y py-20" style={{ borderColor: "#f1f5f9", background: "#f8fafc" }}>
         <div className="mx-auto max-w-4xl px-4">
-          <div className="mb-12 text-center">
-            <h2 className="mb-3 text-3xl font-bold" style={{ color: "#1a2235" }}>
-              Built for clinicians, not hardware vendors
-            </h2>
-            <p style={{ color: "#5a6a85" }}>
-              Built around your workflow — upload an image and get instant AI interpretation.
-            </p>
-          </div>
-          <div className="grid gap-5 md:grid-cols-3">
-            {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="rounded-2xl border p-6 shadow-sm"
-                style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
-                  style={{ background: "#eff6ff" }}>
-                  <Icon size={20} style={{ color: "#2563eb" }} />
-                </div>
-                <h3 className="mb-2 font-semibold" style={{ color: "#1a2235" }}>{title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#5a6a85" }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="py-16 border-y" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-        <div className="mx-auto max-w-4xl px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold" style={{ color: "#1a2235" }}>
-            How it works
+          <h2 className="mb-16 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
+            Three steps. Zero learning curve.
           </h2>
-          <div className="grid gap-8 md:grid-cols-4">
+
+          <div className="grid gap-8 md:grid-cols-3">
             {[
-              { step: "01", title: "Select Protocol", desc: "Choose from 31 ultrasound protocols. AI loads the right context." },
-              { step: "02", title: "Capture Image", desc: "Photo your ultrasound screen or upload from your gallery." },
-              { step: "03", title: "AI Analyzes", desc: "Structures labeled, measurements taken, anomalies flagged in <2s." },
-              { step: "04", title: "Review & Export", desc: "Clinical summary, annotated image, PDF report ready to share." },
-            ].map(({ step, title, desc }) => (
-              <div key={step} className="text-center">
-                <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full text-sm font-bold text-white"
+              {
+                step: "01",
+                emoji: "📸",
+                title: "Snap or upload",
+                desc: "Photograph your ultrasound screen or upload an image from your device. No special equipment needed.",
+              },
+              {
+                step: "02",
+                emoji: "✨",
+                title: "AI analyzes instantly",
+                desc: "Structures labeled, measurements calculated, anomalies flagged — all in under 2 seconds.",
+              },
+              {
+                step: "03",
+                emoji: "📋",
+                title: "Instant insights",
+                desc: "Annotated image, clinical summary, key findings, and a one-tap PDF report ready to share.",
+              },
+            ].map(({ step, emoji, title, desc }) => (
+              <div key={step} className="relative rounded-2xl border p-8 text-center shadow-sm"
+                style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-bold text-white"
                   style={{ background: "#2563eb" }}>
                   {step}
                 </div>
-                <h3 className="mb-1.5 font-semibold" style={{ color: "#1a2235" }}>{title}</h3>
-                <p className="text-sm" style={{ color: "#5a6a85" }}>{desc}</p>
+                <div className="mb-4 text-4xl">{emoji}</div>
+                <h3 className="mb-2 text-lg font-bold" style={{ color: "#0f172a" }}>{title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "#64748b" }}>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 md:py-24">
+      {/* ── What it can do ──────────────────────────────────────── */}
+      <section className="py-20">
         <div className="mx-auto max-w-4xl px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold" style={{ color: "#1a2235" }}>
-            Trusted by clinicians everywhere
+          <div className="mb-12 text-center">
+            <h2 className="mb-3 text-3xl font-bold" style={{ color: "#0f172a" }}>
+              Powerful AI, simple experience
+            </h2>
+            <p style={{ color: "#64748b" }}>
+              All the precision of expert analysis — without the complexity.
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {[
+              {
+                icon: Zap,
+                title: "Instant AI Analysis",
+                desc: "Structure labels, automated measurements, and anomaly detection in under 2 seconds.",
+              },
+              {
+                icon: Shield,
+                title: "Privacy-First",
+                desc: "Auto-anonymization redacts patient headers. End-to-end encryption. HIPAA-ready.",
+              },
+              {
+                icon: Camera,
+                title: "31 Protocols Available",
+                desc: "eFAST, cardiac echo, OB, vascular, MSK, and more — all accessible after your first scan.",
+              },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="rounded-2xl border p-6 shadow-sm"
+                style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl"
+                  style={{ background: "#eff6ff" }}>
+                  <Icon size={20} style={{ color: "#2563eb" }} />
+                </div>
+                <h3 className="mb-2 font-semibold" style={{ color: "#0f172a" }}>{title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "#64748b" }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonials ────────────────────────────────────────── */}
+      <section className="border-y py-20" style={{ borderColor: "#f1f5f9", background: "#f8fafc" }}>
+        <div className="mx-auto max-w-4xl px-4">
+          <h2 className="mb-12 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
+            Trusted at the bedside
           </h2>
           <div className="grid gap-5 md:grid-cols-3">
             {personas.map(({ role, quote, initials, color }) => (
               <div key={role} className="rounded-2xl border p-6 shadow-sm"
-                style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-                <p className="mb-4 text-sm leading-relaxed" style={{ color: "#5a6a85" }}>
+                style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
+                <p className="mb-5 text-sm leading-relaxed" style={{ color: "#475569" }}>
                   &ldquo;{quote}&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
@@ -201,7 +189,7 @@ export default function HomePage() {
                     style={{ background: color }}>
                     {initials}
                   </div>
-                  <span className="text-sm font-medium" style={{ color: "#1a2235" }}>{role}</span>
+                  <span className="text-sm font-semibold" style={{ color: "#0f172a" }}>{role}</span>
                 </div>
               </div>
             ))}
@@ -209,163 +197,110 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-16 border-y" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-        <div className="mx-auto max-w-5xl px-4">
-          <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#1a2235" }}>
-            Simple pricing
+      {/* ── Pricing ─────────────────────────────────────────────── */}
+      <section className="py-20">
+        <div className="mx-auto max-w-3xl px-4">
+          <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
+            Free to start
           </h2>
-          <p className="mb-12 text-center" style={{ color: "#5a6a85" }}>
-            Free to start. Powerful when you need more.
+          <p className="mb-12 text-center" style={{ color: "#64748b" }}>
+            5 free scans every month. Go Pro when you need more.
           </p>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
+          <div className="grid gap-5 sm:grid-cols-2">
             {/* Free */}
-            <div className="flex flex-col rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
-              <p className="mb-1 text-sm font-medium" style={{ color: "#94a3b8" }}>Free</p>
-              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>$0</p>
-              <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>forever</p>
-              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
+            <div className="flex flex-col rounded-2xl border p-8"
+              style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
+              <p className="mb-1 text-sm font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Free</p>
+              <p className="mb-6 text-4xl font-extrabold" style={{ color: "#0f172a" }}>$0</p>
+              <ul className="mb-8 flex-1 space-y-3 text-sm" style={{ color: "#475569" }}>
                 {[
                   "5 AI analyses/month",
                   "All 31 protocols",
-                  "Structure labeling",
-                  "Anomaly detection",
+                  "Structure labeling & measurements",
+                  "PHI auto-redaction",
                   "30-day scan history",
-                  "PHI auto-redaction",
                 ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#5a6a85" }}>
-                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#94a3b8" }} />
+                  <li key={f} className="flex items-center gap-2.5">
+                    <CheckCircle size={15} style={{ color: "#94a3b8", flexShrink: 0 }} />
                     {f}
                   </li>
                 ))}
               </ul>
               <Link href="/scan"
-                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-white"
-                style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
-                Get Started Free
+                className="block w-full rounded-xl border py-3 text-center text-sm font-semibold transition-all hover:bg-white"
+                style={{ borderColor: "#e2e8f0", color: "#475569" }}>
+                Start for free
               </Link>
             </div>
 
-            {/* Student */}
-            <div className="flex flex-col rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
-              <p className="mb-1 text-sm font-medium" style={{ color: "#5a6a85" }}>Student</p>
-              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
-                $14.99<span className="text-base font-normal" style={{ color: "#94a3b8" }}>/mo</span>
-              </p>
-              <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>or $119/year (save 34%)</p>
-              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
-                {[
-                  "50 AI analyses/month",
-                  "All 31 protocols",
-                  "Full measurements suite",
-                  "AI chat (150 msgs/mo)",
-                  "90-day scan history",
-                  "PHI auto-redaction",
-                ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#5a6a85" }}>
-                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#2563eb" }} />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/scan"
-                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-slate-50"
-                style={{ borderColor: "#2563eb", color: "#2563eb" }}>
-                Start Free Trial
-              </Link>
-            </div>
-
-            {/* Professional — Most Popular */}
-            <div className="relative flex flex-col rounded-2xl border p-6 shadow-lg"
+            {/* Pro */}
+            <div className="relative flex flex-col rounded-2xl border p-8 shadow-lg"
               style={{ borderColor: "#93c5fd", background: "#eff6ff" }}>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-0.5 text-xs font-bold text-white"
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-4 py-1 text-xs font-bold text-white"
                 style={{ background: "#2563eb" }}>
-                Most Popular
+                Most popular
               </div>
-              <p className="mb-1 text-sm font-medium" style={{ color: "#2563eb" }}>Professional</p>
-              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
+              <p className="mb-1 text-sm font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Pro</p>
+              <p className="mb-1 text-4xl font-extrabold" style={{ color: "#0f172a" }}>
                 $34.99<span className="text-base font-normal" style={{ color: "#64748b" }}>/mo</span>
               </p>
-              <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $279/year (save 33%)</p>
-              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
+              <p className="mb-6 text-xs" style={{ color: "#64748b" }}>or $279/year — save 33%</p>
+              <ul className="mb-8 flex-1 space-y-3 text-sm" style={{ color: "#1e40af" }}>
                 {[
                   "150 AI analyses/month",
                   "All 31 protocols",
                   "Full measurements suite",
-                  "AI chat (500 msgs/mo)",
+                  "AI chat follow-up",
                   "PDF report export",
                   "1-year scan history",
-                  "PHI auto-redaction",
                   "Priority AI queue",
                 ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#1e40af" }}>
-                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#2563eb" }} />
+                  <li key={f} className="flex items-center gap-2.5">
+                    <CheckCircle size={15} style={{ color: "#2563eb", flexShrink: 0 }} />
                     {f}
                   </li>
                 ))}
               </ul>
               <Link href="/scan"
-                className="block w-full rounded-xl py-2.5 text-center text-sm font-semibold text-white transition-all hover:opacity-90"
+                className="block w-full rounded-xl py-3 text-center text-sm font-bold text-white transition-all hover:opacity-90"
                 style={{ background: "#2563eb" }}>
-                Start Pro Trial
+                Go Pro — Start free trial
               </Link>
             </div>
-
-            {/* Clinic */}
-            <div className="flex flex-col rounded-2xl border p-6" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
-              <p className="mb-1 text-sm font-medium" style={{ color: "#5a6a85" }}>Clinic</p>
-              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>
-                $89.99<span className="text-base font-normal" style={{ color: "#94a3b8" }}>/mo</span>
-              </p>
-              <p className="mb-5 text-xs" style={{ color: "#94a3b8" }}>or $719/year (save 33%)</p>
-              <ul className="mb-6 flex-1 space-y-2.5 text-sm">
-                {[
-                  "600 AI analyses/month",
-                  "3 user seats",
-                  "All 31 protocols",
-                  "Full measurements suite",
-                  "AI chat (2,000 msgs/mo)",
-                  "PDF export",
-                  "Unlimited history",
-                  "PHI auto-redaction",
-                  "Priority support",
-                ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5" style={{ color: "#5a6a85" }}>
-                    <CheckCircle size={14} className="mt-0.5 shrink-0" style={{ color: "#059669" }} />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/scan"
-                className="block w-full rounded-xl border py-2.5 text-center text-sm font-semibold transition-all hover:bg-white"
-                style={{ borderColor: "#dde4ee", color: "#1a2235" }}>
-                Contact Sales
-              </Link>
-            </div>
-
           </div>
+
+          <p className="mt-6 text-center text-xs" style={{ color: "#94a3b8" }}>
+            Need clinic-wide access?{" "}
+            <Link href="/scan" className="underline" style={{ color: "#64748b" }}>
+              Contact us for team pricing →
+            </Link>
+          </p>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 md:py-24">
+      {/* ── Final CTA ───────────────────────────────────────────── */}
+      <section className="border-t py-20" style={{ borderColor: "#f1f5f9", background: "#f8fafc" }}>
         <div className="mx-auto max-w-xl px-4 text-center">
-          <h2 className="mb-4 text-3xl font-bold" style={{ color: "#1a2235" }}>Ready to scan smarter?</h2>
-          <p className="mb-8" style={{ color: "#5a6a85" }}>
-            Join thousands of clinicians using Sonoguide to deliver better care at the bedside.
+          <h2 className="mb-4 text-3xl font-bold" style={{ color: "#0f172a" }}>
+            Ready to scan smarter?
+          </h2>
+          <p className="mb-8" style={{ color: "#64748b" }}>
+            Join clinicians using Sonoguide to deliver better care at the bedside.
           </p>
-          <Link href="/protocols"
-            className="inline-flex items-center gap-2 rounded-xl px-8 py-3 font-semibold text-white shadow-sm transition-all hover:opacity-90"
+          <Link
+            href="/scan"
+            className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 font-bold text-white shadow-lg transition-all hover:opacity-90"
             style={{ background: "#2563eb" }}>
-            Start Your First Scan <ArrowRight size={17} />
+            <Camera size={18} />
+            Start Your First Scan Free
+            <ArrowRight size={17} />
           </Link>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t py-8 pb-24 md:pb-8" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+      {/* ── Footer ──────────────────────────────────────────────── */}
+      <footer className="border-t py-8 pb-24 md:pb-8" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
         <div className="mx-auto max-w-4xl px-4 text-center text-xs" style={{ color: "#94a3b8" }}>
           <p className="mb-1">
             Sonoguide is not FDA-cleared for primary diagnosis. For educational and supportive use only.

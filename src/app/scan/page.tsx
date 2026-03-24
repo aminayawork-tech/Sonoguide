@@ -3,79 +3,59 @@
 import { Suspense, useCallback, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Activity,
   AlertCircle,
-  ArrowLeft,
-  Baby,
-  Bone,
-  Brain,
   Camera,
   CheckCircle,
-  ChevronRight,
-  Crosshair,
-  Droplets,
+  ChevronDown,
+  ChevronUp,
   Edit3,
-  Heart,
   ImageIcon,
   Info,
   Loader2,
-  Microscope,
-  Scan,
-  ScanLine,
   Upload,
-  Wind,
   X,
   Zap,
-  type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
-import { CATEGORY_PILL, PROTOCOLS, getProtocolById } from "@/lib/protocols";
+import { PROTOCOLS, getProtocolById } from "@/lib/protocols";
 
-const CATEGORY_ICON: Record<string, LucideIcon> = {
-  Trauma:     Crosshair,
-  Cardiac:    Heart,
-  Lung:       Wind,
-  "OB/GYN":   Baby,
-  Abdominal:  Scan,
-  Vascular:   Droplets,
-  Neuro:      Brain,
-  Thyroid:    ScanLine,
-  MSK:        Bone,
-  Procedural: Microscope,
-};
+// Default protocol when user doesn't pick one
+const DEFAULT_PROTOCOL_ID = "efast";
+
+const ANALYSIS_STEPS = [
+  "Assessing image quality...",
+  "Identifying anatomical structures...",
+  "Running AI analysis...",
+  "Calculating measurements...",
+  "Generating findings summary...",
+];
 
 function ScanContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const protocolId = searchParams.get("protocol") ?? "";
 
-  const [selectedProtocolId, setSelectedProtocolId] = useState(protocolId);
+  // Pre-select if coming from a protocol deep-link, otherwise empty
+  const urlProtocolId = searchParams.get("protocol") ?? "";
+
+  const [selectedProtocolId, setSelectedProtocolId] = useState(urlProtocolId);
+  const [protocolOpen, setProtocolOpen] = useState(!!urlProtocolId);
   const [image, setImage] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
-  const [selectedView, setSelectedView] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const selectedProtocol = getProtocolById(selectedProtocolId);
-
-  const ANALYSIS_STEPS = [
-    "Assessing image quality...",
-    "Identifying anatomical structures...",
-    "Running protocol-specific analysis...",
-    "Calculating measurements...",
-    "Generating findings summary...",
-  ];
+  const effectiveProtocolId = selectedProtocolId || DEFAULT_PROTOCOL_ID;
+  const selectedProtocol = getProtocolById(effectiveProtocolId);
 
   function handleFile(file: File) {
     if (!file.type.startsWith("image/")) return;
     const reader = new FileReader();
     reader.onload = (e) => {
       const raw = e.target?.result as string;
-      // Redact patient info header before storing/displaying
       const img = new window.Image();
       img.onload = () => {
         const canvas = document.createElement("canvas");
@@ -83,7 +63,7 @@ function ScanContent() {
         canvas.height = img.height;
         const ctx = canvas.getContext("2d")!;
         ctx.drawImage(img, 0, 0);
-        // Black out top 13% (patient name/DOB/MRN header on all US machines)
+        // Redact patient header (top 13%)
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, img.width, Math.round(img.height * 0.13));
         setImage(canvas.toDataURL("image/jpeg", 0.92));
@@ -100,8 +80,11 @@ function ScanContent() {
     if (file) handleFile(file);
   }
 
-  /** Resize + re-encode to JPEG to keep well under sessionStorage 5 MB limit */
-  function compressImage(dataUrl: string, maxPx = 1024, quality = 0.82): Promise<{ dataUrl: string; base64: string; mediaType: string }> {
+  function compressImage(
+    dataUrl: string,
+    maxPx = 1024,
+    quality = 0.82,
+  ): Promise<{ dataUrl: string; base64: string; mediaType: string }> {
     return new Promise((resolve) => {
       const img = new window.Image();
       img.onload = () => {
@@ -113,17 +96,19 @@ function ScanContent() {
         canvas.height = h;
         canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
         const compressed = canvas.toDataURL("image/jpeg", quality);
-        const base64 = compressed.split(",")[1];
-        resolve({ dataUrl: compressed, base64, mediaType: "image/jpeg" });
+        resolve({
+          dataUrl: compressed,
+          base64: compressed.split(",")[1],
+          mediaType: "image/jpeg",
+        });
       };
       img.src = dataUrl;
     });
   }
 
   const runAnalysis = useCallback(async () => {
-    if (!selectedProtocolId) return;
     setIsAnalyzing(true);
-    setAnalysisStep(1);
+    setAnalysisStep(0);
 
     let imageBase64: string | null = null;
     let mediaType: string | null = null;
@@ -136,9 +121,12 @@ function ScanContent() {
         mediaType = compressed.mediaType;
         compressedDataUrl = compressed.dataUrl;
       } catch {
-        // If compression fails, extract from original
         const match = image.match(/^data:([^;]+);base64,(.+)$/);
-        if (match) { mediaType = match[1]; imageBase64 = match[2]; compressedDataUrl = image; }
+        if (match) {
+          mediaType = match[1];
+          imageBase64 = match[2];
+          compressedDataUrl = image;
+        }
       }
     }
 
@@ -154,7 +142,11 @@ function ScanContent() {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64, mediaType, protocolId: selectedProtocolId }),
+        body: JSON.stringify({
+          imageBase64,
+          mediaType,
+          protocolId: effectiveProtocolId,
+        }),
       });
 
       clearInterval(stepInterval);
@@ -163,332 +155,308 @@ function ScanContent() {
       if (!res.ok) {
         const data = await res.json();
         const msg = data.error ?? "Analysis failed";
-        // Surface auth errors clearly
-        if (msg.toLowerCase().includes("auth") || msg.toLowerCase().includes("api") || msg.toLowerCase().includes("key")) {
-          throw new Error("API key error: Make sure ANTHROPIC_API_KEY is set in your Vercel environment variables.");
+        if (
+          msg.toLowerCase().includes("auth") ||
+          msg.toLowerCase().includes("api") ||
+          msg.toLowerCase().includes("key")
+        ) {
+          throw new Error(
+            "API key error: Make sure ANTHROPIC_API_KEY is set in your environment variables.",
+          );
         }
         throw new Error(msg);
       }
 
       const analysis = await res.json();
-
       sessionStorage.setItem("lastAnalysis", JSON.stringify(analysis));
       if (compressedDataUrl) sessionStorage.setItem("lastImage", compressedDataUrl);
       else sessionStorage.removeItem("lastImage");
 
       await new Promise((r) => setTimeout(r, 300));
-      router.push(`/results?protocol=${selectedProtocolId}`);
+      router.push(`/results?protocol=${effectiveProtocolId}`);
     } catch (err) {
       clearInterval(stepInterval);
-      const msg = err instanceof Error ? err.message : "Analysis failed. Please try again.";
-      console.error("Analysis error:", msg);
+      const msg =
+        err instanceof Error ? err.message : "Analysis failed. Please try again.";
       setIsAnalyzing(false);
       setAnalysisError(msg);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedProtocolId, router, image]);
-
-  const pill = selectedProtocol ? CATEGORY_PILL[selectedProtocol.category] ?? { bg: "#f1f5f9", text: "#64748b" } : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectiveProtocolId, router, image]);
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8 md:pt-16" style={{ background: "#eef3f8" }}>
+    <div className="min-h-screen pb-28 md:pb-10 md:pt-16" style={{ background: "#f8fafc" }}>
       <NavBar />
 
-      <div className="mx-auto max-w-2xl px-4 py-8">
-        {/* Back */}
-        <Link href="/protocols"
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:opacity-70"
-          style={{ color: "#5a6a85" }}>
-          <ArrowLeft size={14} /> Protocol Library
-        </Link>
+      <div className="mx-auto max-w-lg px-4 py-8">
 
-        <h1 className="mb-1.5 text-2xl font-extrabold" style={{ color: "#1a2235" }}>New Scan</h1>
-        <p className="mb-8 text-sm" style={{ color: "#5a6a85" }}>
-          Select a protocol and upload your ultrasound image for AI analysis.
-        </p>
-
-        {/* Step 1 */}
-        <div className="mb-5 rounded-2xl border p-5 shadow-sm" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-          <div className="mb-4 flex items-center gap-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
-              style={{ background: "#2563eb" }}>1</span>
-            <h2 className="font-semibold" style={{ color: "#1a2235" }}>Select Protocol</h2>
-          </div>
-
-          {selectedProtocol && pill ? (
-            <div className="rounded-xl border p-4" style={{ background: "#eff6ff", borderColor: "#bfdbfe" }}>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  {(() => { const I = CATEGORY_ICON[selectedProtocol.category] ?? Activity; return <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl" style={{ background: pill.bg }}><I size={20} style={{ color: pill.text }} /></div>; })()}
-                  <div>
-                    <p className="font-semibold" style={{ color: "#1a2235" }}>{selectedProtocol.name}</p>
-                    <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                      style={{ background: pill.bg, color: pill.text }}>
-                      {selectedProtocol.category}
-                    </span>
-                  </div>
-                </div>
-                <button onClick={() => setSelectedProtocolId("")} style={{ color: "#94a3b8" }}>
-                  <X size={16} />
-                </button>
-              </div>
-
-              <div className="mt-3 space-y-1.5 text-xs" style={{ color: "#5a6a85" }}>
-                <p><span style={{ color: "#1a2235" }} className="font-medium">Indication:</span> {selectedProtocol.indication}</p>
-                <p><span style={{ color: "#1a2235" }} className="font-medium">AI measures:</span> {selectedProtocol.aiMeasurements.join(", ")}</p>
-                <p><span style={{ color: "#1a2235" }} className="font-medium">Detects:</span> {selectedProtocol.anomaliesDetected.join(", ")}</p>
-              </div>
-
-              {/* View selector */}
-              <div className="mt-4">
-                <p className="mb-2 text-xs font-medium" style={{ color: "#5a6a85" }}>Select view to capture:</p>
-                <div className="flex flex-wrap gap-2">
-                  {selectedProtocol.views.map((view, i) => (
-                    <button key={view} onClick={() => setSelectedView(i)}
-                      className="rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
-                      style={
-                        selectedView === i
-                          ? { background: "#2563eb", color: "#ffffff" }
-                          : { background: "#f1f5f9", color: "#64748b", border: "1px solid #dde4ee" }
-                      }>
-                      {view}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="max-h-64 overflow-y-auto space-y-1.5">
-              {[...PROTOCOLS].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name)).map((p) => {
-                const ppill = CATEGORY_PILL[p.category] ?? { bg: "#f1f5f9", text: "#64748b" };
-                return (
-                  <button key={p.id} onClick={() => setSelectedProtocolId(p.id)}
-                    className="flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all hover:border-blue-200"
-                    style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
-                    {(() => { const I = CATEGORY_ICON[p.category] ?? Activity; return <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg" style={{ background: ppill.bg }}><I size={16} style={{ color: ppill.text }} /></div>; })()}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold truncate" style={{ color: "#1a2235" }}>{p.name}</p>
-                      <p className="text-xs truncate" style={{ color: "#94a3b8" }}>{p.indication}</p>
-                    </div>
-                    <span className="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                      style={{ background: ppill.bg, color: ppill.text }}>
-                      {p.category}
-                    </span>
-                    <ChevronRight size={13} style={{ color: "#cbd5e1", flexShrink: 0 }} />
-                  </button>
-                );
-              })}
-            </div>
-          )}
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-2xl font-extrabold" style={{ color: "#0f172a" }}>
+            New Scan
+          </h1>
+          <p className="mt-1 text-sm" style={{ color: "#64748b" }}>
+            Upload your ultrasound image — AI analyzes it instantly
+          </p>
         </div>
 
-        {/* Step 2 */}
-        <div className="mb-5 rounded-2xl border p-5 shadow-sm" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-          <div className="mb-4 flex items-center gap-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white"
-              style={{ background: selectedProtocolId ? "#2563eb" : "#cbd5e1" }}>2</span>
-            <h2 className="font-semibold" style={{ color: "#1a2235" }}>Upload Ultrasound Image</h2>
-          </div>
-
-          {!selectedProtocolId && (
-            <div className="mb-3 flex items-center gap-2 rounded-xl border px-3 py-2.5 text-xs"
-              style={{ borderColor: "#fcd34d", background: "#fef9c3", color: "#92400e" }}>
-              <AlertCircle size={13} style={{ flexShrink: 0 }} />
-              Select a protocol first to enable image upload
-            </div>
-          )}
+        {/* ── Upload Zone ── */}
+        <div className="mb-5 overflow-hidden rounded-2xl border shadow-sm"
+          style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
 
           {image ? (
-            <div className="space-y-3">
-              <div className="relative overflow-hidden rounded-xl border" style={{ borderColor: "#dde4ee", background: "#000" }}>
+            /* Image preview */
+            <div>
+              <div className="relative" style={{ background: "#000" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={image} alt="Uploaded ultrasound" className="w-full object-contain max-h-72" />
-                <button onClick={() => setImage(null)}
-                  className="absolute right-2 top-2 rounded-full p-1.5 text-white"
-                  style={{ background: "rgba(0,0,0,0.55)" }}>
-                  <X size={13} />
+                <img
+                  src={image}
+                  alt="Uploaded ultrasound"
+                  className="w-full object-contain"
+                  style={{ maxHeight: 320 }}
+                />
+                <button
+                  onClick={() => setImage(null)}
+                  className="absolute right-3 top-3 rounded-full p-1.5 text-white transition-opacity hover:opacity-90"
+                  style={{ background: "rgba(0,0,0,0.6)" }}>
+                  <X size={14} />
                 </button>
-                <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium text-white"
-                  style={{ background: "rgba(5,150,105,0.85)" }}>
-                  <CheckCircle size={10} /> PHI redacted
+                <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-white"
+                  style={{ background: "rgba(5,150,105,0.9)" }}>
+                  <CheckCircle size={11} /> PHI redacted
                 </div>
                 {selectedProtocol && (
-                  <div className="absolute bottom-0 left-0 right-0 px-4 py-2.5"
-                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)" }}>
-                    <p className="text-xs text-white flex items-center gap-1.5">
+                  <div className="absolute bottom-0 left-0 right-0 px-4 py-3"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75), transparent)" }}>
+                    <p className="flex items-center gap-1.5 text-xs text-white">
                       <Info size={11} /> {selectedProtocol.tip}
                     </p>
                   </div>
                 )}
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => setImage(null)}
+              <div className="flex gap-2 p-3">
+                <button
+                  onClick={() => setImage(null)}
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-medium transition-all hover:bg-slate-50"
-                  style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
+                  style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
                   <Edit3 size={13} /> Retake
                 </button>
-                <button onClick={() => fileInputRef.current?.click()}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-medium transition-all hover:bg-slate-50"
-                  style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
-                  <Upload size={13} /> Different Image
+                  style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
+                  <Upload size={13} /> Different image
                 </button>
               </div>
             </div>
           ) : (
+            /* Drop zone */
             <div
               onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
-              onClick={() => selectedProtocolId && fileInputRef.current?.click()}
-              className="cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all"
+              onClick={() => fileInputRef.current?.click()}
+              className="cursor-pointer p-10 text-center transition-all"
               style={{
-                borderColor: isDragging ? "#2563eb" : selectedProtocolId ? "#bfdbfe" : "#dde4ee",
-                background: isDragging ? "#eff6ff" : selectedProtocolId ? "#f8fafc" : "#f8fafc",
-                opacity: selectedProtocolId ? 1 : 0.55,
-                cursor: selectedProtocolId ? "pointer" : "not-allowed",
-              }}
-            >
-              <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-xl"
-                style={{ background: "#f1f5f9" }}>
-                <ImageIcon size={22} style={{ color: "#94a3b8" }} />
+                background: isDragging ? "#eff6ff" : "#ffffff",
+                border: isDragging ? "2px dashed #2563eb" : "2px dashed #cbd5e1",
+                borderRadius: "1rem",
+              }}>
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
+                style={{ background: isDragging ? "#dbeafe" : "#f1f5f9" }}>
+                <ImageIcon size={28} style={{ color: isDragging ? "#2563eb" : "#94a3b8" }} />
               </div>
-              <p className="mb-1 text-sm font-semibold" style={{ color: "#1a2235" }}>
-                Drop ultrasound image here
+              <p className="mb-1 text-base font-semibold" style={{ color: "#0f172a" }}>
+                Tap to photograph your ultrasound
               </p>
-              <p className="text-xs" style={{ color: "#94a3b8" }}>
-                or click to browse · JPG, PNG, DICOM export
+              <p className="mb-5 text-sm" style={{ color: "#94a3b8" }}>
+                or drag & drop an image here
               </p>
-              <div className="mt-4 flex justify-center gap-2">
-                <span className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs"
-                  style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
-                  <Camera size={11} /> Camera
+              <div className="flex justify-center gap-3">
+                <span className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium"
+                  style={{ borderColor: "#e2e8f0", color: "#64748b", background: "#f8fafc" }}>
+                  <Camera size={13} /> Camera
                 </span>
-                <span className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs"
-                  style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
-                  <Upload size={11} /> Gallery
+                <span className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium"
+                  style={{ borderColor: "#e2e8f0", color: "#64748b", background: "#f8fafc" }}>
+                  <Upload size={13} /> Gallery
                 </span>
               </div>
             </div>
           )}
-
-          <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) handleFile(f);
-          }} />
         </div>
 
-        {/* Protocol tip */}
-        {selectedProtocol && (
-          <div className="mb-5 flex items-start gap-3 rounded-xl border p-4"
-            style={{ borderColor: "#bfdbfe", background: "#eff6ff" }}>
-            <Info size={15} className="mt-0.5 shrink-0" style={{ color: "#2563eb" }} />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleFile(f);
+          }}
+        />
+
+        {/* ── Protocol selector (optional, collapsed by default) ── */}
+        <div className="mb-5 overflow-hidden rounded-2xl border shadow-sm"
+          style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
+          <button
+            onClick={() => setProtocolOpen((o) => !o)}
+            className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-slate-50">
             <div>
-              <p className="text-sm font-semibold" style={{ color: "#1e40af" }}>Protocol Tip</p>
-              <p className="mt-0.5 text-xs leading-relaxed" style={{ color: "#1e40af", opacity: 0.85 }}>
-                {selectedProtocol.tip}
+              <p className="text-sm font-semibold" style={{ color: "#0f172a" }}>
+                {selectedProtocolId
+                  ? getProtocolById(selectedProtocolId)?.name
+                  : "Protocol (optional)"}
               </p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {selectedProtocol.keyFindings.slice(0, 3).map((f) => (
-                  <span key={f} className="rounded-full px-2 py-0.5 text-xs font-medium"
-                    style={{ background: "#dbeafe", color: "#1d4ed8" }}>
-                    {f}
-                  </span>
-                ))}
-              </div>
+              <p className="mt-0.5 text-xs" style={{ color: "#94a3b8" }}>
+                {selectedProtocolId
+                  ? getProtocolById(selectedProtocolId)?.indication
+                  : "AI auto-detects — or choose for precision"}
+              </p>
             </div>
-          </div>
-        )}
+            <div className="flex items-center gap-2">
+              {selectedProtocolId && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setSelectedProtocolId(""); }}
+                  className="rounded-full p-1" style={{ color: "#94a3b8" }}>
+                  <X size={13} />
+                </button>
+              )}
+              {protocolOpen
+                ? <ChevronUp size={16} style={{ color: "#94a3b8" }} />
+                : <ChevronDown size={16} style={{ color: "#94a3b8" }} />}
+            </div>
+          </button>
+
+          {protocolOpen && (
+            <div className="max-h-64 overflow-y-auto border-t" style={{ borderColor: "#f1f5f9" }}>
+              {[...PROTOCOLS]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => { setSelectedProtocolId(p.id); setProtocolOpen(false); }}
+                    className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors hover:bg-slate-50"
+                    style={
+                      selectedProtocolId === p.id
+                        ? { background: "#eff6ff" }
+                        : undefined
+                    }>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate" style={{ color: "#0f172a" }}>
+                        {p.name}
+                      </p>
+                      <p className="text-xs truncate" style={{ color: "#94a3b8" }}>
+                        {p.indication}
+                      </p>
+                    </div>
+                    {selectedProtocolId === p.id && (
+                      <CheckCircle size={14} style={{ color: "#2563eb", flexShrink: 0 }} />
+                    )}
+                  </button>
+                ))}
+            </div>
+          )}
+        </div>
 
         <DisclaimerBanner compact />
 
-        {/* Analyze button */}
+        {/* ── Analyze / Loading ── */}
         <div className="mt-5">
           {isAnalyzing ? (
-            <div className="rounded-2xl border overflow-hidden"
+            <div className="overflow-hidden rounded-2xl border"
               style={{ borderColor: "#bfdbfe", background: "#eff6ff" }}>
-              {/* Show the actual image while Claude analyses it */}
               {image && (
                 <div className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={image} alt="Analyzing..." className="w-full object-contain max-h-72"
-                    style={{ background: "#000" }} />
-                  {/* Scanning overlay */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center"
+                  <img
+                    src={image}
+                    alt="Analyzing..."
+                    className="w-full object-contain"
+                    style={{ maxHeight: 280, background: "#000" }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center"
                     style={{ background: "rgba(10,16,32,0.55)" }}>
-                    <div className="rounded-xl px-5 py-3 text-center"
-                      style={{ background: "rgba(0,0,0,0.65)", border: "1px solid rgba(37,99,235,0.5)" }}>
-                      <Loader2 size={22} className="mx-auto mb-1.5 animate-spin" style={{ color: "#60a5fa" }} />
+                    <div className="rounded-2xl px-6 py-4 text-center"
+                      style={{ background: "rgba(0,0,0,0.7)", border: "1px solid rgba(37,99,235,0.4)" }}>
+                      <Loader2 size={24} className="mx-auto mb-2 animate-spin" style={{ color: "#60a5fa" }} />
                       <p className="text-sm font-semibold text-white">
                         {ANALYSIS_STEPS[analysisStep] ?? "Finalizing..."}
                       </p>
                     </div>
-                    {/* Animated scan line */}
-                    <div className="pointer-events-none absolute left-0 right-0 h-0.5 animate-bounce"
-                      style={{ background: "rgba(37,99,235,0.6)", top: "50%" }} />
                   </div>
                 </div>
               )}
-              <div className="px-5 py-4">
+              <div className="px-6 py-5">
                 {!image && (
                   <>
                     <Loader2 size={28} className="mx-auto mb-2 animate-spin" style={{ color: "#2563eb" }} />
-                    <p className="text-center font-semibold" style={{ color: "#1a2235" }}>Analyzing...</p>
+                    <p className="text-center font-semibold" style={{ color: "#0f172a" }}>
+                      {ANALYSIS_STEPS[analysisStep] ?? "Analyzing..."}
+                    </p>
                   </>
                 )}
-                <p className="mt-1 text-center text-sm" style={{ color: "#5a6a85" }}>
-                  {image ? "Claude is reviewing your image with protocol context" : (ANALYSIS_STEPS[analysisStep] ?? "Finalizing...")}
-                </p>
-                <div className="mt-3 flex justify-center gap-1">
+                <div className="mt-3 flex justify-center gap-1.5">
                   {ANALYSIS_STEPS.map((_, i) => (
-                    <div key={i} className="h-1.5 rounded-full transition-all"
-                      style={{ width: i < analysisStep ? "2rem" : "0.5rem", background: i < analysisStep ? "#2563eb" : "#dde4ee" }} />
+                    <div
+                      key={i}
+                      className="h-1.5 rounded-full transition-all duration-500"
+                      style={{
+                        width: i <= analysisStep ? "2rem" : "0.5rem",
+                        background: i <= analysisStep ? "#2563eb" : "#dde4ee",
+                      }}
+                    />
                   ))}
                 </div>
               </div>
             </div>
           ) : (
             <>
-            {analysisError && (
-              <div className="mb-3 rounded-xl border p-4 text-sm"
-                style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
-                <p className="font-bold mb-1">Analysis Failed</p>
-                <p className="leading-relaxed" style={{ opacity: 0.9 }}>{analysisError}</p>
-                {analysisError.includes("API key") && (
-                  <p className="mt-2 text-xs font-medium" style={{ color: "#991b1b" }}>
-                    → Go to Vercel → Your project → Settings → Environment Variables → add <code className="rounded px-1" style={{ background: "#fee2e2" }}>ANTHROPIC_API_KEY</code>
-                  </p>
-                )}
-                <button onClick={() => setAnalysisError(null)} className="mt-2 text-xs underline" style={{ color: "#dc2626" }}>
-                  Dismiss
+              {analysisError && (
+                <div className="mb-4 rounded-2xl border p-4 text-sm"
+                  style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
+                  <div className="flex items-start gap-2">
+                    <AlertCircle size={15} className="mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-bold">Analysis failed</p>
+                      <p className="mt-0.5 leading-relaxed opacity-90">{analysisError}</p>
+                      {analysisError.includes("API key") && (
+                        <p className="mt-2 text-xs font-medium" style={{ color: "#991b1b" }}>
+                          → Add <code className="rounded px-1" style={{ background: "#fee2e2" }}>ANTHROPIC_API_KEY</code> to your environment variables.
+                        </p>
+                      )}
+                    </div>
+                    <button onClick={() => setAnalysisError(null)} style={{ color: "#dc2626", flexShrink: 0 }}>
+                      <X size={14} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={() => { setAnalysisError(null); runAnalysis(); }}
+                disabled={!image}
+                className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-4 text-lg font-bold text-white shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                style={{ background: "#2563eb" }}>
+                <Zap size={19} />
+                {image ? "Analyze Now" : "Upload an image to start"}
+              </button>
+
+              {/* Demo shortcut — no image required */}
+              {!image && !isAnalyzing && (
+                <button
+                  onClick={() => { setAnalysisError(null); runAnalysis(); }}
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-medium transition-all hover:bg-white"
+                  style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
+                  <CheckCircle size={14} style={{ color: "#2563eb" }} />
+                  Try a demo analysis without uploading
                 </button>
-              </div>
-            )}
-            <button
-              onClick={() => { setAnalysisError(null); runAnalysis(); }}
-              disabled={!image || !selectedProtocolId}
-              className="flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base font-bold text-white shadow-sm transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ background: "#2563eb" }}
-            >
-              <Zap size={17} />
-              {!selectedProtocolId
-                ? "Select a protocol first"
-                : !image
-                ? "Upload an image to analyze"
-                : "Run AI Analysis"}
-            </button>
+              )}
             </>
           )}
         </div>
-
-        {/* Demo shortcut */}
-        {!image && selectedProtocolId && !isAnalyzing && (
-          <button onClick={runAnalysis}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm transition-all hover:bg-white"
-            style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
-            <CheckCircle size={14} style={{ color: "#2563eb" }} />
-            Demo: Run analysis with sample image
-          </button>
-        )}
       </div>
     </div>
   );
@@ -496,11 +464,12 @@ function ScanContent() {
 
 export default function ScanPage() {
   return (
-    <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center" style={{ background: "#eef3f8" }}>
-        <Loader2 size={28} className="animate-spin" style={{ color: "#2563eb" }} />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center" style={{ background: "#f8fafc" }}>
+          <Loader2 size={28} className="animate-spin" style={{ color: "#2563eb" }} />
+        </div>
+      }>
       <ScanContent />
     </Suspense>
   );
