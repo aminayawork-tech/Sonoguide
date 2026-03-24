@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/client";
+import { createClient, supabaseConfigured } from "@/lib/supabase/client";
 import { FREE_SCAN_LIMIT } from "@/lib/stripe";
 
 export interface Profile {
@@ -64,6 +64,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }, [user, fetchProfile]);
 
   useEffect(() => {
+    // Skip if Supabase not configured (env vars missing)
+    if (!supabaseConfigured) { setLoading(false); return; }
+
     // Initial session
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
