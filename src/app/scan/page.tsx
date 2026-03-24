@@ -302,7 +302,7 @@ function ScanContent() {
 
   return (
     <div className="min-h-screen pt-14 pb-28 md:pb-10 md:pt-16" style={{ background: "#f8fafc" }}>
-      <NavBar onSignIn={() => setShowAuthModal(true)} />
+      <NavBar />
 
       <div className="mx-auto max-w-lg px-4 py-8">
 
