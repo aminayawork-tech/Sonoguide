@@ -1,10 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getProtocolById } from "@/lib/protocols";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
+  // ── 1. Auth check ─────────────────────────────────────────────
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "Not authenticated", code: "UNAUTHENTICATED" },
+      { status: 401 },
+    );
+  }
+
+  // ── 2. Scan-limit check (atomic, handles lazy monthly reset) ──
+  const service = createServiceClient();
+  const { data: statusRaw, error: statusError } = await service.rpc(
+    "check_scan_status",
+    { p_user_id: user.id },
+  );
+
+  if (statusError || !statusRaw) {
+    console.error("check_scan_status error:", statusError);
+    return NextResponse.json({ error: "Could not verify scan quota" }, { status: 500 });
+  }
+
+  const status = statusRaw as {
+    tier: string;
+    scans_used: number;
+    limit_reached: boolean;
+    stripe_customer_id: string | null;
+    error?: string;
+  };
+
+  if (status.error === "profile_not_found") {
+    return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+  }
+
+  if (status.limit_reached) {
+    return NextResponse.json(
+      { error: "Monthly scan limit reached", code: "LIMIT_REACHED" },
+      { status: 429 },
+    );
+  }
+
+  // ── 3. Parse request body ─────────────────────────────────────
   try {
     const { imageBase64, mediaType, protocolId } = await req.json();
 
@@ -95,7 +139,6 @@ Rules:
       return NextResponse.json({ error: "No text response from AI" }, { status: 500 });
     }
 
-    // Strip any accidental markdown fences, then parse
     const raw = textBlock.text
       .replace(/^```json\s*/i, "")
       .replace(/^```\s*/i, "")
@@ -104,6 +147,12 @@ Rules:
 
     const analysis = JSON.parse(raw);
     analysis.timestamp = analysis.timestamp ?? new Date().toISOString();
+
+    // ── 4. Increment scan count (fire-and-forget; don't fail on error) ──
+    service.rpc("increment_scan_count", { p_user_id: user.id })
+      .then(({ error }: { error: unknown }) => {
+        if (error) console.error("increment_scan_count error:", error);
+      });
 
     return NextResponse.json(analysis);
   } catch (err) {

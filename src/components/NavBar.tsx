@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Camera, Clock, Home } from "lucide-react";
+import { Camera, Clock, Home, LogIn } from "lucide-react";
+import { useAuth } from "./AuthProvider";
+import UserMenu from "./UserMenu";
 
 const desktopNavItems = [
   { href: "/", label: "Home", icon: Home },
@@ -22,8 +24,13 @@ function SonoLogo() {
   );
 }
 
-export default function NavBar() {
+interface NavBarProps {
+  onSignIn?: () => void;
+}
+
+export default function NavBar({ onSignIn }: NavBarProps) {
   const pathname = usePathname();
+  const { user, loading } = useAuth();
 
   return (
     <>
@@ -54,13 +61,30 @@ export default function NavBar() {
             })}
           </nav>
 
-          <Link
-            href="/scan"
-            className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-95"
-            style={{ background: "#2563eb" }}>
-            <Camera size={15} />
-            Start Scanning
-          </Link>
+          <div className="flex items-center gap-3">
+            {/* Auth area */}
+            {!loading && (
+              user
+                ? <UserMenu />
+                : (
+                  <button
+                    onClick={onSignIn}
+                    className="flex items-center gap-1.5 rounded-xl border px-3.5 py-2 text-sm font-medium transition-all hover:bg-slate-50"
+                    style={{ borderColor: "#e2e8f0", color: "#374151" }}>
+                    <LogIn size={14} />
+                    Sign in
+                  </button>
+                )
+            )}
+
+            <Link
+              href="/scan"
+              className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-95"
+              style={{ background: "#2563eb" }}>
+              <Camera size={15} />
+              Start Scanning
+            </Link>
+          </div>
         </div>
       </header>
 

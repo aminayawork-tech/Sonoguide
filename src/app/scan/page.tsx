@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
@@ -19,7 +19,11 @@ import {
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
+import AuthModal from "@/components/AuthModal";
+import UpgradeModal from "@/components/UpgradeModal";
+import { useAuth } from "@/components/AuthProvider";
 import { PROTOCOLS, getProtocolById } from "@/lib/protocols";
+import { FREE_SCAN_LIMIT } from "@/lib/stripe";
 
 // Default protocol when user doesn't pick one
 const DEFAULT_PROTOCOL_ID = "efast";
@@ -35,6 +39,7 @@ const ANALYSIS_STEPS = [
 function ScanContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user, profile, scansLeft, refreshProfile } = useAuth();
 
   // Pre-select if coming from a protocol deep-link, otherwise empty
   const urlProtocolId = searchParams.get("protocol") ?? "";
@@ -46,11 +51,22 @@ function ScanContent() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState(0);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);   // gallery – no capture
+  const [showAuthModal,    setShowAuthModal]    = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [upgradeReason,    setUpgradeReason]    = useState<"limit" | "generic">("generic");
+
+  const fileInputRef   = useRef<HTMLInputElement>(null);   // gallery – no capture
   const cameraInputRef = useRef<HTMLInputElement>(null); // camera – with capture
 
   const effectiveProtocolId = selectedProtocolId || DEFAULT_PROTOCOL_ID;
   const selectedProtocol = getProtocolById(effectiveProtocolId);
+
+  // Show upgrade success toast when returning from Stripe
+  useEffect(() => {
+    if (searchParams.get("upgrade") === "success") {
+      refreshProfile();
+    }
+  }, [searchParams, refreshProfile]);
 
   function handleFile(file: File) {
     if (!file.type.startsWith("image/")) return;
@@ -108,6 +124,12 @@ function ScanContent() {
   }
 
   const runAnalysis = useCallback(async () => {
+    // Gate: must be signed in
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
     setIsAnalyzing(true);
     setAnalysisStep(0);
 
@@ -153,6 +175,19 @@ function ScanContent() {
       clearInterval(stepInterval);
       setAnalysisStep(ANALYSIS_STEPS.length);
 
+      if (res.status === 401) {
+        setIsAnalyzing(false);
+        setShowAuthModal(true);
+        return;
+      }
+
+      if (res.status === 429) {
+        setIsAnalyzing(false);
+        setUpgradeReason("limit");
+        setShowUpgradeModal(true);
+        return;
+      }
+
       if (!res.ok) {
         const data = await res.json();
         const msg = data.error ?? "Analysis failed";
@@ -173,6 +208,9 @@ function ScanContent() {
       if (compressedDataUrl) sessionStorage.setItem("lastImage", compressedDataUrl);
       else sessionStorage.removeItem("lastImage");
 
+      // Refresh profile to update scan counter in UI
+      refreshProfile();
+
       await new Promise((r) => setTimeout(r, 300));
       router.push(`/results?protocol=${effectiveProtocolId}`);
     } catch (err) {
@@ -183,11 +221,13 @@ function ScanContent() {
       setAnalysisError(msg);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [effectiveProtocolId, router, image]);
+  }, [effectiveProtocolId, router, image, user]);
+
+  const isFreeAtLimit = profile?.tier === "free" && profile.scans_used_this_month >= FREE_SCAN_LIMIT;
 
   return (
     <div className="min-h-screen pb-28 md:pb-10 md:pt-16" style={{ background: "#f8fafc" }}>
-      <NavBar />
+      <NavBar onSignIn={() => setShowAuthModal(true)} />
 
       <div className="mx-auto max-w-lg px-4 py-8">
 
@@ -200,6 +240,51 @@ function ScanContent() {
             Upload your ultrasound image — AI analyzes it instantly
           </p>
         </div>
+
+        {/* Scan counter badge */}
+        {user && profile && (
+          <div className="mb-4 flex justify-center">
+            {profile.tier === "free" ? (
+              <button
+                onClick={() => { setUpgradeReason("generic"); setShowUpgradeModal(true); }}
+                className="flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all hover:bg-slate-50"
+                style={{
+                  borderColor: scansLeft <= 1 ? "#fca5a5" : "#dde4ee",
+                  background:  scansLeft <= 1 ? "#fef2f2" : "#ffffff",
+                  color:       scansLeft <= 1 ? "#dc2626" : "#5a6a85",
+                }}>
+                <span className="font-bold" style={{ color: scansLeft <= 1 ? "#dc2626" : "#2563eb" }}>
+                  {scansLeft}/{FREE_SCAN_LIMIT}
+                </span>
+                free scans left this month
+                {scansLeft <= 1 && " · Upgrade"}
+              </button>
+            ) : (
+              <span className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium"
+                style={{ borderColor: "#bfdbfe", background: "#eff6ff", color: "#1d4ed8" }}>
+                <Zap size={11} />
+                {profile.tier === "clinic" ? "Clinic" : "Pro"} — unlimited scans
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Limit-reached banner */}
+        {isFreeAtLimit && (
+          <div className="mb-5 rounded-2xl border p-4"
+            style={{ borderColor: "#fca5a5", background: "#fef2f2" }}>
+            <p className="text-sm font-bold" style={{ color: "#dc2626" }}>Monthly limit reached</p>
+            <p className="mt-1 text-xs" style={{ color: "#dc2626", opacity: 0.85 }}>
+              You&apos;ve used your {FREE_SCAN_LIMIT} free scans this month.{" "}
+              <button
+                onClick={() => { setUpgradeReason("limit"); setShowUpgradeModal(true); }}
+                className="font-bold underline">
+                Upgrade to Pro
+              </button>{" "}
+              for unlimited scans.
+            </p>
+          </div>
+        )}
 
         {/* ── Upload Zone ── */}
         <div className="mb-5 overflow-hidden rounded-2xl border shadow-sm"
@@ -452,29 +537,78 @@ function ScanContent() {
                 </div>
               )}
 
-              <button
-                onClick={() => { setAnalysisError(null); runAnalysis(); }}
-                disabled={!image}
-                className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-4 text-lg font-bold text-white shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
-                style={{ background: "#2563eb" }}>
-                <Zap size={19} />
-                {image ? "Analyze Now" : "Upload an image to start"}
-              </button>
+              {!user ? (
+                /* Not signed in — show sign-in CTA */
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-4 text-lg font-bold text-white shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95"
+                    style={{ background: "#2563eb" }}>
+                    <Zap size={19} />
+                    Sign in to Start Scanning
+                  </button>
+                  <p className="text-center text-xs" style={{ color: "#94a3b8" }}>
+                    Free account · 5 scans/month · No credit card
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <button
+                    onClick={() => { setAnalysisError(null); runAnalysis(); }}
+                    disabled={!image || isFreeAtLimit}
+                    className="flex w-full items-center justify-center gap-2.5 rounded-2xl py-4 text-lg font-bold text-white shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+                    style={{ background: "#2563eb" }}>
+                    <Zap size={19} />
+                    {isFreeAtLimit
+                      ? "Upgrade to Continue"
+                      : image ? "Analyze Now" : "Upload an image to start"}
+                  </button>
 
-              {/* Demo shortcut — no image required */}
-              {!image && !isAnalyzing && (
-                <button
-                  onClick={() => { setAnalysisError(null); runAnalysis(); }}
-                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-medium transition-all hover:bg-white"
-                  style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
-                  <CheckCircle size={14} style={{ color: "#2563eb" }} />
-                  Try a demo analysis without uploading
-                </button>
+                  {isFreeAtLimit && (
+                    <button
+                      onClick={() => { setUpgradeReason("limit"); setShowUpgradeModal(true); }}
+                      className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-bold transition-all hover:bg-white"
+                      style={{ borderColor: "#2563eb", color: "#2563eb" }}>
+                      View upgrade plans →
+                    </button>
+                  )}
+
+                  {/* Demo shortcut — no image required */}
+                  {!image && !isAnalyzing && !isFreeAtLimit && (
+                    <button
+                      onClick={() => { setAnalysisError(null); runAnalysis(); }}
+                      className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border py-3 text-sm font-medium transition-all hover:bg-white"
+                      style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
+                      <CheckCircle size={14} style={{ color: "#2563eb" }} />
+                      Try a demo analysis without uploading
+                    </button>
+                  )}
+                </>
               )}
             </>
           )}
         </div>
       </div>
+
+      {/* Auth modal */}
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          reason={
+            !user
+              ? "Sign in to start scanning — free account, 5 scans per month."
+              : undefined
+          }
+        />
+      )}
+
+      {/* Upgrade modal */}
+      {showUpgradeModal && (
+        <UpgradeModal
+          onClose={() => setShowUpgradeModal(false)}
+          limitReached={upgradeReason === "limit"}
+        />
+      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AuthProvider from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Sonoguide — AI Ultrasound Guide",
@@ -20,7 +21,9 @@ export default function RootLayout({
         className="antialiased min-h-screen"
         style={{ background: "#eef3f8", color: "#1a2235", fontFamily: "system-ui, -apple-system, sans-serif" }}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
