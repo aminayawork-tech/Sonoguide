@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Camera, CheckCircle, Shield, Zap } from "lucide-react";
+import { ArrowRight, Camera, CheckCircle, ClipboardList, Shield, Upload, Zap } from "lucide-react";
 import NavBar from "@/components/NavBar";
 
 const personas = [
@@ -95,30 +95,39 @@ export default function HomePage() {
             {[
               {
                 step: "01",
-                emoji: "📸",
+                icon: Upload,
+                iconBg: "#eff6ff",
+                iconColor: "#2563eb",
                 title: "Snap or upload",
                 desc: "Photograph your ultrasound screen or upload an image from your device. No special equipment needed.",
               },
               {
                 step: "02",
-                emoji: "✨",
+                icon: Zap,
+                iconBg: "#fefce8",
+                iconColor: "#ca8a04",
                 title: "AI analyzes instantly",
                 desc: "Structures labeled, measurements calculated, anomalies flagged — all in under 2 seconds.",
               },
               {
                 step: "03",
-                emoji: "📋",
+                icon: ClipboardList,
+                iconBg: "#f0fdf4",
+                iconColor: "#059669",
                 title: "Instant insights",
                 desc: "Annotated image, clinical summary, key findings, and a one-tap PDF report ready to share.",
               },
-            ].map(({ step, emoji, title, desc }) => (
+            ].map(({ step, icon: Icon, iconBg, iconColor, title, desc }) => (
               <div key={step} className="relative rounded-2xl border p-8 text-center shadow-sm"
                 style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-bold text-white"
                   style={{ background: "#2563eb" }}>
                   {step}
                 </div>
-                <div className="mb-4 text-4xl">{emoji}</div>
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl"
+                  style={{ background: iconBg }}>
+                  <Icon size={26} style={{ color: iconColor }} />
+                </div>
                 <h3 className="mb-2 text-lg font-bold" style={{ color: "#0f172a" }}>{title}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: "#64748b" }}>{desc}</p>
               </div>
