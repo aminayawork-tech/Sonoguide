@@ -38,3 +38,51 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
+
+/* ── Print / PDF export ──────────────────────────────────────── */
+@media print {
+  /* Hide everything that isn't the report */
+  header,
+  nav,
+  [data-print="hide"],
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Let the report fill the page */
+  .print-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Show the hidden print header */
+  [data-print="header"] {
+    display: flex !important;
+  }
+
+  /* Avoid splitting cards across pages */
+  [data-print="card"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Force colors to print (browsers suppress backgrounds by default) */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Keep the page padding for print */
+  @page {
+    margin: 18mm 15mm;
+  }
+}

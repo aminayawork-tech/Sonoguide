@@ -111,6 +111,12 @@ function ResultsContent() {
   const [reviewConfirmed, setReviewConfirmed] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
 
+  function handleExportPDF() {
+    setShowExportModal(false);
+    // Give React a tick to close the modal before printing
+    setTimeout(() => window.print(), 100);
+  }
+
   // Follow-up chat
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState("");
@@ -179,8 +185,9 @@ function ResultsContent() {
     month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
   });
 
-  const Card = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  const Card = ({ children, className = "", "data-print": dataPrint }: { children: React.ReactNode; className?: string; "data-print"?: string }) => (
     <div className={`rounded-2xl border p-5 shadow-sm ${className}`}
+      data-print={dataPrint}
       style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
       {children}
     </div>
@@ -193,15 +200,30 @@ function ResultsContent() {
       {/* Floating New Scan button */}
       <Link
         href="/scan"
+        data-print="hide"
         className="fixed bottom-20 right-4 z-40 flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white shadow-xl transition-all hover:opacity-90 active:scale-95 md:bottom-6 md:right-6"
         style={{ background: "#2563eb" }}>
         <Camera size={16} />
         New Scan
       </Link>
-      <div className="mx-auto max-w-2xl px-4 py-8">
+      <div className="mx-auto max-w-2xl px-4 py-8 print-container">
+
+        {/* Print-only header — hidden on screen */}
+        <div data-print="header" className="mb-6 hidden items-center justify-between border-b pb-4"
+          style={{ borderColor: "#e2e8f0" }}>
+          <div>
+            <span className="text-xl font-extrabold" style={{ color: "#0f172a" }}>Sono</span>
+            <span className="text-xl font-extrabold" style={{ color: "#2563eb" }}>guide</span>
+            <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>AI Ultrasound Report</p>
+          </div>
+          <div className="text-right text-xs" style={{ color: "#94a3b8" }}>
+            <p>{timestamp}</p>
+            <p className="mt-0.5">Not FDA-cleared for primary diagnosis</p>
+          </div>
+        </div>
 
         {/* Back + timestamp */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between no-print" data-print="hide">
           <Link href={`/scan?protocol=${protocolId}`}
             className="inline-flex items-center gap-1.5 text-sm font-medium hover:opacity-70"
             style={{ color: "#5a6a85" }}>
@@ -397,7 +419,7 @@ function ResultsContent() {
         </div>
 
         {/* Actions */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" data-print="hide">
           {[
             { icon: Download, label: "Export PDF", onClick: () => reviewConfirmed && setShowExportModal(true) },
             { icon: Share2, label: "Share", onClick: () => {} },
@@ -421,7 +443,7 @@ function ResultsContent() {
 
         {/* Protocol checklist */}
         {protocol && (
-          <Card className="mt-5">
+          <Card className="mt-5" data-print="hide">
             <h2 className="mb-3 font-semibold" style={{ color: "#1a2235" }}>Protocol Checklist</h2>
             <div className="space-y-2">
               {protocol.views.map((view, i) => (
@@ -449,7 +471,7 @@ function ResultsContent() {
         )}
 
         {/* Follow-up chat */}
-        <div className="mt-5 rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+        <div className="mt-5 rounded-2xl border shadow-sm overflow-hidden" data-print="hide" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
           <div className="flex items-center gap-2.5 border-b px-5 py-4" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
             <MessageCircle size={16} style={{ color: "#2563eb" }} />
             <div>
@@ -543,7 +565,7 @@ function ResultsContent() {
                 style={{ borderColor: "#dde4ee", color: "#5a6a85" }}>
                 Cancel
               </button>
-              <button onClick={() => setShowExportModal(false)}
+              <button onClick={handleExportPDF}
                 className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
                 style={{ background: "#2563eb" }}>
                 Download PDF
