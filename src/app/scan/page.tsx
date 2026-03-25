@@ -66,8 +66,8 @@ function ProtocolSheet({
   return (
     /* Backdrop */
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end"
-      style={{ background: "rgba(0,0,0,0.45)" }}
+      className="fixed inset-0 z-50 flex flex-col justify-end overflow-hidden"
+      style={{ background: "rgba(0,0,0,0.45)", width: "100vw", maxWidth: "100vw" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
 
       {/* Sheet */}

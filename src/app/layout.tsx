@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="antialiased min-h-screen"
+        className="antialiased min-h-screen w-full overflow-x-hidden"
         style={{ background: "#eef3f8", color: "#1a2235", fontFamily: "system-ui, -apple-system, sans-serif" }}
       >
         <AuthProvider>
