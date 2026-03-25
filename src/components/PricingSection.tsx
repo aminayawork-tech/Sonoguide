@@ -55,9 +55,11 @@ function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: stri
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function startCheckout() {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
@@ -65,9 +67,13 @@ function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: stri
         body: JSON.stringify({ planKey }),
       });
       const data = await res.json();
-      if (data.url) window.location.href = data.url;
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error ?? "Something went wrong. Please try again.");
+      }
     } catch {
-      // silent
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -91,6 +97,9 @@ function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: stri
         {loading && <Loader2 size={12} className="animate-spin" />}
         {label}
       </button>
+      {error && (
+        <p className="mt-1.5 text-center text-xs" style={{ color: "#dc2626" }}>{error}</p>
+      )}
     </>
   );
 }
@@ -184,7 +193,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <PaidButton planKey={studentPlan} label="Start Free Trial" />
+            <PaidButton planKey={studentPlan} label="Start Student Pro" />
           </div>
 
           {/* Professional */}
@@ -258,7 +267,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <PaidButton planKey={teamPlan} label="Contact Sales" />
+            <PaidButton planKey={teamPlan} label="Start Team Pro" />
           </div>
         </div>
       </div>
