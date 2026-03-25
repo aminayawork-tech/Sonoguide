@@ -35,9 +35,9 @@ export const PLANS = {
   },
   student_yearly: {
     name: "Student",
-    price: "$79.99",
+    price: "$79",
     period: "year",
-    badge: "Save 33%",
+    badge: "Save 34%",
     priceId: process.env.STRIPE_STUDENT_YEARLY_PRICE_ID!,
     features: [
       "50 AI analyses/month",

@@ -171,9 +171,9 @@ export default function PricingSection() {
             ) : (
               <>
                 <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                  $79.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+                  $79<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
                 </p>
-                <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$6.67/mo — save 33%</p>
+                <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$6.58/mo — save 34%</p>
               </>
             )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
