@@ -97,7 +97,7 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
               {t === "yearly" && (
                 <span className="rounded px-1 text-[9px] font-bold"
                   style={{ background: "rgba(255,255,255,0.25)" }}>
-                  SAVE 33%
+                  SAVE 31%
                 </span>
               )}
             </button>

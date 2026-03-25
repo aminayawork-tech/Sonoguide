@@ -34,7 +34,7 @@ export const PLANS = {
   },
   pro_yearly: {
     name: "Pro Yearly",
-    price: "$279",
+    price: "$290",
     period: "year",
     badge: "Save 33%",
     priceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID!,

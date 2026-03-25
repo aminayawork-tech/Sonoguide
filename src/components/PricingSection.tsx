@@ -205,13 +205,13 @@ export default function PricingSection() {
             </div>
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Professional</p>
             <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-              {billing === "yearly" ? "$279" : "$34.99"}
+              {billing === "yearly" ? "$290" : "$34.99"}
               <span className="text-sm font-normal" style={{ color: "#64748b" }}>
                 {billing === "yearly" ? "/yr" : "/mo"}
               </span>
             </p>
             <p className="mb-5 text-xs" style={{ color: "#64748b" }}>
-              {billing === "yearly" ? "save 33% vs monthly" : "or $279/yr — save 33%"}
+              {billing === "yearly" ? "save 31% vs monthly" : "or $290/yr — save 31%"}
             </p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
               {["150 AI analyses/month","All 31 protocols","Full measurements suite","AI chat (500 msgs/mo)","PDF report export","1-year scan history","PHI auto-redaction","Priority AI queue"].map((f) => (
