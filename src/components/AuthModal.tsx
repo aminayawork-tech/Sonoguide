@@ -68,7 +68,7 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
         {/* Logo */}
         <div className="mb-5 flex items-baseline gap-0 select-none leading-none">
           <span className="text-lg font-extrabold" style={{ color: "#0f172a" }}>Sono</span>
-          <span className="text-lg font-extrabold" style={{ color: "#2563eb" }}>Guide</span>
+          <span className="text-lg font-extrabold" style={{ color: "#2563eb" }}>Pilot</span>
         </div>
 
         {sent ? (

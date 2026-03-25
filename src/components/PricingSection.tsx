@@ -24,7 +24,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
         </button>
         <div className="mb-5 flex items-baseline gap-0.5">
           <span className="text-lg font-extrabold" style={{ color: "#0f172a" }}>Sono</span>
-          <span className="text-lg font-extrabold" style={{ color: "#2563eb" }}>Guide</span>
+          <span className="text-lg font-extrabold" style={{ color: "#2563eb" }}>Pilot</span>
         </div>
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl"
           style={{ background: "#eff6ff" }}>
