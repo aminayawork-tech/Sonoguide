@@ -16,6 +16,7 @@ import {
   XCircle,
 } from "lucide-react";
 import NavBar from "@/components/NavBar";
+import UpgradeModal from "@/components/UpgradeModal";
 import { getSavedScans } from "@/lib/mock-analysis";
 
 const LS_KEY = "sonoguide_history";
@@ -34,6 +35,7 @@ export default function HistoryPage() {
   const [scans, setScans] = useState(() => getSavedScans());
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   // Hydrate from localStorage on mount
   useEffect(() => {
@@ -70,6 +72,7 @@ export default function HistoryPage() {
   return (
     <div className="min-h-screen pt-14 pb-24 md:pb-8 md:pt-16" style={{ background: "#eef3f8" }}>
       <NavBar />
+      {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
 
       <div className="mx-auto max-w-2xl px-4 py-8">
         {/* Header */}
@@ -108,9 +111,9 @@ export default function HistoryPage() {
             <Clock size={14} />
             Free tier: Scans retained for <strong style={{ color: "#1a2235" }}>30 days</strong>
           </div>
-          <Link href="/" className="text-xs font-semibold" style={{ color: "#2563eb" }}>
+          <button onClick={() => setShowUpgrade(true)} className="text-xs font-semibold" style={{ color: "#2563eb" }}>
             Upgrade to Pro →
-          </Link>
+          </button>
         </div>
 
         {/* Search + filter */}

@@ -523,7 +523,7 @@ function ResultsContent() {
                     style={msg.role === "user"
                       ? { background: "#2563eb", color: "#ffffff", borderBottomRightRadius: "4px" }
                       : { background: "#f1f5f9", color: "#1a2235", borderBottomLeftRadius: "4px" }}>
-                    {msg.content}
+                    {msg.role === "assistant" ? stripMarkdown(msg.content) : msg.content}
                   </div>
                 </div>
               ))}
@@ -678,6 +678,17 @@ function ResultsContent() {
       )}
     </div>
   );
+}
+
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/#{1,6}\s+/g, "")        // remove headings
+    .replace(/\*\*(.+?)\*\*/g, "$1")  // remove bold
+    .replace(/\*(.+?)\*/g, "$1")      // remove italic
+    .replace(/^[-*+]\s+/gm, "")       // remove list markers
+    .replace(/^\d+\.\s+/gm, "")       // remove numbered lists
+    .replace(/`(.+?)`/g, "$1")        // remove inline code
+    .trim();
 }
 
 export default function ResultsPage() {

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 Here is the analysis context for this study:
 ${JSON.stringify(analysisContext, null, 2)}
 
-Answer questions clearly and concisely in plain text (no JSON). Be clinically precise but approachable. If asked about something outside the scope of this image/protocol, say so clearly. Always remind the user that your answers are for educational support only and that a qualified clinician must review all findings before clinical decisions are made.`;
+Answer questions clearly and concisely. Write in plain conversational prose — do not use markdown formatting, headers, bullet points, bold text, or any special symbols. No asterisks, no pound signs, no dashes as list markers. Just plain sentences and paragraphs. Be clinically precise but approachable. If asked about something outside the scope of this image/protocol, say so clearly. Always remind the user that your answers are for educational support only and that a qualified clinician must review all findings before clinical decisions are made.`;
 
     // Build message history
     const messages: Anthropic.MessageParam[] = [

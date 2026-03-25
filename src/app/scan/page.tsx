@@ -126,8 +126,8 @@ function ProtocolSheet({
                 <button
                   key={p.id}
                   onClick={() => { onSelect(p.id); onClose(); }}
-                  className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-colors"
-                  style={{ background: active ? "#eff6ff" : "transparent" }}>
+                  className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-colors hover:bg-slate-100"
+                  style={{ background: active ? "#eff6ff" : undefined }}>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold" style={{ color: active ? "#2563eb" : "#0f172a" }}>
                       {p.name}
