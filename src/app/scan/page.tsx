@@ -66,8 +66,8 @@ function ProtocolSheet({
   return (
     /* Backdrop — mobile: align bottom; desktop: center */
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end overflow-hidden md:items-center md:justify-center md:px-4"
-      style={{ background: "rgba(0,0,0,0.45)", width: "100vw", maxWidth: "100vw" }}
+      className="fixed inset-0 z-[60] flex flex-col justify-end md:items-center md:justify-center md:px-4"
+      style={{ background: "rgba(0,0,0,0.45)" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
 
       {/* Sheet — mobile: full-width bottom sheet; desktop: compact centered dialog */}
@@ -102,7 +102,6 @@ function ProtocolSheet({
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }} />
             <input
-              autoFocus
               type="text"
               placeholder="Search protocols..."
               value={query}
@@ -126,7 +125,7 @@ function ProtocolSheet({
         )}
 
         {/* List */}
-        <div className="flex-1 overflow-y-auto overscroll-contain px-3 pb-4">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-3" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))", WebkitOverflowScrolling: "touch" }}>
           {filtered.length === 0 ? (
             <p className="py-8 text-center text-sm" style={{ color: "#94a3b8" }}>No protocols match &ldquo;{query}&rdquo;</p>
           ) : (
