@@ -7,7 +7,7 @@ import { useAuth } from "./AuthProvider";
 import AuthModal from "./AuthModal";
 
 type BillingCycle = "monthly" | "yearly";
-type PlanKey = "student_monthly" | "student_yearly" | "pro_monthly" | "pro_yearly" | "team";
+type PlanKey = "student_monthly" | "student_yearly" | "pro_monthly" | "pro_yearly" | "team_monthly" | "team_yearly";
 
 function ContactModal({ onClose }: { onClose: () => void }) {
   return (
@@ -101,6 +101,7 @@ export default function PricingSection() {
 
   const studentPlan = billing === "monthly" ? "student_monthly" : "student_yearly";
   const proPlan     = billing === "monthly" ? "pro_monthly"     : "pro_yearly";
+  const teamPlan    = billing === "monthly" ? "team_monthly"    : "team_yearly";
 
   return (
     <section className="py-20">
@@ -170,9 +171,9 @@ export default function PricingSection() {
             ) : (
               <>
                 <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                  $79<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+                  $79.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
                 </p>
-                <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$6.58/mo — save 34%</p>
+                <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$6.67/mo — save 33%</p>
               </>
             )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
@@ -228,10 +229,25 @@ export default function PricingSection() {
           <div className="flex flex-col rounded-2xl border p-6"
             style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Team</p>
-            <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-              $99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
+            {billing === "monthly" ? (
+              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                $99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
+              </p>
+            ) : (
+              <div className="mb-1 flex items-center gap-2">
+                <p className="text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                  $799<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+                </p>
+                <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                  style={{ background: "#059669" }}>
+                  <Sparkles size={9} />
+                  SAVE 33%
+                </span>
+              </div>
+            )}
+            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>
+              {billing === "yearly" ? "~$66.58/mo · " : ""}Up to 10 seats · 500 scans pooled
             </p>
-            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>Up to 10 seats · 500 scans pooled</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
               {["500 AI analyses/month (pooled)", "Up to 10 seats", "All 31 protocols", "Full measurements suite", "AI chat (2,000 msgs/mo)", "PDF export", "Unlimited history", "PHI auto-redaction", "Priority support"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
@@ -242,12 +258,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <button
-              onClick={() => setShowContact(true)}
-              className="w-full rounded-xl border py-2.5 text-xs font-semibold transition-all hover:bg-white"
-              style={{ borderColor: "#e2e8f0", color: "#475569" }}>
-              Contact Sales
-            </button>
+            <PaidButton planKey={teamPlan} label="Contact Sales" />
           </div>
         </div>
       </div>

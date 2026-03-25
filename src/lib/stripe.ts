@@ -35,9 +35,9 @@ export const PLANS = {
   },
   student_yearly: {
     name: "Student",
-    price: "$79",
+    price: "$79.99",
     period: "year",
-    badge: "Save 34%",
+    badge: "Save 33%",
     priceId: process.env.STRIPE_STUDENT_YEARLY_PRICE_ID!,
     features: [
       "50 AI analyses/month",
@@ -81,11 +81,29 @@ export const PLANS = {
       "Priority AI queue",
     ],
   },
-  team: {
+  team_monthly: {
     name: "Team",
     price: "$99",
     period: "month",
     priceId: process.env.STRIPE_TEAM_MONTHLY_PRICE_ID!,
+    features: [
+      "500 AI analyses/month (pooled)",
+      "Up to 10 seats",
+      "All 31 protocols",
+      "Full measurements suite",
+      "AI chat (2,000 msgs/mo)",
+      "PDF export",
+      "Unlimited history",
+      "PHI auto-redaction",
+      "Priority support",
+    ],
+  },
+  team_yearly: {
+    name: "Team",
+    price: "$799",
+    period: "year",
+    badge: "Save 33%",
+    priceId: process.env.STRIPE_TEAM_YEARLY_PRICE_ID!,
     features: [
       "500 AI analyses/month (pooled)",
       "Up to 10 seats",
