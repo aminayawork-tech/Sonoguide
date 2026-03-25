@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle, Loader2, Mail, Sparkles, X } from "lucide-react";
+import { CheckCircle, Loader2, Mail, Sparkles, Users, X } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import AuthModal from "./AuthModal";
 
-type PlanKey = "pro_monthly" | "pro_yearly" | "clinic";
+type BillingCycle = "monthly" | "yearly";
+type PlanKey = "student_monthly" | "student_yearly" | "pro_monthly" | "pro_yearly" | "team";
 
 function ContactModal({ onClose }: { onClose: () => void }) {
   return (
@@ -31,10 +32,10 @@ function ContactModal({ onClose }: { onClose: () => void }) {
         </div>
         <h2 className="mb-1 text-lg font-bold" style={{ color: "#0f172a" }}>Contact Sales</h2>
         <p className="mb-5 text-sm" style={{ color: "#64748b" }}>
-          Interested in the Clinic plan? Reach out and we'll get you set up with a custom demo.
+          Interested in the Team plan? Reach out and we&apos;ll get your program set up.
         </p>
         <a
-          href="mailto:sales@sonoguide.app?subject=Clinic Plan Inquiry"
+          href="mailto:sales@sonoguide.app?subject=Team Plan Inquiry"
           className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition-all hover:opacity-90"
           style={{ background: "#2563eb" }}>
           <Mail size={14} />
@@ -96,6 +97,10 @@ function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: stri
 
 export default function PricingSection() {
   const [showContact, setShowContact] = useState(false);
+  const [billing, setBilling] = useState<BillingCycle>("monthly");
+
+  const studentPlan = billing === "monthly" ? "student_monthly" : "student_yearly";
+  const proPlan     = billing === "monthly" ? "pro_monthly"     : "pro_yearly";
 
   return (
     <section className="py-20">
@@ -104,9 +109,34 @@ export default function PricingSection() {
         <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
           Simple, transparent pricing
         </h2>
-        <p className="mb-12 text-center" style={{ color: "#64748b" }}>
+        <p className="mb-8 text-center" style={{ color: "#64748b" }}>
           Start free. Upgrade as you grow.
         </p>
+
+        {/* Billing toggle */}
+        <div className="mb-10 flex items-center justify-center gap-1 rounded-xl p-1 w-fit mx-auto"
+          style={{ background: "#f1f5f9" }}>
+          <button
+            onClick={() => setBilling("monthly")}
+            className="rounded-lg px-5 py-2 text-sm font-semibold transition-all"
+            style={billing === "monthly"
+              ? { background: "#ffffff", color: "#0f172a", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
+              : { color: "#64748b" }}>
+            Monthly
+          </button>
+          <button
+            onClick={() => setBilling("yearly")}
+            className="flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-semibold transition-all"
+            style={billing === "yearly"
+              ? { background: "#ffffff", color: "#0f172a", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
+              : { color: "#64748b" }}>
+            Yearly
+            <span className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+              style={{ background: "#059669" }}>
+              Save 34%
+            </span>
+          </button>
+        </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {/* Free */}
@@ -133,10 +163,18 @@ export default function PricingSection() {
           <div className="flex flex-col rounded-2xl border p-6"
             style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Student</p>
-            <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-              $14.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
-            </p>
-            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $119/yr — save 34%</p>
+            {billing === "monthly" ? (
+              <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                $9.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
+              </p>
+            ) : (
+              <>
+                <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                  $79<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+                </p>
+                <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$6.58/mo — save 34%</p>
+              </>
+            )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
               {["50 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (150 msgs/mo)", "90-day scan history", "PHI auto-redaction"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
@@ -145,7 +183,7 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <PaidButton planKey="pro_monthly" label="Start Free Trial" />
+            <PaidButton planKey={studentPlan} label="Start Free Trial" />
           </div>
 
           {/* Professional */}
@@ -156,17 +194,25 @@ export default function PricingSection() {
               Most Popular
             </div>
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Professional</p>
-            <div className="mb-1 flex items-center gap-2">
-              <p className="text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                $290<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+            {billing === "monthly" ? (
+              <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                $19.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
               </p>
-              <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                style={{ background: "#059669" }}>
-                <Sparkles size={9} />
-                SAVE 33%
-              </span>
-            </div>
-            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>Billed annually — ~$24/mo</p>
+            ) : (
+              <div className="mb-1 flex items-center gap-2">
+                <p className="text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                  $159<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+                </p>
+                <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                  style={{ background: "#059669" }}>
+                  <Sparkles size={9} />
+                  SAVE 34%
+                </span>
+              </div>
+            )}
+            {billing === "yearly" && (
+              <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$13.25/mo</p>
+            )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
               {["150 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (500 msgs/mo)", "PDF report export", "1-year scan history", "PHI auto-redaction", "Priority AI queue"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
@@ -175,21 +221,23 @@ export default function PricingSection() {
                 </li>
               ))}
             </ul>
-            <PaidButton planKey="pro_yearly" label="Start Pro Trial" primary />
+            <PaidButton planKey={proPlan} label="Start Pro Trial" primary />
           </div>
 
-          {/* Clinic */}
+          {/* Team */}
           <div className="flex flex-col rounded-2xl border p-6"
             style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Clinic</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Team</p>
             <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-              $89.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
+              $99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
             </p>
-            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $719/yr — save 33%</p>
+            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>Up to 10 seats · 500 scans pooled</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["600 AI analyses/month", "3 user seats", "All 31 protocols", "Full measurements suite", "AI chat (2,000 msgs/mo)", "PDF export", "Unlimited history", "PHI auto-redaction", "Priority support"].map((f) => (
+              {["500 AI analyses/month (pooled)", "Up to 10 seats", "All 31 protocols", "Full measurements suite", "AI chat (2,000 msgs/mo)", "PDF export", "Unlimited history", "PHI auto-redaction", "Priority support"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
-                  <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
+                  {f === "Up to 10 seats"
+                    ? <Users size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
+                    : <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />}
                   {f}
                 </li>
               ))}

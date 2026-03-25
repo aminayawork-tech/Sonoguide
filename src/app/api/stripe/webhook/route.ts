@@ -6,10 +6,17 @@ import { createServiceClient } from "@/lib/supabase/server";
 // Raw body needed for Stripe signature verification
 export const runtime = "nodejs";
 
-function tierFromPriceId(priceId: string): "pro" | "clinic" | "free" {
-  const { STRIPE_PRO_MONTHLY_PRICE_ID, STRIPE_PRO_YEARLY_PRICE_ID, STRIPE_CLINIC_MONTHLY_PRICE_ID } = process.env;
-  if (priceId === STRIPE_CLINIC_MONTHLY_PRICE_ID) return "clinic";
+function tierFromPriceId(priceId: string): "student" | "pro" | "team" | "free" {
+  const {
+    STRIPE_STUDENT_MONTHLY_PRICE_ID,
+    STRIPE_STUDENT_YEARLY_PRICE_ID,
+    STRIPE_PRO_MONTHLY_PRICE_ID,
+    STRIPE_PRO_YEARLY_PRICE_ID,
+    STRIPE_TEAM_MONTHLY_PRICE_ID,
+  } = process.env;
+  if (priceId === STRIPE_TEAM_MONTHLY_PRICE_ID) return "team";
   if (priceId === STRIPE_PRO_MONTHLY_PRICE_ID || priceId === STRIPE_PRO_YEARLY_PRICE_ID) return "pro";
+  if (priceId === STRIPE_STUDENT_MONTHLY_PRICE_ID || priceId === STRIPE_STUDENT_YEARLY_PRICE_ID) return "student";
   return "free";
 }
 

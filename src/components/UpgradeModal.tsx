@@ -9,11 +9,16 @@ interface UpgradeModalProps {
   limitReached?: boolean;
 }
 
-const VISIBLE_PLANS: PlanKey[] = ["pro_yearly", "clinic"];
+type BillingCycle = "monthly" | "yearly";
 
 export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProps) {
   const [loading,  setLoading]  = useState<PlanKey | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [billing,  setBilling]  = useState<BillingCycle>("monthly");
+
+  const visiblePlans: PlanKey[] = billing === "monthly"
+    ? ["student_monthly", "pro_monthly"]
+    : ["student_yearly", "pro_yearly"];
 
   async function handleUpgrade(planKey: PlanKey) {
     setLoading(planKey);
@@ -67,14 +72,41 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
                 You&apos;ve used your {FREE_SCAN_LIMIT} free scans this month.
               </p>
               <p className="mt-1 text-sm" style={{ color: "#64748b" }}>
-                Upgrade to Pro for unlimited scans + advanced features.
+                Upgrade to keep scanning and unlock advanced features.
               </p>
             </>
           ) : (
             <p className="text-sm" style={{ color: "#64748b" }}>
-              Unlock unlimited scans, all protocols, and priority AI analysis.
+              Unlock more scans, all protocols, and priority AI analysis.
             </p>
           )}
+        </div>
+
+        {/* Billing toggle */}
+        <div className="px-6 pt-3 pb-1">
+          <div className="flex items-center gap-1 rounded-xl p-1 w-fit"
+            style={{ background: "#f1f5f9" }}>
+            <button
+              onClick={() => setBilling("monthly")}
+              className="rounded-lg px-4 py-1.5 text-xs font-semibold transition-all"
+              style={billing === "monthly"
+                ? { background: "#ffffff", color: "#0f172a", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
+                : { color: "#64748b" }}>
+              Monthly
+            </button>
+            <button
+              onClick={() => setBilling("yearly")}
+              className="flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-semibold transition-all"
+              style={billing === "yearly"
+                ? { background: "#ffffff", color: "#0f172a", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
+                : { color: "#64748b" }}>
+              Yearly
+              <span className="rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white"
+                style={{ background: "#059669" }}>
+                Save 34%
+              </span>
+            </button>
+          </div>
         </div>
 
         {errorMsg && (
@@ -85,10 +117,11 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
         )}
 
         {/* Plan cards */}
-        <div className="space-y-3 px-6 pb-6 pt-2">
-          {VISIBLE_PLANS.map((key) => {
+        <div className="space-y-3 px-6 pb-6 pt-3">
+          {visiblePlans.map((key) => {
             const plan = PLANS[key];
-            const isPro = key === "pro_yearly";
+            const isPro = key === "pro_monthly" || key === "pro_yearly";
+            const isYearly = key === "student_yearly" || key === "pro_yearly";
             return (
               <div key={key}
                 className="rounded-xl border p-4"
@@ -102,11 +135,11 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
                       <span className="font-bold text-sm" style={{ color: "#0f172a" }}>
                         {plan.name}
                       </span>
-                      {isPro && (
+                      {isYearly && (
                         <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
                           style={{ background: "#059669" }}>
                           <Sparkles size={9} />
-                          SAVE 33%
+                          SAVE 34%
                         </span>
                       )}
                     </div>
@@ -115,7 +148,11 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
                         {plan.price}
                       </span>
                       {" "}/{plan.period}
-                      {isPro && <span className="ml-1">— ~$24/mo</span>}
+                      {isYearly && (
+                        <span className="ml-1">
+                          — ~${isPro ? "13.25" : "6.58"}/mo
+                        </span>
+                      )}
                     </p>
                   </div>
                   <button
