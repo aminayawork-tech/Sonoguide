@@ -54,7 +54,7 @@ Answer questions clearly and concisely. Write in plain conversational prose — 
     messages.push({ role: "user", content: userContent });
 
     const response = await client.messages.create({
-      model: "claude-opus-4-6",
+      model: "claude-sonnet-4-6",
       max_tokens: 1024,
       system: systemPrompt,
       messages,
