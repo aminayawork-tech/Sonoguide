@@ -40,16 +40,21 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-4 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:px-4"
       style={{ background: "rgba(0,0,0,0.5)" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
 
       <div
-        className="relative w-full max-w-md overflow-hidden rounded-2xl border shadow-2xl"
-        style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+        className="relative w-full max-w-md overflow-y-auto rounded-t-3xl border shadow-2xl sm:rounded-2xl"
+        style={{ background: "#ffffff", borderColor: "#dde4ee", maxHeight: "92dvh" }}>
+
+        {/* Mobile drag handle */}
+        <div className="flex justify-center pt-3 pb-1 sm:hidden">
+          <div className="h-1 w-10 rounded-full" style={{ background: "#e2e8f0" }} />
+        </div>
 
         {/* Header */}
-        <div className="px-6 pt-6 pb-4"
+        <div className="px-6 pt-4 pb-4 sm:pt-6"
           style={{ background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
           <button
             onClick={onClose}

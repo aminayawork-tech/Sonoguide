@@ -72,10 +72,10 @@ function ProtocolSheet({
 
       {/* Sheet */}
       <div
-        className="flex flex-col rounded-t-3xl shadow-2xl"
+        className="flex w-full flex-col rounded-t-3xl shadow-2xl overflow-x-hidden"
         style={{
           background: "#ffffff",
-          maxHeight: "80vh",
+          maxHeight: "88vh",
           animation: "slideUp 0.25s cubic-bezier(0.32,0.72,0,1)",
         }}>
 
@@ -128,11 +128,11 @@ function ProtocolSheet({
                   onClick={() => { onSelect(p.id); onClose(); }}
                   className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-colors hover:bg-slate-100"
                   style={{ background: active ? "#eff6ff" : undefined }}>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: active ? "#2563eb" : "#0f172a" }}>
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <p className="truncate text-sm font-semibold" style={{ color: active ? "#2563eb" : "#0f172a" }}>
                       {p.name}
                     </p>
-                    <p className="text-xs mt-0.5 line-clamp-1" style={{ color: "#94a3b8" }}>
+                    <p className="truncate text-xs mt-0.5" style={{ color: "#94a3b8" }}>
                       {p.indication}
                     </p>
                   </div>
