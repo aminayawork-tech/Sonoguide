@@ -343,7 +343,7 @@ function ResultsContent() {
         </div>
 
         {/* Label legend */}
-        <div className="mb-5 flex flex-wrap gap-2">
+        <div className="mb-2 flex flex-wrap gap-2">
           {analysis.labels.map((label) => (
             <span key={label.id}
               className="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium"
@@ -352,6 +352,14 @@ function ResultsContent() {
               {label.name}
             </span>
           ))}
+        </div>
+        {/* Label position disclaimer */}
+        <div className="mb-5 flex items-start gap-1.5 rounded-xl border px-3 py-2"
+          style={{ borderColor: "#fcd34d", background: "#fefce8" }}>
+          <Info size={12} className="mt-0.5 shrink-0" style={{ color: "#ca8a04" }} />
+          <p className="text-xs leading-relaxed" style={{ color: "#92400e" }}>
+            Label positions are approximate and for reference only. They do not precisely mark the anatomical location of each structure. Use your own sonographic judgment for accurate identification.
+          </p>
         </div>
 
         {/* Findings */}
