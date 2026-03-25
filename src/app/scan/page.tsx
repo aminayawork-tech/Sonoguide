@@ -64,27 +64,37 @@ function ProtocolSheet({
   }, []);
 
   return (
-    /* Backdrop */
+    /* Backdrop — mobile: align bottom; desktop: center */
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end overflow-hidden"
+      className="fixed inset-0 z-50 flex flex-col justify-end overflow-hidden md:items-center md:justify-center md:px-4"
       style={{ background: "rgba(0,0,0,0.45)", width: "100vw", maxWidth: "100vw" }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
 
-      {/* Sheet */}
+      {/* Sheet — mobile: full-width bottom sheet; desktop: compact centered dialog */}
       <div
-        className="flex w-full flex-col rounded-t-3xl shadow-2xl overflow-x-hidden"
+        className="flex w-full flex-col overflow-x-hidden
+          rounded-t-3xl
+          md:rounded-2xl md:max-w-md"
         style={{
           background: "#ffffff",
           maxHeight: "88vh",
-          animation: "slideUp 0.25s cubic-bezier(0.32,0.72,0,1)",
+          boxShadow: "0 25px 50px rgba(0,0,0,0.25)",
+          animation: "slideUp 0.22s cubic-bezier(0.32,0.72,0,1)",
         }}>
 
-        {/* Handle + header */}
+        {/* Handle (mobile only) */}
+        <div className="md:hidden flex justify-center pt-3">
+          <div className="h-1 w-10 rounded-full" style={{ background: "#e2e8f0" }} />
+        </div>
+
+        {/* Header */}
         <div className="flex-shrink-0 px-5 pt-4 pb-3">
-          <div className="mx-auto mb-4 h-1 w-10 rounded-full" style={{ background: "#e2e8f0" }} />
           <div className="flex items-center justify-between mb-3">
             <p className="font-bold" style={{ color: "#0f172a" }}>Choose Protocol</p>
-            <button onClick={onClose} className="rounded-full p-1.5" style={{ color: "#94a3b8" }}>
+            <button
+              onClick={onClose}
+              className="rounded-full p-1.5 transition-colors hover:bg-slate-100"
+              style={{ color: "#94a3b8" }}>
               <X size={16} />
             </button>
           </div>
@@ -97,7 +107,7 @@ function ProtocolSheet({
               placeholder="Search protocols..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-xl border py-2.5 pl-9 pr-4 text-sm outline-none"
+              className="w-full rounded-xl border py-2.5 pl-9 pr-4 text-sm outline-none focus:border-blue-300"
               style={{ borderColor: "#e2e8f0", color: "#0f172a", background: "#f8fafc" }}
             />
           </div>
@@ -108,7 +118,7 @@ function ProtocolSheet({
           <div className="flex-shrink-0 px-5 pb-2">
             <button
               onClick={() => { onSelect(""); onClose(); }}
-              className="flex w-full items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium"
+              className="flex w-full items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium"
               style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
               <X size={13} /> Clear selection (AI auto-detects)
             </button>
@@ -116,9 +126,9 @@ function ProtocolSheet({
         )}
 
         {/* List */}
-        <div className="flex-1 overflow-y-auto overscroll-contain px-3 pb-6">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-3 pb-4">
           {filtered.length === 0 ? (
-            <p className="py-8 text-center text-sm" style={{ color: "#94a3b8" }}>No protocols match "{query}"</p>
+            <p className="py-8 text-center text-sm" style={{ color: "#94a3b8" }}>No protocols match &ldquo;{query}&rdquo;</p>
           ) : (
             filtered.map((p) => {
               const active = p.id === selected;
@@ -126,7 +136,7 @@ function ProtocolSheet({
                 <button
                   key={p.id}
                   onClick={() => { onSelect(p.id); onClose(); }}
-                  className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-colors hover:bg-slate-100"
+                  className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left transition-colors hover:bg-slate-50"
                   style={{ background: active ? "#eff6ff" : undefined }}>
                   <div className="flex-1 min-w-0 overflow-hidden">
                     <p className="truncate text-sm font-semibold" style={{ color: active ? "#2563eb" : "#0f172a" }}>
