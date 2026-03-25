@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { CreditCard, LogOut, Loader2 } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { FREE_SCAN_LIMIT } from "@/lib/stripe";
+import UpgradeModal from "./UpgradeModal";
 
 export default function UserMenu() {
   const { user, profile, scansLeft, signOut } = useAuth();
-  const [open,          setOpen]          = useState(false);
-  const [portalLoading, setPortalLoading] = useState(false);
+  const [open,           setOpen]           = useState(false);
+  const [portalLoading,  setPortalLoading]  = useState(false);
+  const [showUpgrade,    setShowUpgrade]    = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close on outside click
@@ -38,6 +39,8 @@ export default function UserMenu() {
   const isPaid   = profile?.tier === "pro" || profile?.tier === "clinic";
 
   return (
+    <>
+    {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
@@ -95,14 +98,13 @@ export default function UserMenu() {
                 Manage Billing
               </button>
             ) : (
-              <Link
-                href="/scan"
-                onClick={() => setOpen(false)}
+              <button
+                onClick={() => { setOpen(false); setShowUpgrade(true); }}
                 className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm transition-colors hover:bg-slate-50"
                 style={{ color: "#2563eb" }}>
                 <CreditCard size={14} />
                 Upgrade to Pro
-              </Link>
+              </button>
             )}
 
             <button
@@ -116,5 +118,6 @@ export default function UserMenu() {
         </div>
       )}
     </div>
+    </>
   );
 }
