@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle, Loader2, Mail, X } from "lucide-react";
+import { CheckCircle, Loader2, Mail, Sparkles, X } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import AuthModal from "./AuthModal";
 
@@ -50,15 +50,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-function PaidButton({
-  planKey,
-  label,
-  primary,
-}: {
-  planKey: PlanKey;
-  label: string;
-  primary?: boolean;
-}) {
+function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: string; primary?: boolean }) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
@@ -80,14 +72,6 @@ function PaidButton({
     }
   }
 
-  function handleClick() {
-    if (!user) {
-      setShowAuth(true);
-    } else {
-      startCheckout();
-    }
-  }
-
   return (
     <>
       {showAuth && (
@@ -97,7 +81,7 @@ function PaidButton({
         />
       )}
       <button
-        onClick={handleClick}
+        onClick={() => user ? startCheckout() : setShowAuth(true)}
         disabled={loading}
         className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all hover:opacity-90 disabled:opacity-60 ${primary ? "text-white" : "border"}`}
         style={primary
@@ -112,7 +96,6 @@ function PaidButton({
 
 export default function PricingSection() {
   const [showContact, setShowContact] = useState(false);
-  const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
 
   return (
     <section className="py-20">
@@ -121,35 +104,9 @@ export default function PricingSection() {
         <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
           Simple, transparent pricing
         </h2>
-        <p className="mb-6 text-center" style={{ color: "#64748b" }}>
+        <p className="mb-12 text-center" style={{ color: "#64748b" }}>
           Start free. Upgrade as you grow.
         </p>
-
-        {/* Billing toggle */}
-        <div className="mb-10 flex justify-center">
-          <div className="flex rounded-xl border p-1" style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
-            <button
-              onClick={() => setBilling("monthly")}
-              className="rounded-lg px-5 py-2 text-sm font-semibold transition-all"
-              style={billing === "monthly"
-                ? { background: "#ffffff", color: "#0f172a", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
-                : { color: "#64748b" }}>
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling("yearly")}
-              className="flex items-center gap-1.5 rounded-lg px-5 py-2 text-sm font-semibold transition-all"
-              style={billing === "yearly"
-                ? { background: "#ffffff", color: "#0f172a", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }
-                : { color: "#64748b" }}>
-              Yearly
-              <span className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                style={{ background: "#2563eb" }}>
-                SAVE 33%
-              </span>
-            </button>
-          </div>
-        </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {/* Free */}
@@ -158,7 +115,7 @@ export default function PricingSection() {
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Free</p>
             <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>$0</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["5 AI analyses/month","All 31 protocols","Structure labeling","Anomaly detection","30-day scan history","PHI auto-redaction"].map((f) => (
+              {["5 AI analyses/month", "All 31 protocols", "Structure labeling", "Anomaly detection", "30-day scan history", "PHI auto-redaction"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
                   {f}
@@ -177,16 +134,11 @@ export default function PricingSection() {
             style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Student</p>
             <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-              {billing === "yearly" ? "$119" : "$14.99"}
-              <span className="text-sm font-normal" style={{ color: "#64748b" }}>
-                {billing === "yearly" ? "/yr" : "/mo"}
-              </span>
+              $14.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
             </p>
-            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>
-              {billing === "yearly" ? "save 34% vs monthly" : "or $119/yr — save 34%"}
-            </p>
+            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $119/yr — save 34%</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["50 AI analyses/month","All 31 protocols","Full measurements suite","AI chat (150 msgs/mo)","90-day scan history","PHI auto-redaction"].map((f) => (
+              {["50 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (150 msgs/mo)", "90-day scan history", "PHI auto-redaction"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
                   {f}
@@ -204,28 +156,26 @@ export default function PricingSection() {
               Most Popular
             </div>
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Professional</p>
-            <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-              {billing === "yearly" ? "$290" : "$34.99"}
-              <span className="text-sm font-normal" style={{ color: "#64748b" }}>
-                {billing === "yearly" ? "/yr" : "/mo"}
+            <div className="mb-1 flex items-center gap-2">
+              <p className="text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                $290<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+              </p>
+              <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                style={{ background: "#059669" }}>
+                <Sparkles size={9} />
+                SAVE 33%
               </span>
-            </p>
-            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>
-              {billing === "yearly" ? "save 31% vs monthly" : "or $290/yr — save 31%"}
-            </p>
+            </div>
+            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>Billed annually — ~$24/mo</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
-              {["150 AI analyses/month","All 31 protocols","Full measurements suite","AI chat (500 msgs/mo)","PDF report export","1-year scan history","PHI auto-redaction","Priority AI queue"].map((f) => (
+              {["150 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (500 msgs/mo)", "PDF report export", "1-year scan history", "PHI auto-redaction", "Priority AI queue"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#2563eb", flexShrink: 0 }} />
                   {f}
                 </li>
               ))}
             </ul>
-            <PaidButton
-              planKey={billing === "yearly" ? "pro_yearly" : "pro_monthly"}
-              label={billing === "yearly" ? "Start Pro Trial (Yearly)" : "Start Pro Trial"}
-              primary
-            />
+            <PaidButton planKey="pro_yearly" label="Start Pro Trial" primary />
           </div>
 
           {/* Clinic */}
@@ -237,7 +187,7 @@ export default function PricingSection() {
             </p>
             <p className="mb-5 text-xs" style={{ color: "#64748b" }}>or $719/yr — save 33%</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["600 AI analyses/month","3 user seats","All 31 protocols","Full measurements suite","AI chat (2,000 msgs/mo)","PDF export","Unlimited history","PHI auto-redaction","Priority support"].map((f) => (
+              {["600 AI analyses/month", "3 user seats", "All 31 protocols", "Full measurements suite", "AI chat (2,000 msgs/mo)", "PDF export", "Unlimited history", "PHI auto-redaction", "Priority support"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
                   {f}

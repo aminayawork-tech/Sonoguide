@@ -6,16 +6,14 @@ import { PLANS, FREE_SCAN_LIMIT, type PlanKey } from "@/lib/stripe";
 
 interface UpgradeModalProps {
   onClose: () => void;
-  /** If true, shows the "limit reached" headline; otherwise shows generic upgrade */
   limitReached?: boolean;
 }
 
-const PLAN_ORDER: PlanKey[] = ["pro_monthly", "pro_yearly", "clinic"];
+const VISIBLE_PLANS: PlanKey[] = ["pro_yearly", "clinic"];
 
 export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProps) {
-  const [loading,    setLoading]    = useState<PlanKey | null>(null);
-  const [errorMsg,   setErrorMsg]   = useState<string | null>(null);
-  const [billingTab, setBillingTab] = useState<"monthly" | "yearly">("monthly");
+  const [loading,  setLoading]  = useState<PlanKey | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   async function handleUpgrade(planKey: PlanKey) {
     setLoading(planKey);
@@ -34,10 +32,6 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
       setLoading(null);
     }
   }
-
-  const visiblePlans: PlanKey[] = billingTab === "yearly"
-    ? ["pro_yearly", "clinic"]
-    : ["pro_monthly", "clinic"];
 
   return (
     <div
@@ -83,27 +77,6 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
           )}
         </div>
 
-        {/* Billing toggle */}
-        <div className="flex gap-1 px-6 pb-4 pt-2">
-          {(["monthly", "yearly"] as const).map((t) => (
-            <button key={t}
-              onClick={() => setBillingTab(t)}
-              className="flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all"
-              style={billingTab === t
-                ? { background: "#2563eb", color: "#ffffff" }
-                : { background: "#f1f5f9", color: "#64748b" }}>
-              {t === "yearly" && <Sparkles size={10} />}
-              {t.charAt(0).toUpperCase() + t.slice(1)}
-              {t === "yearly" && (
-                <span className="rounded px-1 text-[9px] font-bold"
-                  style={{ background: "rgba(255,255,255,0.25)" }}>
-                  SAVE 31%
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
         {errorMsg && (
           <div className="mx-6 mb-3 rounded-xl border px-3 py-2.5 text-sm"
             style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
@@ -112,33 +85,28 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
         )}
 
         {/* Plan cards */}
-        <div className="space-y-3 px-6 pb-6">
-          {visiblePlans.map((key) => {
+        <div className="space-y-3 px-6 pb-6 pt-2">
+          {VISIBLE_PLANS.map((key) => {
             const plan = PLANS[key];
-            const isPopular = key === "pro_monthly" || key === "pro_yearly";
+            const isPro = key === "pro_yearly";
             return (
               <div key={key}
                 className="rounded-xl border p-4"
                 style={{
-                  borderColor: isPopular ? "#2563eb" : "#dde4ee",
-                  background:  isPopular ? "#eff6ff"  : "#fafafa",
+                  borderColor: isPro ? "#2563eb" : "#dde4ee",
+                  background:  isPro ? "#eff6ff"  : "#fafafa",
                 }}>
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-sm" style={{ color: "#0f172a" }}>
                         {plan.name}
                       </span>
-                      {isPopular && (
-                        <span className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                          style={{ background: "#2563eb" }}>
-                          POPULAR
-                        </span>
-                      )}
-                      {"badge" in plan && plan.badge && (
-                        <span className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                          style={{ background: "#d1fae5", color: "#059669" }}>
-                          {plan.badge}
+                      {isPro && (
+                        <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                          style={{ background: "#059669" }}>
+                          <Sparkles size={9} />
+                          SAVE 33%
                         </span>
                       )}
                     </div>
@@ -147,13 +115,14 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
                         {plan.price}
                       </span>
                       {" "}/{plan.period}
+                      {isPro && <span className="ml-1">— ~$24/mo</span>}
                     </p>
                   </div>
                   <button
                     onClick={() => handleUpgrade(key)}
                     disabled={loading !== null}
                     className="flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold text-white disabled:opacity-60 transition-all hover:opacity-90"
-                    style={{ background: isPopular ? "#2563eb" : "#374151", minWidth: 80 }}>
+                    style={{ background: isPro ? "#2563eb" : "#374151", minWidth: 80 }}>
                     {loading === key ? <Loader2 size={12} className="animate-spin" /> : null}
                     {loading === key ? "Loading…" : "Upgrade"}
                   </button>
