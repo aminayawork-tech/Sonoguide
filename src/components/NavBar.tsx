@@ -20,7 +20,7 @@ function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
   return (
     <Link href="/" className="flex items-baseline gap-0 select-none leading-none">
       <span className={cls} style={{ color: "#0f172a" }}>Sono</span>
-      <span className={cls} style={{ color: "#2563eb" }}>Guide</span>
+      <span className={cls} style={{ color: "#2563eb" }}>Pilot</span>
     </Link>
   );
 }

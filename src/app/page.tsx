@@ -172,7 +172,7 @@ export default function HomePage() {
             Ready to scan smarter?
           </h2>
           <p className="mb-8" style={{ color: "#64748b" }}>
-            Join clinicians using SonoGuide to deliver better care at the bedside.
+            Join clinicians using SonoPilot to deliver better care at the bedside.
           </p>
           <Link
             href="/scan"
@@ -189,9 +189,9 @@ export default function HomePage() {
       <footer className="border-t py-8 pb-24 md:pb-8" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
         <div className="mx-auto max-w-4xl px-4 text-center text-xs" style={{ color: "#94a3b8" }}>
           <p className="mb-1">
-            SonoGuide is not FDA-cleared for primary diagnosis. For educational and supportive use only.
+            SonoPilot is not FDA-cleared for primary diagnosis. For educational and supportive use only.
           </p>
-          <p>© 2026 SonoGuide. All rights reserved.</p>
+          <p>© 2026 SonoPilot. All rights reserved.</p>
         </div>
       </footer>
     </div>

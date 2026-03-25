@@ -35,11 +35,11 @@ function ContactModal({ onClose }: { onClose: () => void }) {
           Interested in the Team plan? Reach out and we&apos;ll get your program set up.
         </p>
         <a
-          href="mailto:sales@sonoguide.app?subject=Team Plan Inquiry"
+          href="mailto:sales@sonopilot.app?subject=Team Plan Inquiry"
           className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition-all hover:opacity-90"
           style={{ background: "#2563eb" }}>
           <Mail size={14} />
-          Email us at sales@sonoguide.app
+          Email us at sales@sonopilot.app
         </a>
         <button onClick={onClose}
           className="mt-3 w-full rounded-xl border py-2.5 text-sm font-medium transition-all hover:bg-slate-50"

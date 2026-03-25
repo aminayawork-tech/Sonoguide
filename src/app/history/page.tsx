@@ -19,7 +19,7 @@ import NavBar from "@/components/NavBar";
 import UpgradeModal from "@/components/UpgradeModal";
 import { getSavedScans } from "@/lib/mock-analysis";
 
-const LS_KEY = "sonoguide_history";
+const LS_KEY = "sonopilot_history";
 
 const ALERT_CFG: Record<string, {
   icon: React.ElementType; iconColor: string; border: string; bg: string; badge: string; badgeText: string; label: string;
