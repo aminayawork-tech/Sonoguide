@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { CreditCard, LogOut, Loader2 } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import { FREE_SCAN_LIMIT } from "@/lib/stripe";
@@ -40,7 +41,10 @@ export default function UserMenu() {
 
   return (
     <>
-    {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
+    {showUpgrade && typeof document !== "undefined" && createPortal(
+      <UpgradeModal onClose={() => setShowUpgrade(false)} />,
+      document.body
+    )}
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
