@@ -3,26 +3,6 @@ import { ArrowRight, Camera, CheckCircle, ClipboardList, Shield, Upload, Zap } f
 import NavBar from "@/components/NavBar";
 import PricingSection from "@/components/PricingSection";
 
-const personas = [
-  {
-    role: "Emergency Physician",
-    quote: "Caught a FAST-positive I almost missed at 3AM. This is now part of every shift.",
-    initials: "AEM",
-    color: "#ef4444",
-  },
-  {
-    role: "OB/GYN Resident",
-    quote: "CRL with gestational age in 2 seconds. The OB flow is incredible.",
-    initials: "SK",
-    color: "#9333ea",
-  },
-  {
-    role: "Rural Family Medicine",
-    quote: "No radiologist for 90 miles. SonoGuide gave me the confidence to catch a AAA before transfer.",
-    initials: "JT",
-    color: "#2563eb",
-  },
-];
 
 export default function HomePage() {
   return (
@@ -181,31 +161,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Testimonials ────────────────────────────────────────── */}
-      <section className="border-y py-20" style={{ borderColor: "#f1f5f9", background: "#f8fafc" }}>
-        <div className="mx-auto max-w-4xl px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
-            Trusted at the bedside
-          </h2>
-          <div className="grid gap-5 md:grid-cols-3">
-            {personas.map(({ role, quote, initials, color }) => (
-              <div key={role} className="rounded-2xl border p-6 shadow-sm"
-                style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
-                <p className="mb-5 text-sm leading-relaxed" style={{ color: "#475569" }}>
-                  &ldquo;{quote}&rdquo;
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white"
-                    style={{ background: color }}>
-                    {initials}
-                  </div>
-                  <span className="text-sm font-semibold" style={{ color: "#0f172a" }}>{role}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── Pricing ─────────────────────────────────────────────── */}
       <PricingSection />

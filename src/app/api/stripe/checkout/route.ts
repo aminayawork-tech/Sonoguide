@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       payment_method_types: ["card"],
       line_items: [{ price: plan.priceId, quantity: 1 }],
       success_url: `${appUrl}/scan?upgrade=success`,
-      cancel_url:  `${appUrl}/scan?upgrade=cancelled`,
+      cancel_url:  `${appUrl}/`,
       metadata: { supabase_user_id: user.id },
       allow_promotion_codes: true,
     });

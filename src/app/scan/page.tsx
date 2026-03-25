@@ -174,8 +174,14 @@ function ScanContent() {
   const selectedProtocol    = getProtocolById(effectiveProtocolId);
 
   useEffect(() => {
-    if (searchParams.get("upgrade") === "success") refreshProfile();
-  }, [searchParams, refreshProfile]);
+    const param = searchParams.get("upgrade");
+    if (param === "success") {
+      refreshProfile();
+      router.replace("/scan");
+    } else if (param === "cancelled") {
+      router.replace("/scan");
+    }
+  }, [searchParams, refreshProfile, router]);
 
   function handleFile(file: File) {
     if (!file.type.startsWith("image/")) return;
