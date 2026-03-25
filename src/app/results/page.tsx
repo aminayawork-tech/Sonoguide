@@ -531,7 +531,14 @@ function ResultsContent() {
                     style={msg.role === "user"
                       ? { background: "#2563eb", color: "#ffffff", borderBottomRightRadius: "4px" }
                       : { background: "#f1f5f9", color: "#1a2235", borderBottomLeftRadius: "4px" }}>
-                    {msg.role === "assistant" ? stripMarkdown(msg.content) : msg.content}
+                    {msg.role === "assistant"
+                      ? stripMarkdown(msg.content)
+                          .split(/\n\n+/)
+                          .filter(Boolean)
+                          .map((para, pi, arr) => (
+                            <p key={pi} className={pi < arr.length - 1 ? "mb-2" : ""}>{para.trim()}</p>
+                          ))
+                      : msg.content}
                   </div>
                 </div>
               ))}

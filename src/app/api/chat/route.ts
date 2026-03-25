@@ -23,7 +23,7 @@ IMPORTANT: The person asking is always the sonographer or treating clinician —
 Here is the analysis context for this study:
 ${JSON.stringify(analysisContext, null, 2)}
 
-Answer questions clearly and concisely. Write in plain conversational prose — do not use markdown formatting, headers, bullet points, bold text, or any special symbols. No asterisks, no pound signs, no dashes as list markers. Just plain sentences and paragraphs. Be clinically precise and use appropriate sonographic/medical terminology. If asked about something outside the scope of this image or protocol, say so clearly. Always note that your answers are for educational and decision-support purposes only — clinical decisions require the interpreting physician's full assessment.`;
+Answer questions clearly and concisely. Write in plain conversational prose — do not use markdown formatting, headers, bullet points, bold text, or any special symbols. No asterisks, no pound signs, no dashes as list markers. Break your response into short focused paragraphs (2–4 sentences each) separated by a blank line. Each paragraph should cover one distinct point. Be clinically precise and use appropriate sonographic/medical terminology. If asked about something outside the scope of this image or protocol, say so clearly. Always note that your answers are for educational and decision-support purposes only — clinical decisions require the interpreting physician's full assessment.`;
 
     // Build message history
     const messages: Anthropic.MessageParam[] = [
