@@ -25,6 +25,7 @@ export interface Protocol {
   estimatedTime: string;
   aiMeasurements: string[];
   anomaliesDetected: string[];
+  steps?: string[];
 }
 
 export const PROTOCOLS: Protocol[] = [
@@ -44,6 +45,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "3–5 min",
     aiMeasurements: ["Free fluid depth (mm)", "Pericardial effusion size"],
     anomaliesDetected: ["Free fluid", "Pericardial effusion", "Pneumothorax", "Hemothorax"],
+    steps: [
+      "Position patient supine. Select phased array or curvilinear probe.",
+      "Start at RUQ (Morison's pouch): place probe in right mid-axillary line, 8th–11th ICS, marker toward head. Look for anechoic fluid between liver and kidney.",
+      "Move to LUQ (splenorenal): probe in left posterior axillary line, 8th–11th ICS. Look for fluid between spleen and left kidney and above the spleen.",
+      "Pelvis: probe suprapubic, marker toward head (sagittal), then rotate 90° (transverse). Look for fluid posterior to bladder/uterus.",
+      "Subxiphoid cardiac: flat probe angle under xiphoid, marker to patient's right. Look for pericardial effusion and gross cardiac function.",
+      "Bilateral lung bases: probe at 2nd–3rd ICS, mid-clavicular line, marker toward head. Confirm lung sliding (rules out pneumothorax).",
+      "Document each view. A positive eFAST (free fluid or absent sliding) warrants immediate surgical or clinical escalation.",
+    ],
   },
 
   // ── CARDIAC ─────────────────────────────────────────────────────────────────
@@ -73,6 +83,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "45–60 min",
     aiMeasurements: ["LV EF (%)", "EPSS (mm)", "IVSd (mm)", "LVPWd (mm)", "LVIDd (mm)", "LA diameter (cm)", "Aortic root (cm)", "E/A ratio"],
     anomaliesDetected: ["Reduced EF (<55%)", "Wall motion abnormality", "Pericardial effusion", "Aortic stenosis", "Mitral regurgitation", "LV hypertrophy", "RV dilation"],
+    steps: [
+      "Position patient in left lateral decubitus. Select phased array probe.",
+      "Begin with PLAX: probe at 3rd–4th ICS left sternal border, marker to patient's right shoulder. Align with cardiac long axis. Measure EPSS, LV dimensions, aortic root, LA.",
+      "Rotate 90° clockwise to PSAX. Sweep from mitral valve (fish mouth) down to papillary level to apex. Assess for wall motion abnormalities and D-sign.",
+      "Move to cardiac apex for A4C: probe at point of maximal impulse, marker toward left shoulder. Assess all four chambers, EF, MV and TV.",
+      "Tilt anteriorly from A4C for A5C (LVOT/aortic valve). Rotate to A2C (marker down) then to APLAX.",
+      "Subcostal window: patient supine, probe subxiphoid, marker to patient's left. Assess all chambers and measure IVC.",
+      "Suprasternal notch: probe in suprasternal notch for aortic arch. Document all measurements per lab protocol.",
+    ],
   },
   {
     id: "cardiac-plax",
@@ -89,6 +108,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "2–3 min",
     aiMeasurements: ["EPSS (mm)", "LV internal dimension", "LA diameter", "Aortic root diameter"],
     anomaliesDetected: ["Pericardial effusion", "Reduced EF (EPSS >1cm)", "Aortic dilation", "Posterior effusion"],
+    steps: [
+      "Position patient supine or slight left lateral decubitus. Select phased array probe.",
+      "Place probe at 3rd–4th ICS, left sternal border, marker pointing to right shoulder.",
+      "Rotate probe until the cardiac long axis is aligned — LV, MV, aorta, and LA should all be in view.",
+      "Optimize depth so the descending aorta is just visible at the bottom of the screen.",
+      "Measure EPSS (E-point septal separation) in M-mode through the mitral valve — >1cm suggests reduced EF.",
+      "Measure LV internal dimension, posterior wall, IVS, LA diameter, and aortic root in 2D or M-mode.",
+      "Check posterior pericardial space for effusion. Note valve morphology and mobility.",
+    ],
   },
   {
     id: "cardiac-psax",
@@ -105,6 +133,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "2–3 min",
     aiMeasurements: ["Fractional shortening", "D-sign severity"],
     anomaliesDetected: ["Wall motion abnormality", "RV strain (D-sign)", "Pericardial effusion"],
+    steps: [
+      "From PLAX, rotate probe 90° clockwise (marker now pointing to left shoulder) to obtain PSAX.",
+      "Sweep superiorly for aortic valve level (Mercedes-Benz sign), then inferiorly to mitral valve level (fish mouth).",
+      "Continue to papillary muscle level — this is the standard level for wall motion assessment.",
+      "The LV should appear as a perfect donut. If it looks elliptical, adjust probe rotation.",
+      "Assess all 6 segments at papillary level for symmetric contraction.",
+      "Look for D-sign: flattening of the interventricular septum in systole = RV pressure overload.",
+      "Sweep to apical level — the LV should taper to a point with no papillary muscles visible.",
+    ],
   },
   {
     id: "cardiac-a4c",
@@ -121,6 +158,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "3–4 min",
     aiMeasurements: ["LV EF estimate (%)", "LA volume index", "E/A ratio estimate"],
     anomaliesDetected: ["Reduced EF", "RV dilation", "Apical wall motion abnormality", "Mitral regurgitation signs"],
+    steps: [
+      "Position patient in left lateral decubitus — this is essential for a non-foreshortened apex.",
+      "Locate the cardiac apex by palpation or 2D guidance. Place probe at the point of maximal impulse.",
+      "Orient marker toward the left shoulder. The LV should appear on the right of screen, RV on the left.",
+      "Optimize until all four chambers are visible and the apex is at the top of the sector.",
+      "Assess LV and RV size, wall motion in all visible segments, and gross EF visually.",
+      "Evaluate mitral and tricuspid valves for regurgitation with color Doppler.",
+      "Ensure the apex is not foreshortened — the LV should taper to a true point, not a flat wall.",
+    ],
   },
   {
     id: "ivc",
@@ -137,6 +183,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "2 min",
     aiMeasurements: ["IVC max diameter (cm)", "IVC min diameter (cm)", "Collapsibility Index (%)"],
     anomaliesDetected: ["Dilated IVC (>2.1cm)", "Plethoric IVC", "Flat IVC (<0.9cm)"],
+    steps: [
+      "Position patient supine. Use phased array or curvilinear probe subxiphoid.",
+      "Place probe at subxiphoid region, marker to patient's right, angled toward the right shoulder.",
+      "Identify the IVC entering the right atrium in long axis — it runs to the right of the aorta.",
+      "Slide probe slightly right and fan to obtain a clear longitudinal IVC view.",
+      "Place M-mode cursor 2cm from the IVC–RA junction. Record diameter at max inspiration and expiration.",
+      "For spontaneous breathers: collapsibility >50% = likely volume responsive. <50% = euvolemic or hypervolemic.",
+      "For ventilated patients: distensibility index >18% with tidal volume challenge = volume responsive.",
+    ],
   },
 
   // ── LUNG ─────────────────────────────────────────────────────────────────────
@@ -155,6 +210,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "5–8 min",
     aiMeasurements: ["B-line count per zone", "Pleural effusion depth (mm)"],
     anomaliesDetected: ["B-lines (≥3/zone)", "Absent lung sliding", "Consolidation", "Pleural effusion"],
+    steps: [
+      "Select linear probe for pleural line detail or curvilinear for deeper pathology.",
+      "Identify the Upper BLUE point (hand placed on chest, upper hand = upper zone) bilaterally.",
+      "Assess Lower BLUE point (lower hand on chest) bilaterally. Note A-lines (horizontal, normal) vs. B-lines (vertical, comet-tail).",
+      "≥3 B-lines per zone is significant. Bilateral B-lines = interstitial syndrome (CHF, pneumonia).",
+      "Check for lung sliding at each point — absence = pneumothorax until proven otherwise.",
+      "Assess PLAPS point (postero-lateral alveolar/pleural syndrome): probe in posterior axillary line above diaphragm. Look for effusion or consolidation.",
+      "Integrate findings: A+A bilateral = normal/PE/asthma; B+B bilateral = CHF/pneumonia; A+B = pneumonia; C = consolidation.",
+    ],
   },
   {
     id: "lung-effusion",
@@ -171,6 +235,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "2–3 min",
     aiMeasurements: ["Effusion depth (cm)", "Estimated volume (mL)"],
     anomaliesDetected: ["Simple effusion", "Complex/exudative effusion", "Septated effusion"],
+    steps: [
+      "Position patient sitting upright or in lateral decubitus. Select curvilinear probe.",
+      "Place probe in the posterior-lateral chest, above the diaphragm, marker toward the head.",
+      "Identify the diaphragm as the bright curved structure. Effusion appears as anechoic space above it.",
+      "Use the spine sign on the left: if vertebral bodies are visible below the diaphragm, effusion is present.",
+      "Characterize the effusion: simple (anechoic) vs. complex (echogenic debris, septations).",
+      "Measure the maximal depth of the effusion. Estimate volume: depth (cm) × 90 ≈ volume (mL).",
+      "Assess for lung compressive atelectasis (echogenic consolidated lung floating in fluid).",
+    ],
   },
 
   // ── OB/GYN ───────────────────────────────────────────────────────────────────
@@ -189,6 +262,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "5–10 min",
     aiMeasurements: ["CRL (mm)", "Gestational Age (weeks+days)", "EDD", "GS mean diameter (mm)"],
     anomaliesDetected: ["Subchorionic hematoma", "Irregular GS", "No cardiac motion (>6 weeks CRL)", "Adnexal mass", "Free fluid (ectopic risk)"],
+    steps: [
+      "Begin transabdominal with a full bladder (curvilinear probe). Survey uterus in sagittal and transverse planes.",
+      "Identify gestational sac (GS) within the uterine cavity. Look for the double decidual sign to confirm IUP vs. pseudosac.",
+      "Identify yolk sac (confirms IUP) and embryo. Activate M-mode over the embryo to confirm cardiac activity.",
+      "Measure CRL: place calipers crown to rump in a neutral (not curled) position. This gives gestational age.",
+      "Evaluate both adnexa for masses or free fluid — adnexal ring + free fluid raises ectopic concern.",
+      "If transabdominal is inconclusive, proceed to transvaginal (empty bladder) for higher resolution.",
+      "Document GS mean diameter (3-plane average), CRL, cardiac rate, and adnexal findings.",
+    ],
   },
   {
     id: "ob-second-trimester",
@@ -205,6 +287,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "10–15 min",
     aiMeasurements: ["BPD (mm)", "HC (mm)", "AC (mm)", "FL (mm)", "EFW (g)", "GA by biometry", "EFW percentile"],
     anomaliesDetected: ["IUGR pattern (AC lag)", "Macrosomia", "FL/AC discordance", "Placenta previa signs"],
+    steps: [
+      "Position patient supine with slight left tilt. Curvilinear probe, adequate gel.",
+      "BPD/HC: axial plane through cavum septi pellucidi, thalami, and falx. No cerebellum visible. Measure outer-to-inner for BPD, outer perimeter for HC.",
+      "AC: true transverse at the level of the stomach and umbilical vein junction (J-shaped). Measure outer perimeter.",
+      "Femur length: visualize full femoral diaphysis, perpendicular to beam. Measure diaphysis only — not cartilaginous ends.",
+      "Calculate EFW using Hadlock formula. Plot on growth chart and note percentile.",
+      "Assess amniotic fluid: measure deepest vertical pocket (DVP) or AFI (four-quadrant sum).",
+      "Document placental location relative to internal os. Note fetal presentation.",
+    ],
   },
   {
     id: "pelvic-female",
@@ -229,6 +320,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–45 min",
     aiMeasurements: ["Uterus length (cm)", "Uterus width (cm)", "Uterus AP (cm)", "Endometrial thickness (mm)", "Right ovary volume (cc)", "Left ovary volume (cc)"],
     anomaliesDetected: ["Endometrial thickening (>5mm postmenopausal)", "Ovarian cyst (simple/complex)", "Fibroid", "Free fluid", "Adnexal mass"],
+    steps: [
+      "Ensure patient has a full bladder for transabdominal (TA) scan. Use curvilinear probe.",
+      "Sagittal uterus: probe suprapubic, marker toward head. Measure uterine length and AP diameter.",
+      "Transverse uterus: rotate 90°, sweep superior to inferior. Measure width at widest point.",
+      "Measure endometrial thickness in the sagittal plane — double layer, at the thickest point, excluding any fluid.",
+      "Locate right ovary (lateral to uterus, medial to iliac vessels). Measure in 3 planes. Assess follicles.",
+      "Locate left ovary similarly. Document any cysts — characterize as simple (anechoic, thin wall) or complex.",
+      "Check cul-de-sac for free fluid. If TA is suboptimal, proceed to transvaginal (empty bladder) for endometrium and ovaries.",
+    ],
   },
   {
     id: "scrotal",
@@ -253,6 +353,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–45 min",
     aiMeasurements: ["Testis length, width, height (mm)", "Testicular volume (mL)", "Prostate volume (mL)", "Epididymal head diameter (mm)"],
     anomaliesDetected: ["Absent flow (torsion)", "Heterogeneous echotexture", "Intratesticular mass", "Epididymo-orchitis", "Hydrocele", "Varicocele", "Prostate enlargement"],
+    steps: [
+      "Position patient supine with a towel supporting the scrotum. Use high-frequency linear probe (10–18 MHz).",
+      "Begin with the right testis in transverse: evaluate echogenicity, size, and any focal lesions. Measure length, width, height.",
+      "Rotate to longitudinal for right testis — full sweep superior to inferior.",
+      "Evaluate right epididymis (head at superior pole, body and tail posterolaterally). Note any enlargement or hyperemia.",
+      "Apply color Doppler to right testis — document vascularity. Switch to split-screen to compare both sides simultaneously.",
+      "Repeat all steps for left testis and epididymis. Any absent flow compared to contralateral = torsion until proven otherwise.",
+      "Transabdominal prostate (full bladder): measure AP, transverse, and length. Calculate volume (0.523 × L × W × H).",
+    ],
   },
 
   // ── ABDOMINAL ────────────────────────────────────────────────────────────────
@@ -279,6 +388,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–45 min",
     aiMeasurements: ["GB wall thickness (mm)", "CBD diameter (mm)", "Stone size (mm)", "Liver span (cm)"],
     anomaliesDetected: ["Cholelithiasis", "Acute cholecystitis (wall >3mm + Murphy's + stones)", "CBD dilation (>6mm)", "Hepatomegaly", "Hepatic steatosis", "Pericholecystic fluid"],
+    steps: [
+      "Patient should be fasting ≥4 hours for optimal GB distension. Use curvilinear probe.",
+      "Begin with liver in sagittal: sweep from right lobe to left lobe, assessing echogenicity, size, and parenchymal texture.",
+      "Locate gallbladder in intercostal oblique view (right mid-axillary line). Survey in long and short axis.",
+      "Roll patient to left decubitus to confirm stone mobility and assess for pericholecystic fluid.",
+      "Measure GB wall thickness at the anterior wall (normal <3mm). Apply direct probe pressure for sonographic Murphy's sign.",
+      "Locate CBD at the porta hepatis (anterior to portal vein). Measure inner-to-inner diameter (normal ≤6mm).",
+      "Scan right kidney longitudinally as comparison for echogenicity assessment vs. liver.",
+    ],
   },
   {
     id: "gallbladder",
@@ -295,6 +413,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "3–5 min",
     aiMeasurements: ["GB wall thickness (mm)", "CBD diameter (mm)", "Stone size (mm)"],
     anomaliesDetected: ["Cholelithiasis", "Wall thickening >3mm", "Pericholecystic fluid", "CBD dilation >6mm", "Polyp"],
+    steps: [
+      "Patient fasting ≥4 hours ideally. Use curvilinear probe, right intercostal oblique approach.",
+      "Identify GB in long axis: look for the pear-shaped fluid-filled structure under the right lobe of the liver.",
+      "Rotate to short axis. Evaluate wall thickness at the anterior wall — measure at the near wall.",
+      "Look for stones: hyperechoic foci with posterior acoustic shadowing. Small stones may not shadow.",
+      "Roll patient left — confirm mobile echogenic foci = stones (fixed = polyps or sludge).",
+      "Apply direct probe pressure over the GB while patient holds breath — positive Murphy's sign = focal tenderness.",
+      "Measure CBD at the porta hepatis, anterior to the portal vein. Inner-to-inner >6mm is abnormal.",
+    ],
   },
   {
     id: "renal",
@@ -311,6 +438,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "4–6 min",
     aiMeasurements: ["Kidney length (cm)", "Cortical thickness (mm)", "Hydronephrosis grade"],
     anomaliesDetected: ["Hydronephrosis (mild/mod/severe)", "Renal stone", "Perinephric collection", "Cortical thinning"],
+    steps: [
+      "Position patient supine or slightly oblique. Use curvilinear probe.",
+      "Right kidney: probe in right mid-axillary line, 9th–11th ICS, marker toward head. Use liver as acoustic window.",
+      "Left kidney: probe in left posterior axillary line. Ask patient to take a deep breath to bring kidney into view.",
+      "Scan each kidney in full longitudinal sweep, then rotate to transverse. Measure length (longitudinal), width, and AP.",
+      "Assess renal pelvis and calyces: anechoic separation = hydronephrosis. Grade mild (pelvis only), moderate (calyces), severe (cortical thinning).",
+      "Look for stones: hyperechoic foci with posterior shadowing, often at the UPJ or ureter.",
+      "Scan bladder transverse and sagittal: assess for distal ureteral jets with color Doppler and post-void residual.",
+    ],
   },
   {
     id: "bladder-volume",
@@ -327,6 +463,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "2–3 min",
     aiMeasurements: ["Bladder length (cm)", "Width (cm)", "Height (cm)", "Volume (mL)"],
     anomaliesDetected: ["Retention (>300mL)", "Debris/clot", "Mass", "Thickened wall"],
+    steps: [
+      "Patient should not have voided recently. Use curvilinear probe suprapubically.",
+      "Transverse plane: place probe just above the pubic symphysis, marker to patient's right. Measure width (W) and AP depth (D) at the widest point.",
+      "Rotate 90° to sagittal plane. Measure the longest craniocaudal dimension (L).",
+      "Calculate volume: 0.523 × L × W × D. Values >300mL suggest urinary retention.",
+      "Trace the bladder wall continuously in both planes to confirm it is bladder (not an ovarian cyst).",
+      "Assess for wall thickening (>3mm when full = abnormal), intraluminal debris, or masses.",
+      "If post-void residual needed: scan immediately after voiding. PVR >100mL is significant.",
+    ],
   },
 
   // ── VASCULAR ─────────────────────────────────────────────────────────────────
@@ -353,6 +498,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–45 min",
     aiMeasurements: ["IMT (mm)", "CCA PSV (cm/s)", "ICA PSV (cm/s)", "ICA/CCA ratio", "ECA PSV (cm/s)", "Vertebral PSV (cm/s)"],
     anomaliesDetected: ["ICA stenosis (>50%, >70%)", "Plaque with surface ulceration", "Near-occlusion", "Occlusion", "Retrograde vertebral flow", "IMT >1.0mm"],
+    steps: [
+      "Patient supine, head slightly turned away from side being scanned. Use linear probe (5–12 MHz).",
+      "Begin with CCA transverse sweep from clavicle to bifurcation — survey for plaque, IMT, and diameter.",
+      "Longitudinal CCA: angle ≤60° to vessel, sample Doppler at proximal, mid, and distal. Document PSV and EDV.",
+      "At bifurcation: identify ICA (posterior, larger, no branches) and ECA (anterior, smaller, branches). Use temporal tap test to confirm.",
+      "Longitudinal ICA: sample at origin, proximal, mid, and distal. Calculate ICA/CCA PSV ratio.",
+      "Measure IMT at far wall of distal CCA, 1cm proximal to bifurcation in a plaque-free segment.",
+      "Vertebral artery: probe posterolateral to CCA between transverse processes. Confirm antegrade flow. Repeat all steps contralateral side.",
+    ],
   },
   {
     id: "le-venous-duplex",
@@ -376,6 +530,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–45 min",
     aiMeasurements: ["CFV diameter (mm)", "Popliteal vein diameter (mm)", "Compressibility score", "Flow velocity (cm/s)"],
     anomaliesDetected: ["Acute DVT (non-compressible)", "Chronic DVT (wall thickening)", "Partial thrombosis", "Absent augmentation (proximal obstruction)"],
+    steps: [
+      "Patient supine with leg slightly externally rotated. Use linear probe (5–12 MHz).",
+      "Start at CFV in the groin: transverse view, compress fully — walls should touch. Scan proximally to SFJ.",
+      "Sweep distally in transverse with compression every 1–2 cm through the femoral vein in the thigh.",
+      "At the popliteal fossa (patient prone or knee bent): compress popliteal vein transversely from distal thigh to trifurcation.",
+      "Add color Doppler and augmentation (calf squeeze releases): normal response is flow augmentation. Loss = proximal obstruction.",
+      "Assess phasicity: normal venous flow waxes/wanes with respiration. Continuous non-phasic flow = proximal obstruction.",
+      "Document each segment: compressible (normal), non-compressible (DVT), echogenic thrombus characteristics.",
+    ],
   },
   {
     id: "dvt",
@@ -392,6 +555,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "5–8 min",
     aiMeasurements: ["CFV diameter (mm)", "Compressibility score"],
     anomaliesDetected: ["Non-compressible vein (DVT)", "Intraluminal echogenic material", "Absent augmentation"],
+    steps: [
+      "Patient supine, leg slightly externally rotated. Linear probe (5–12 MHz).",
+      "Groin: identify CFV in transverse. It is medial and compressible — artery is lateral and pulsatile.",
+      "Apply firm downward pressure — normal vein walls fully touch. Non-compressible = DVT.",
+      "Scan femoral vein in mid-thigh with sequential compression every 2cm.",
+      "Popliteal vein: flex knee or prone position. Compress transversely from above to below the knee.",
+      "Add color Doppler and squeeze calf — confirm augmentation response at each level.",
+      "A 2-point compression study (CFV + popliteal) has high sensitivity for proximal DVT in low-risk patients.",
+    ],
   },
   {
     id: "ue-arterial-duplex",
@@ -415,6 +587,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–45 min",
     aiMeasurements: ["Brachial PSV (cm/s)", "Radial PSV (cm/s)", "Ulnar PSV (cm/s)", "Pressure index"],
     anomaliesDetected: ["Stenosis (focal PSV elevation)", "Occlusion (absent flow)", "Monophasic waveform (inflow disease)", "Pseudoaneurysm", "AV fistula"],
+    steps: [
+      "Patient supine, arm extended. Use linear probe (5–12 MHz). Record bilateral brachial blood pressures first.",
+      "Subclavian artery: probe at supraclavicular fossa. Sample Doppler — note waveform character (triphasic = normal).",
+      "Axillary → brachial artery: follow artery distally with Doppler at regular intervals. Maintain angle ≤60°.",
+      "At antecubital fossa, identify brachial bifurcation into radial (lateral) and ulnar (medial) arteries.",
+      "Follow radial and ulnar arteries to wrist. Document PSV and waveform at each level.",
+      "Note any transition from triphasic to biphasic to monophasic — indicates progressive proximal disease.",
+      "Repeat on contralateral arm. A PSV increase of >100% at a focal site = hemodynamically significant stenosis.",
+    ],
   },
   {
     id: "ue-venous-duplex",
@@ -437,6 +618,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "20–30 min",
     aiMeasurements: ["IJV diameter (mm)", "Subclavian vein flow (cm/s)", "Compressibility score"],
     anomaliesDetected: ["Acute DVT (non-compressible)", "PICC-associated thrombosis", "Effort thrombosis (subclavian)", "SVC syndrome signs"],
+    steps: [
+      "Patient supine, head turned slightly away. Linear probe (5–12 MHz).",
+      "IJV: probe lateral to carotid at the neck. Compress in transverse — IJV collapses easily (artery does not).",
+      "Subclavian vein: probe in infraclavicular region. Cannot fully compress due to clavicle — rely on Doppler phasicity.",
+      "Axillary vein: arm slightly abducted. Compress transversely from axilla to upper arm.",
+      "Brachial, basilic, and cephalic veins: linear compression sweeps from axilla to antecubital fossa.",
+      "Add color Doppler at subclavian: confirm respiratory phasicity. Loss of variation = central (SVC) obstruction.",
+      "If PICC present: trace catheter track and assess for surrounding thrombus along its course.",
+    ],
   },
   {
     id: "renal-artery-duplex",
@@ -460,6 +650,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "45–75 min",
     aiMeasurements: ["Renal artery PSV (cm/s)", "Aortic PSV (cm/s)", "RAR (renal/aortic ratio)", "RI (resistive index)", "Kidney length (cm)"],
     anomaliesDetected: ["Renal artery stenosis (RAR >3.5)", "Fibromuscular dysplasia", "Kidney size asymmetry (>2cm)", "Elevated RI (parenchymal disease)"],
+    steps: [
+      "Patient fasting 6–8 hours to minimise bowel gas. Supine or slight oblique. Curvilinear probe.",
+      "Aorta: transverse view at the level of renal arteries (L1–L2). Sample aortic PSV for RAR calculation.",
+      "Right renal artery: from aorta, angle probe right. Follow RA origin to hilum. Sample at origin, proximal, and mid-segment.",
+      "Left renal artery: rotate/angle left from aorta. Follow posterior and lateral course to left kidney.",
+      "Both kidneys: measure length longitudinally. Asymmetry >2cm suggests renovascular disease on smaller side.",
+      "Parenchymal Doppler: sample segmental/interlobar arteries in upper, mid, and lower poles. Calculate RI = (PSV−EDV)/PSV.",
+      "RAR (renal artery PSV / aortic PSV) >3.5 = significant stenosis. RI >0.80 = poor revascularization prognosis.",
+    ],
   },
   {
     id: "abi",
@@ -483,6 +682,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–45 min",
     aiMeasurements: ["Right ABI", "Left ABI", "Segmental pressures (mmHg)", "TBI"],
     anomaliesDetected: ["ABI ≤0.9 (PAD)", "ABI >1.4 (calcified, non-compressible)", "Segmental gradient >20mmHg", "Critical limb ischemia (ABI <0.4)"],
+    steps: [
+      "Patient supine, 10 min rest. Place appropriate cuffs: bilateral brachial, high thigh, above-knee, below-knee, ankle.",
+      "Bilateral brachial pressures: use handheld Doppler over brachial artery. Record the higher value as reference.",
+      "Segmental pressures: inflate each cuff to suprasystolic, then slowly deflate. Use Doppler over DP or PT to detect return of signal.",
+      "Ankle pressures: DP and PT on each side. Use the higher ankle value for ABI calculation.",
+      "ABI = highest ankle pressure ÷ highest brachial pressure. Normal ≥0.9; PAD ≤0.9; Critical ischemia <0.4.",
+      "If ABI >1.4 (incompressible): measure toe pressures using photoplethysmography (PPG). TBI <0.6 = PAD.",
+      "Document waveforms at each level: triphasic = normal, biphasic = mild disease, monophasic = significant disease.",
+    ],
   },
   {
     id: "aaa",
@@ -499,6 +707,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "3–5 min",
     aiMeasurements: ["Max AP diameter (cm)", "Transverse diameter (cm)"],
     anomaliesDetected: ["Dilation >3cm (aneurysm threshold)", "Dilation >5.5cm (surgical threshold)", "Intraluminal thrombus", "Periaortic fluid"],
+    steps: [
+      "Patient supine. Use curvilinear probe. Start at the epigastrium just below xiphoid.",
+      "Transverse view: identify aorta (left of midline, pulsatile, non-compressible). IVC is to the right and compressible.",
+      "Sweep distally from diaphragm to bifurcation (at level of umbilicus, ~L4). Measure AP diameter in transverse at widest point.",
+      "Measure outer-wall to outer-wall — this is the standard for AAA sizing.",
+      "Longitudinal view: confirm diameter and assess for mural thrombus (echogenic crescent lining vessel wall).",
+      "Look for periaortic hematoma (hypoechoic shadowing around aorta) — in the right clinical context this suggests rupture.",
+      "Measure iliac arteries bilaterally if aorta is dilated. Normal iliac <1.5cm.",
+    ],
   },
   {
     id: "vein-mapping",
@@ -523,6 +740,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "30–60 min",
     aiMeasurements: ["GSV diameter per segment (mm)", "Cephalic vein diameter (mm)", "Basilic vein diameter (mm)", "Depth from skin (cm)"],
     anomaliesDetected: ["Inadequate diameter (<3mm)", "Thrombosed segment", "Varicose segment", "Deep accessory system dependence"],
+    steps: [
+      "Patient standing for lower extremity mapping (supine underestimates vein diameter). Apply tourniquet above scan level.",
+      "GSV mapping: start at SFJ (groin), confirm competence, measure diameter. Mark every 10cm distally to ankle.",
+      "At each mark: record GSV diameter, depth from skin, continuity, and note any varicosities or thrombosed segments.",
+      "SSV: probe popliteal fossa — identify at SPJ. Map to mid-calf.",
+      "Upper extremity (supine): cephalic vein from wrist to shoulder. Basilic from antecubital to axilla. Measure every 10cm.",
+      "Confirm all veins are compressible and free of thrombus before marking as usable conduit.",
+      "Mark skin with indelible marker. Minimum 3mm diameter for CABG; 2.5mm at wrist for dialysis fistula.",
+    ],
   },
   {
     id: "avf-surveillance",
@@ -546,6 +772,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "20–30 min",
     aiMeasurements: ["Brachial artery volume flow (mL/min)", "Access vein diameter (mm)", "Stenosis PSV ratio", "Anastomosis PSV (cm/s)"],
     anomaliesDetected: ["Stenosis (PSV ratio >2:1)", "Thrombosis", "Pseudoaneurysm", "Low flow (<500 mL/min)", "Steal syndrome signs"],
+    steps: [
+      "Patient supine, arm extended. Linear probe (5–12 MHz). Palpate access for thrill before scanning.",
+      "Begin at the arterial anastomosis: document PSV and waveform. Turbulence here is normal.",
+      "Sweep along the juxta-anastomotic vein (most common stenosis site). Flag any focal PSV elevation.",
+      "Continue sweep along the access vein to the outflow — document PSV at regular intervals and at any stenosis.",
+      "Volume flow: measure brachial artery PSV and diameter. Volume flow = π × r² × TAMEAN × 60. Normal mature fistula >600 mL/min.",
+      "Assess aneurysmal segments: measure largest diameter. Note pseudoaneurysms (pulsatile sac with yin-yang flow).",
+      "Check for steal: Doppler at radial artery distal to anastomosis — retrograde flow = steal syndrome.",
+    ],
   },
   {
     id: "venous-reflux",
@@ -569,6 +804,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "45–60 min (bilateral)",
     aiMeasurements: ["Reflux duration (seconds)", "GSV diameter standing (mm)", "Perforator diameter (mm)"],
     anomaliesDetected: ["GSV reflux (>0.5s)", "SSV reflux", "Perforator incompetence", "SFJ incompetence", "Post-thrombotic changes"],
+    steps: [
+      "Patient standing or in reverse Trendelenburg. Supine gives false negatives — this step is mandatory.",
+      "SFJ: probe at groin, GSV origin. Apply distal cuff augmentation then release — time any retrograde flow. >0.5s = pathologic reflux.",
+      "GSV thigh: follow GSV distally, augmenting and releasing at each level. Mark refluxing segments.",
+      "GSV below knee: continue to ankle if reflux present. Measure GSV diameter in standing.",
+      "SPJ/SSV: probe popliteal fossa. Identify SSV entering popliteal vein. Augment calf and release — assess for reflux.",
+      "Perforating veins: thick-walled veins connecting superficial to deep. Bidirectional flow >0.35s = incompetent.",
+      "Deep system: assess CFV, FV, and popliteal for reflux (>1.0s in deep veins is pathologic). Mark all incompetent segments for ablation planning.",
+    ],
   },
 
   // ── THYROID ──────────────────────────────────────────────────────────────────
@@ -596,6 +840,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "20–30 min",
     aiMeasurements: ["Right lobe volume (mL)", "Left lobe volume (mL)", "Isthmus AP (mm)", "Nodule dimensions (mm)", "ACR TI-RADS score"],
     anomaliesDetected: ["Thyroid nodule (solid/cystic/mixed)", "Microcalcifications (high suspicion)", "Irregular margins", "Taller-than-wide shape", "Goiter", "Lymphadenopathy", "Hashimoto pattern"],
+    steps: [
+      "Patient supine with neck slightly extended (pillow under shoulders). High-frequency linear probe (10–18 MHz).",
+      "Transverse sweep: start at the right lobe superior pole, sweep inferiorly to isthmus. Repeat for left lobe.",
+      "Measure right lobe in transverse (width + AP) at the largest dimension, and longitudinally (length).",
+      "Measure isthmus AP in transverse. Measure left lobe in same planes.",
+      "For each nodule: document location, size (3 planes), composition (cystic/solid/mixed), echogenicity, shape, margins, and echogenic foci.",
+      "Apply ACR TI-RADS scoring: assign points for each feature. Total determines FNA threshold.",
+      "Color Doppler: note vascularity pattern (peripheral, internal, or absent). Survey central and lateral neck nodes.",
+    ],
   },
 
   // ── NEURO ────────────────────────────────────────────────────────────────────
@@ -614,6 +867,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "3–4 min",
     aiMeasurements: ["ONSD bilateral (mm)", "Globe axial length (mm)"],
     anomaliesDetected: ["Elevated ONSD (>5.7mm)", "Posterior globe flattening", "Papilledema signs"],
+    steps: [
+      "Patient supine with eyes closed. Use linear probe (7–15 MHz) with a generous standoff gel pad — do NOT apply pressure to the globe.",
+      "Place gel pad on closed eyelid. Orient probe transversely over the eye.",
+      "Identify the globe (anechoic sphere), lens (anterior hyperechoic arc), and optic nerve (hypoechoic tract exiting posteriorly).",
+      "Measure ONSD exactly 3mm posterior to the posterior wall of the globe, perpendicular to the nerve.",
+      "Normal ONSD ≤5.0–5.7mm (varies by reference). >5.7mm correlates with ICP >20 mmHg.",
+      "Rotate probe 90° for the longitudinal plane — repeat measurement. Average transverse and longitudinal.",
+      "Repeat on the contralateral eye. Bilateral elevation strengthens the correlation with raised ICP.",
+    ],
   },
   {
     id: "tcd",
@@ -637,6 +899,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "45–60 min",
     aiMeasurements: ["MCA PSV (cm/s)", "ACA PSV (cm/s)", "PCA PSV (cm/s)", "Basilar PSV (cm/s)", "Lindegaard Ratio"],
     anomaliesDetected: ["MCA PSV >120 cm/s (vasospasm/sickle cell risk)", "Reversed ophthalmic flow (ICA occlusion)", "Absent flow (brain death criteria)", "HITS (microemboli)", "Lindegaard Ratio >3"],
+    steps: [
+      "Patient supine. Use sector/phased array probe (2 MHz TCD probe preferred) set to low MI.",
+      "Transtemporal window: place probe at the temporal squama above the zygomatic arch. Identify the MCA at 45–65mm depth — it flows toward the probe (positive).",
+      "Identify ACA at 60–80mm (flows away, negative). PCA at 60–70mm (flow direction varies by segment).",
+      "Record PSV, EDV, and mean velocity at each vessel. Calculate Lindegaard Ratio = MCA mean / ICA mean (>3 = vasospasm).",
+      "Transorbital window: REDUCE power to minimum MI. Place probe on closed eyelid. Ophthalmic artery at 40–50mm — normally toward probe.",
+      "Suboccipital window: patient flexes neck. Probe at foramen magnum. Basilar at 80–120mm (away from probe); vertebrals at 40–70mm.",
+      "For PFO: inject agitated saline IV during Valsalva. Count HITS (microembolic signals) within 25 cardiac cycles on MCA.",
+    ],
   },
 
   // ── MSK ──────────────────────────────────────────────────────────────────────
@@ -665,6 +936,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "20–30 min",
     aiMeasurements: ["Supraspinatus thickness (mm)", "Bursal fluid depth (mm)", "Tear size if present (mm)", "Biceps tendon diameter (mm)"],
     anomaliesDetected: ["Full-thickness rotator cuff tear", "Partial-thickness tear (bursal/articular)", "Tendinosis", "Calcific tendinopathy", "Biceps tendon rupture/dislocation", "Subdeltoid bursitis"],
+    steps: [
+      "Patient seated on a stool facing you. Use high-frequency linear probe (10–18 MHz) with plenty of gel.",
+      "Biceps tendon: arm in neutral, elbow flexed 90°. Probe transverse in the bicipital groove — identify as round echogenic structure. Rotate longitudinal to assess continuity.",
+      "Subscapularis: internally rotate arm (palm up on thigh). Transverse then longitudinal scan of the subscapularis tendon.",
+      "Supraspinatus — modified Crass position: patient places hand in back pocket (internally rotated). Probe coronal on the anterior shoulder. Long axis first, then short axis.",
+      "Infraspinatus: arm in neutral, probe at posterior shoulder lateral to spine of scapula. Long and short axis.",
+      "Subacromial-subdeltoid bursa: thin anechoic line between cuff and deltoid. Any fluid >2mm = bursitis.",
+      "Dynamic assessment: slowly abduct the arm while scanning — observe for impingement of cuff against acromion.",
+    ],
   },
 
   // ── PROCEDURAL ───────────────────────────────────────────────────────────────
@@ -683,6 +963,15 @@ export const PROTOCOLS: Protocol[] = [
     estimatedTime: "3–5 min",
     aiMeasurements: ["Collection dimensions (cm)", "Depth from skin (cm)"],
     anomaliesDetected: ["Abscess (fluid + debris)", "Cellulitis (cobblestone)", "Foreign body", "Hematoma"],
+    steps: [
+      "Use high-frequency linear probe (10–18 MHz). No special patient preparation needed.",
+      "Survey the affected area in two perpendicular planes. Compare to the contralateral side when possible.",
+      "Cellulitis pattern: diffuse hyperechogenicity of subcutaneous fat with cobblestone appearance (edematous fat lobules separated by fluid).",
+      "Abscess: look for a hypoechoic/anechoic collection. Apply the squish sign — gentle compression causes internal swirling of debris = abscess.",
+      "If collection found: measure in 3 planes. Note depth from skin, wall characteristics, internal echoes, and vascularity with color Doppler.",
+      "Foreign body: linear hyperechoic structure with posterior shadowing (wood) or reverberation artifact (metal/glass).",
+      "Document all findings. For abscess drainage guidance: confirm needle trajectory in real time.",
+    ],
   },
 ];
 

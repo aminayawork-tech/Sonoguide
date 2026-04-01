@@ -54,7 +54,7 @@ function ProtocolCard({ protocol }: { protocol: Protocol }) {
   const IconComp = CATEGORY_ICON[protocol.category] ?? Activity;
   return (
     <Link
-      href={`/scan?protocol=${protocol.id}`}
+      href={`/protocols/${protocol.id}`}
       className="group flex flex-col rounded-2xl border p-5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
       style={{ background: "#ffffff", borderColor: "#dde4ee" }}
     >
@@ -265,7 +265,7 @@ export default function ProtocolsPage() {
               const p = PROTOCOLS.find((x) => x.id === id)!;
               const QIcon = CATEGORY_ICON[p.category] ?? Activity;
               return (
-                <Link key={id} href={`/scan?protocol=${id}`}
+                <Link key={id} href={`/protocols/${id}`}
                   className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80"
                   style={{ borderColor: "#93c5fd", background: "#dbeafe", color: "#1d4ed8" }}>
                   <QIcon size={12} /> {p.shortName} <ArrowRight size={10} />
