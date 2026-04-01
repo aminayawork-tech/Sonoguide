@@ -224,7 +224,7 @@ export default function PricingSection() {
               <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$13.25/mo</p>
             )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
-              {["150 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (500 msgs/mo)", "PDF report export", ""PHI auto-redaction", "Priority AI queue"].map((f) => (
+              {["150 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (500 msgs/mo)", "PDF report export", "PHI auto-redaction", "Priority AI queue"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#2563eb", flexShrink: 0 }} />
                   {f}
