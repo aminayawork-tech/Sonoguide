@@ -29,7 +29,6 @@ export const PLANS = {
       "All 31 protocols",
       "Full measurements suite",
       "AI chat (150 msgs/mo)",
-      "90-day scan history",
       "PHI auto-redaction",
     ],
   },
@@ -44,7 +43,6 @@ export const PLANS = {
       "All 31 protocols",
       "Full measurements suite",
       "AI chat (150 msgs/mo)",
-      "90-day scan history",
       "PHI auto-redaction",
     ],
   },
@@ -59,7 +57,7 @@ export const PLANS = {
       "Full measurements suite",
       "AI chat (500 msgs/mo)",
       "PDF report export",
-      "1-year scan history",
+
       "PHI auto-redaction",
       "Priority AI queue",
     ],
@@ -76,7 +74,7 @@ export const PLANS = {
       "Full measurements suite",
       "AI chat (500 msgs/mo)",
       "PDF report export",
-      "1-year scan history",
+
       "PHI auto-redaction",
       "Priority AI queue",
     ],
@@ -93,7 +91,7 @@ export const PLANS = {
       "Full measurements suite",
       "AI chat (2,000 msgs/mo)",
       "PDF export",
-      "Unlimited history",
+
       "PHI auto-redaction",
       "Priority support",
     ],
@@ -111,7 +109,7 @@ export const PLANS = {
       "Full measurements suite",
       "AI chat (2,000 msgs/mo)",
       "PDF export",
-      "Unlimited history",
+
       "PHI auto-redaction",
       "Priority support",
     ],
