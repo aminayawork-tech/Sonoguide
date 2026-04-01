@@ -155,7 +155,7 @@ export default function PricingSection() {
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Free</p>
             <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>$0</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["5 AI analyses/month", "All 31 protocols", "Structure labeling", "Anomaly detection", "30-day scan history", "PHI auto-redaction"].map((f) => (
+              {["5 AI analyses/month", "All 31 protocols", "Structure labeling", "Anomaly detection", "PHI auto-redaction"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
                   {f}
@@ -186,7 +186,7 @@ export default function PricingSection() {
               </>
             )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["50 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (150 msgs/mo)", "90-day scan history", "PHI auto-redaction"].map((f) => (
+              {["50 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (150 msgs/mo)", "PHI auto-redaction"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
                   {f}
@@ -224,7 +224,7 @@ export default function PricingSection() {
               <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$13.25/mo</p>
             )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
-              {["150 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (500 msgs/mo)", "PDF report export", "1-year scan history", "PHI auto-redaction", "Priority AI queue"].map((f) => (
+              {["150 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (500 msgs/mo)", "PDF report export", ""PHI auto-redaction", "Priority AI queue"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#2563eb", flexShrink: 0 }} />
                   {f}
@@ -258,7 +258,7 @@ export default function PricingSection() {
               {billing === "yearly" ? "~$66.58/mo · " : ""}Up to 10 seats · 500 scans pooled
             </p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["500 AI analyses/month (pooled)", "Up to 10 seats", "All 31 protocols", "Full measurements suite", "AI chat (2,000 msgs/mo)", "PDF export", "Unlimited history", "PHI auto-redaction", "Priority support"].map((f) => (
+              {["500 AI analyses/month (pooled)", "Up to 10 seats", "All 31 protocols", "Full measurements suite", "AI chat (2,000 msgs/mo)", "PDF export", "PHI auto-redaction", "Priority support"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   {f === "Up to 10 seats"
                     ? <Users size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
