@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { CheckCircle, Loader2, Mail, Sparkles, Users, X } from "lucide-react";
 import { useAuth } from "./AuthProvider";
@@ -53,9 +53,10 @@ function ContactModal({ onClose }: { onClose: () => void }) {
 
 function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: string; primary?: boolean }) {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [showAuth, setShowAuth] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading,     setLoading]     = useState(false);
+  const [showAuth,    setShowAuth]    = useState(false);
+  const [error,       setError]       = useState<string | null>(null);
+  const pendingRef = useRef(false);
 
   async function startCheckout() {
     setLoading(true);
@@ -79,16 +80,26 @@ function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: stri
     }
   }
 
+  // When user signs in/up via the modal, auto-proceed to checkout
+  useEffect(() => {
+    if (pendingRef.current && user) {
+      pendingRef.current = false;
+      startCheckout();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   return (
     <>
       {showAuth && (
         <AuthModal
           onClose={() => setShowAuth(false)}
-          reason="Sign in to continue with your subscription."
+          reason="Create a free account to complete your purchase."
+          initialMode="signup"
         />
       )}
       <button
-        onClick={() => user ? startCheckout() : setShowAuth(true)}
+        onClick={() => user ? startCheckout() : (pendingRef.current = true, setShowAuth(true))}
         disabled={loading}
         className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all hover:opacity-90 disabled:opacity-60 ${primary ? "text-white" : "border"}`}
         style={primary
