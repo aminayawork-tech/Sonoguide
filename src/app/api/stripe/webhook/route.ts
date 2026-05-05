@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 
           // Stamp the subscription metadata so future webhook events can find the user
           await stripe.subscriptions.update(subscriptionId, {
-            metadata: { supabase_user_id: userId },
+            metadata: { supabase_user_id: userId ?? "" },
           });
         }
 
