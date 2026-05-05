@@ -1,0 +1,17 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark rounded background -->
+  <rect width="100" height="100" rx="22" fill="#0f172a"/>
+
+  <!-- Blue waveform trailing behind the plane -->
+  <path d="M7 60 C11 50 17 50 21 60 C25 70 31 70 35 60 C39 50 45 50 49 60"
+        stroke="#3b82f6" stroke-width="5" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Paper plane pointing upper-right -->
+  <!-- Main body -->
+  <path d="M83 13 L26 84 L58 63 Z" fill="white"/>
+  <!-- Folded wing (lighter face) -->
+  <path d="M83 13 L58 63 L75 54 Z" fill="#94a3b8"/>
+  <!-- Fold crease -->
+  <line x1="83" y1="13" x2="58" y2="63" stroke="#0f172a" stroke-width="2"/>
+</svg>

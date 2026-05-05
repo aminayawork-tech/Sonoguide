@@ -1,0 +1,26 @@
+<svg viewBox="0 0 240 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- ── Mark (icon) ── -->
+  <rect width="56" height="56" rx="12" fill="#0f172a"/>
+
+  <!-- Blue waveform -->
+  <path d="M4 34 C7 28 11 28 14 34 C17 40 21 40 24 34 C27 28 31 28 34 34"
+        stroke="#3b82f6" stroke-width="3" fill="none"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Paper plane -->
+  <path d="M48 8 L16 48 L32 37 Z" fill="white"/>
+  <path d="M48 8 L32 37 L43 31 Z" fill="#94a3b8"/>
+  <line x1="48" y1="8" x2="32" y2="37" stroke="#0f172a" stroke-width="1.2"/>
+
+  <!-- ── Wordmark ── -->
+  <!-- "sono" — regular weight -->
+  <text x="68" y="37"
+        font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif"
+        font-size="22" font-weight="400" letter-spacing="-0.5"
+        fill="#0f172a">sono</text>
+  <!-- "pilot" — bold -->
+  <text x="116" y="37"
+        font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif"
+        font-size="22" font-weight="700" letter-spacing="-0.5"
+        fill="#0f172a">pilot</text>
+</svg>
