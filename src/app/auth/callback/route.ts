@@ -24,7 +24,9 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({ token_hash, type });
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      // Recovery tokens must land on the reset-password form, not the home page
+      const destination = type === "recovery" ? "/auth/reset-password" : next;
+      return NextResponse.redirect(`${origin}${destination}`);
     }
   }
 
