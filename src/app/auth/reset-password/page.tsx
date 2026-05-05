@@ -55,12 +55,12 @@ export default function ResetPasswordPage() {
         <div className="mb-6 flex items-center gap-2 select-none">
           <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="100" height="100" rx="22" fill="#2563EB"/>
-            <path d="M10 74 C15 65 21 65 26 74 C31 83 37 83 42 74 C47 65 53 65 58 74"
-                  stroke="white" strokeWidth="4.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M84 16 L14 42 L46 56 Z" fill="white"/>
-            <path d="M84 16 L46 56 L16 66 Z" fill="white" opacity="0.65"/>
-            <path d="M14 42 L46 56 L16 66 Z" fill="white" opacity="0.3"/>
-            <path d="M84 16 L46 56" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+            <path d="M8 78 C13 69 20 69 25 78 C30 87 37 87 42 78 C47 69 54 69 59 78"
+                  stroke="white" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M86 13 L8 45 L40 57 Z" fill="white"/>
+            <path d="M86 13 L40 57 L12 68 Z" fill="white" opacity="0.55"/>
+            <path d="M8 45 L40 57 L12 68 Z" fill="white" opacity="0.25"/>
+            <path d="M86 13 L40 57" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
           </svg>
           <span className="text-[17px] tracking-tight leading-none">
             <span style={{ color: "#374151", fontWeight: 400 }}>sono</span><span style={{ color: "#2563eb", fontWeight: 700 }}>pilot</span>
