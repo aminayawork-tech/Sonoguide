@@ -2,7 +2,6 @@
 
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Camera, Home, Library, LogIn } from "lucide-react";
 import { useAuth } from "./AuthProvider";
@@ -15,13 +14,11 @@ const desktopNavItems = [
 ];
 
 function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
-  const imgSize = size === "sm" ? 20 : 22;
   const textCls = size === "sm"
     ? "text-lg font-extrabold tracking-tight"
     : "text-xl font-extrabold tracking-tight";
   return (
-    <Link href="/" className="flex items-center gap-1.5 select-none leading-none">
-      <Image src="/logo-mark.svg" alt="" width={imgSize} height={imgSize} priority />
+    <Link href="/" className="flex items-baseline gap-0 select-none leading-none">
       <span className={textCls} style={{ color: "#0f172a" }}>Sono</span>
       <span className={textCls} style={{ color: "#2563eb" }}>Pilot</span>
     </Link>
