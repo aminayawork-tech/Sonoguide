@@ -183,10 +183,16 @@ function ScanContent() {
   const selectedProtocol    = getProtocolById(effectiveProtocolId);
 
   useEffect(() => {
-    const param = searchParams.get("upgrade");
+    const param      = searchParams.get("upgrade");
+    const newAccount = searchParams.get("new_account");
     if (param === "success") {
       refreshProfile();
-      router.replace("/scan");
+      if (newAccount === "1") {
+        // New user paid without an account — show email setup prompt
+        router.replace("/scan?welcome=1");
+      } else {
+        router.replace("/scan");
+      }
     } else if (param === "cancelled") {
       router.replace("/scan");
     }
@@ -354,6 +360,17 @@ function ScanContent() {
                 {profile.tier === "clinic" ? "Clinic" : "Pro"} — unlimited scans
               </span>
             )}
+          </div>
+        )}
+
+        {/* New-account welcome banner (paid without being signed in) */}
+        {searchParams.get("welcome") === "1" && (
+          <div className="mb-5 rounded-2xl border p-4"
+            style={{ borderColor: "#86efac", background: "#f0fdf4" }}>
+            <p className="text-sm font-bold" style={{ color: "#15803d" }}>Payment successful!</p>
+            <p className="mt-1 text-xs" style={{ color: "#166534" }}>
+              Check your email — we&apos;ve sent you a link to set up your password and activate your account.
+            </p>
           </div>
         )}
 

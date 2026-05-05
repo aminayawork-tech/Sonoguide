@@ -46,20 +46,55 @@ export async function POST(req: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         if (session.mode !== "subscription") break;
 
-        const userId = (session.metadata as Record<string, string> | null)?.supabase_user_id;
-        if (!userId) {
-          console.error("Webhook: no supabase_user_id in checkout session metadata");
-          break;
-        }
-
+        const customerId    = session.customer as string;
         const subscriptionId = session.subscription as string;
-        const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-        const priceId = subscription.items.data[0]?.price.id;
-        const tier = tierFromPriceId(priceId);
+        const subscription  = await stripe.subscriptions.retrieve(subscriptionId);
+        const priceId       = subscription.items.data[0]?.price.id;
+        const tier          = tierFromPriceId(priceId);
+
+        // Try to get supabase_user_id from metadata (authenticated checkout)
+        let userId = (session.metadata as Record<string, string> | null)?.supabase_user_id;
+
+        if (!userId) {
+          // Unauthenticated checkout — find or create Supabase user by email
+          const email = session.customer_details?.email;
+          if (!email) {
+            console.error("Webhook: no email in checkout session");
+            break;
+          }
+
+          // Check if a profile with this email already exists
+          const { data: existing } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("email", email)
+            .single();
+
+          if (existing) {
+            userId = existing.id;
+          } else {
+            // Create new Supabase user and send them an invite email to set password
+            const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+            const { data: invited, error: inviteErr } = await supabase.auth.admin.inviteUserByEmail(
+              email,
+              { redirectTo: `${appUrl}/auth/callback?next=/auth/reset-password` },
+            );
+            if (inviteErr || !invited.user) {
+              console.error("Webhook: failed to invite user:", inviteErr);
+              break;
+            }
+            userId = invited.user.id;
+          }
+
+          // Stamp the subscription metadata so future webhook events can find the user
+          await stripe.subscriptions.update(subscriptionId, {
+            metadata: { supabase_user_id: userId },
+          });
+        }
 
         await supabase.from("profiles").update({
           tier,
-          stripe_customer_id:     session.customer as string,
+          stripe_customer_id:     customerId,
           stripe_subscription_id: subscriptionId,
           scans_used_this_month:  0,
           current_period_start:   new Date().toISOString(),
