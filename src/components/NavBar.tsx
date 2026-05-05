@@ -14,19 +14,13 @@ const desktopNavItems = [
 ];
 
 function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
-  const iconSize = size === "sm" ? 28 : 32;
-  const textCls  = size === "sm"
+  const textCls = size === "sm"
     ? "text-lg font-extrabold tracking-tight"
     : "text-xl font-extrabold tracking-tight";
   return (
-    <Link href="/" className="flex items-center gap-2 select-none">
-      {/* Use public file so browser renders SVG at full fidelity */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/sonopilot-icon.svg" width={iconSize} height={iconSize} alt="SonoPilot" />
-      <span className="flex items-baseline gap-0 leading-none">
-        <span className={textCls} style={{ color: "#0f172a" }}>Sono</span>
-        <span className={textCls} style={{ color: "#2563eb" }}>Pilot</span>
-      </span>
+    <Link href="/" className="flex items-baseline gap-0 select-none leading-none">
+      <span className={textCls} style={{ color: "#0f172a" }}>Sono</span>
+      <span className={textCls} style={{ color: "#2563eb" }}>Pilot</span>
     </Link>
   );
 }
