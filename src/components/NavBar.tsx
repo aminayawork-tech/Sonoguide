@@ -18,30 +18,20 @@ function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
   const textSize = size === "sm" ? "text-[17px]" : "text-[20px]";
   return (
     <Link href="/" className="flex items-center gap-2 select-none">
-      {/* Paper Plane Pulse — white background favicon */}
+      {/* Paper Plane Pulse — blue background mark */}
       <svg width={iconSize} height={iconSize} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="pg" x1="84" y1="16" x2="18" y2="58" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#14BBA6"/>
-            <stop offset="100%" stopColor="#2563EB"/>
-          </linearGradient>
-          <linearGradient id="pgd" x1="84" y1="16" x2="16" y2="66" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#0d9488"/>
-            <stop offset="100%" stopColor="#1d4ed8"/>
-          </linearGradient>
-        </defs>
-        <rect width="100" height="100" rx="22" fill="white" stroke="#e2e8f0" strokeWidth="2"/>
+        <rect width="100" height="100" rx="22" fill="#2563EB"/>
         <path d="M10 74 C15 65 21 65 26 74 C31 83 37 83 42 74 C47 65 53 65 58 74"
-              stroke="#2563EB" strokeWidth="4.5" fill="none"
+              stroke="white" strokeWidth="4.5" fill="none"
               strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M84 16 L14 40 L48 56 Z" fill="url(#pg)"/>
-        <path d="M84 16 L48 56 L16 64 Z" fill="url(#pgd)" opacity="0.85"/>
-        <path d="M14 40 L48 56 L16 64 Z" fill="#1d4ed8" opacity="0.4"/>
-        <path d="M84 16 L48 56" stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.6"/>
+        <path d="M84 16 L14 42 L46 56 Z" fill="white"/>
+        <path d="M84 16 L46 56 L16 66 Z" fill="white" opacity="0.65"/>
+        <path d="M14 42 L46 56 L16 66 Z" fill="white" opacity="0.3"/>
+        <path d="M84 16 L46 56" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
       </svg>
-      {/* Wordmark: "sono" regular + "pilot" bold, all lowercase */}
-      <span className={`${textSize} tracking-tight leading-none font-normal`} style={{ color: "#374151" }}>
-        sono<span className="font-bold" style={{ color: "#2563eb" }}>pilot</span>
+      {/* sono (regular) + pilot (bold), all lowercase */}
+      <span className={`${textSize} tracking-tight leading-none`}>
+        <span style={{ color: "#374151", fontWeight: 400 }}>sono</span><span style={{ color: "#2563eb", fontWeight: 700 }}>pilot</span>
       </span>
     </Link>
   );

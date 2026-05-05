@@ -1,30 +1,16 @@
 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="planeGrad" x1="85" y1="18" x2="18" y2="58" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#14BBA6"/>
-      <stop offset="100%" stop-color="#2563EB"/>
-    </linearGradient>
-    <linearGradient id="planeGradDark" x1="85" y1="18" x2="18" y2="65" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0d9488"/>
-      <stop offset="100%" stop-color="#1d4ed8"/>
-    </linearGradient>
-  </defs>
-
-  <!-- White rounded background -->
-  <rect width="100" height="100" rx="22" fill="white"/>
-
-  <!-- Blue waveform trailing below the plane -->
+  <!-- Blue rounded background (left favicon variant) -->
+  <rect width="100" height="100" rx="22" fill="#2563EB"/>
+  <!-- Waveform -->
   <path d="M10 74 C15 65 21 65 26 74 C31 83 37 83 42 74 C47 65 53 65 58 74"
-        stroke="#2563EB" stroke-width="4.5" fill="none"
+        stroke="white" stroke-width="4.5" fill="none"
         stroke-linecap="round" stroke-linejoin="round"/>
-
-  <!-- Paper airplane -->
-  <!-- Top face: nose → back-top → belly fold -->
-  <path d="M84 16 L14 40 L48 56 Z" fill="url(#planeGrad)"/>
-  <!-- Bottom face: nose → belly fold → back-bottom -->
-  <path d="M84 16 L48 56 L16 64 Z" fill="url(#planeGradDark)" opacity="0.85"/>
-  <!-- Tail triangle (back face, slightly darker) -->
-  <path d="M14 40 L48 56 L16 64 Z" fill="#1d4ed8" opacity="0.4"/>
-  <!-- Fold crease highlight -->
-  <path d="M84 16 L48 56" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.6"/>
+  <!-- Paper airplane body (white) -->
+  <path d="M84 16 L14 42 L46 56 Z" fill="white"/>
+  <!-- Bottom wing (slightly transparent white for fold depth) -->
+  <path d="M84 16 L46 56 L16 66 Z" fill="white" opacity="0.65"/>
+  <!-- Tail back face -->
+  <path d="M14 42 L46 56 L16 66 Z" fill="white" opacity="0.3"/>
+  <!-- Fold crease -->
+  <path d="M84 16 L46 56" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
 </svg>

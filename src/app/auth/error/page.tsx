@@ -19,15 +19,18 @@ function AuthErrorContent() {
         style={{ background: "#fff" }}
       >
         {/* Logo */}
-        <div className="mb-6 flex items-center justify-center gap-2">
-          <div
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-white text-xs font-bold"
-            style={{ background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)" }}
-          >
-            S
-          </div>
-          <span className="font-semibold text-sm" style={{ color: "#1a2235" }}>
-            Sono<span style={{ color: "#3b82f6" }}>Pilot</span>
+        <div className="mb-6 flex items-center justify-center gap-2 select-none">
+          <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="22" fill="#2563EB"/>
+            <path d="M10 74 C15 65 21 65 26 74 C31 83 37 83 42 74 C47 65 53 65 58 74"
+                  stroke="white" strokeWidth="4.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M84 16 L14 42 L46 56 Z" fill="white"/>
+            <path d="M84 16 L46 56 L16 66 Z" fill="white" opacity="0.65"/>
+            <path d="M14 42 L46 56 L16 66 Z" fill="white" opacity="0.3"/>
+            <path d="M84 16 L46 56" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
+          </svg>
+          <span className="text-[17px] tracking-tight leading-none">
+            <span style={{ color: "#374151", fontWeight: 400 }}>sono</span><span style={{ color: "#2563eb", fontWeight: 700 }}>pilot</span>
           </span>
         </div>
 
