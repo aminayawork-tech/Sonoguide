@@ -57,8 +57,6 @@ export async function POST(req: NextRequest) {
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [{ price: plan.priceId, quantity: 1 }],
-      // Stripe will collect the customer's email at checkout
-      customer_creation: "always",
       billing_address_collection: "auto",
       success_url: `${appUrl}/scan?upgrade=success&new_account=1`,
       cancel_url:  `${appUrl}/`,
