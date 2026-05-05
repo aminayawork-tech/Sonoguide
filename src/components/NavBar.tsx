@@ -14,22 +14,15 @@ const desktopNavItems = [
 ];
 
 function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
-  const iconSize = size === "sm" ? 24 : 26;
+  const iconSize = size === "sm" ? 28 : 32;
   const textCls  = size === "sm"
     ? "text-lg font-extrabold tracking-tight"
     : "text-xl font-extrabold tracking-tight";
   return (
-    <Link href="/" className="flex items-center gap-1.5 select-none">
-      {/* Paper Plane Pulse icon — blue bg, white plane + waveform */}
-      <svg width={iconSize} height={iconSize} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="22" fill="#2563EB"/>
-        <path d="M8 78 C13 69 20 69 25 78 C30 87 37 87 42 78 C47 69 54 69 59 78"
-              stroke="white" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M86 13 L8 45 L40 57 Z" fill="white"/>
-        <path d="M86 13 L40 57 L12 68 Z" fill="white" opacity="0.55"/>
-        <path d="M8 45 L40 57 L12 68 Z" fill="white" opacity="0.25"/>
-        <path d="M86 13 L40 57" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" opacity="0.5"/>
-      </svg>
+    <Link href="/" className="flex items-center gap-2 select-none">
+      {/* Use public file so browser renders SVG at full fidelity */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/sonopilot-icon.svg" width={iconSize} height={iconSize} alt="SonoPilot" />
       <span className="flex items-baseline gap-0 leading-none">
         <span className={textCls} style={{ color: "#0f172a" }}>Sono</span>
         <span className={textCls} style={{ color: "#2563eb" }}>Pilot</span>
