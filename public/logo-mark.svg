@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 70" fill="none">
+  <!-- Paper plane body - pointing upper-right -->
+  <path d="M4 58 L74 6 L56 68 Z" fill="#2563EB"/>
+  <!-- Fold crease - inner wing separation -->
+  <path d="M74 6 L40 40 L56 68 Z" fill="#1d4ed8"/>
+  <!-- Tail flap -->
+  <path d="M4 58 L40 40 L32 57 Z" fill="#1d4ed8"/>
+  <!-- Wavy line below (ultrasound waves) -->
+  <path d="M2 66 Q9 59 16 66 Q23 73 30 66 Q37 59 44 66 Q51 73 58 66"
+        stroke="#2563EB" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
