@@ -52,15 +52,28 @@ export default function ResetPasswordPage() {
         style={{ background: "#fff" }}
       >
         {/* Logo */}
-        <div className="mb-6 flex items-center gap-2">
-          <div
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-white text-xs font-bold"
-            style={{ background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)" }}
-          >
-            S
-          </div>
-          <span className="font-semibold text-sm" style={{ color: "#1a2235" }}>
-            Sono<span style={{ color: "#3b82f6" }}>Pilot</span>
+        <div className="mb-6 flex items-center gap-2 select-none">
+          <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="rp-pg" x1="84" y1="16" x2="18" y2="58" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#14BBA6"/>
+                <stop offset="100%" stopColor="#2563EB"/>
+              </linearGradient>
+              <linearGradient id="rp-pgd" x1="84" y1="16" x2="16" y2="66" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#0d9488"/>
+                <stop offset="100%" stopColor="#1d4ed8"/>
+              </linearGradient>
+            </defs>
+            <rect width="100" height="100" rx="22" fill="white" stroke="#e2e8f0" strokeWidth="2"/>
+            <path d="M10 74 C15 65 21 65 26 74 C31 83 37 83 42 74 C47 65 53 65 58 74"
+                  stroke="#2563EB" strokeWidth="4.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M84 16 L14 40 L48 56 Z" fill="url(#rp-pg)"/>
+            <path d="M84 16 L48 56 L16 64 Z" fill="url(#rp-pgd)" opacity="0.85"/>
+            <path d="M14 40 L48 56 L16 64 Z" fill="#1d4ed8" opacity="0.4"/>
+            <path d="M84 16 L48 56" stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.6"/>
+          </svg>
+          <span className="text-[17px] tracking-tight font-normal" style={{ color: "#374151" }}>
+            sono<span className="font-bold" style={{ color: "#2563eb" }}>pilot</span>
           </span>
         </div>
 

@@ -14,22 +14,34 @@ const desktopNavItems = [
 ];
 
 function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
-  const iconSize = size === "sm" ? 28 : 32;
-  const textCls  = size === "sm" ? "text-lg font-extrabold tracking-tight" : "text-xl font-extrabold tracking-tight";
+  const iconSize = size === "sm" ? 30 : 34;
+  const textSize = size === "sm" ? "text-[17px]" : "text-[20px]";
   return (
     <Link href="/" className="flex items-center gap-2 select-none">
-      {/* Paper Plane Pulse mark */}
+      {/* Paper Plane Pulse — white background favicon */}
       <svg width={iconSize} height={iconSize} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="22" fill="#0f172a"/>
-        <path d="M7 60 C11 50 17 50 21 60 C25 70 31 70 35 60 C39 50 45 50 49 60"
-              stroke="#3b82f6" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M83 13 L26 84 L58 63 Z" fill="white"/>
-        <path d="M83 13 L58 63 L75 54 Z" fill="#94a3b8"/>
-        <line x1="83" y1="13" x2="58" y2="63" stroke="#0f172a" strokeWidth="2"/>
+        <defs>
+          <linearGradient id="pg" x1="84" y1="16" x2="18" y2="58" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#14BBA6"/>
+            <stop offset="100%" stopColor="#2563EB"/>
+          </linearGradient>
+          <linearGradient id="pgd" x1="84" y1="16" x2="16" y2="66" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#0d9488"/>
+            <stop offset="100%" stopColor="#1d4ed8"/>
+          </linearGradient>
+        </defs>
+        <rect width="100" height="100" rx="22" fill="white" stroke="#e2e8f0" strokeWidth="2"/>
+        <path d="M10 74 C15 65 21 65 26 74 C31 83 37 83 42 74 C47 65 53 65 58 74"
+              stroke="#2563EB" strokeWidth="4.5" fill="none"
+              strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M84 16 L14 40 L48 56 Z" fill="url(#pg)"/>
+        <path d="M84 16 L48 56 L16 64 Z" fill="url(#pgd)" opacity="0.85"/>
+        <path d="M14 40 L48 56 L16 64 Z" fill="#1d4ed8" opacity="0.4"/>
+        <path d="M84 16 L48 56" stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.6"/>
       </svg>
-      <span className="flex items-baseline gap-0 leading-none">
-        <span className={textCls} style={{ color: "#0f172a" }}>sono</span>
-        <span className={textCls} style={{ color: "#2563eb" }}>pilot</span>
+      {/* Wordmark: "sono" regular + "pilot" bold, all lowercase */}
+      <span className={`${textSize} tracking-tight leading-none font-normal`} style={{ color: "#374151" }}>
+        sono<span className="font-bold" style={{ color: "#2563eb" }}>pilot</span>
       </span>
     </Link>
   );
