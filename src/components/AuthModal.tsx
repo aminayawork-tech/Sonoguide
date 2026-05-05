@@ -8,10 +8,12 @@ interface AuthModalProps {
   onClose: () => void;
   /** If provided, shown above the form as context for why auth is required */
   reason?: string;
+  /** Open the modal directly in a specific mode */
+  initialMode?: "signin" | "signup" | "forgot";
 }
 
-export default function AuthModal({ onClose, reason }: AuthModalProps) {
-  const [mode,     setMode]     = useState<"signin" | "signup" | "forgot">("signin");
+export default function AuthModal({ onClose, reason, initialMode = "signin" }: AuthModalProps) {
+  const [mode,     setMode]     = useState<"signin" | "signup" | "forgot">(initialMode);
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
   const [showPw,   setShowPw]   = useState(false);

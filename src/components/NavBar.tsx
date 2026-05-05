@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Camera, Home, Library, LogIn } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import UserMenu from "./UserMenu";
@@ -25,14 +25,34 @@ function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
   );
 }
 
-export default function NavBar() {
+function NavBarInner() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { user, loading } = useAuth();
-  const [showAuth, setShowAuth] = useState(false);
+  const [showAuth, setShowAuth]       = useState(false);
+  const [authInitMode, setAuthInitMode] = useState<"signin" | "signup" | "forgot">("signin");
+
+  useEffect(() => {
+    const authParam = searchParams.get("auth");
+    if (authParam === "forgot") {
+      setAuthInitMode("forgot");
+      setShowAuth(true);
+      // Clean the URL without reloading
+      const url = new URL(window.location.href);
+      url.searchParams.delete("auth");
+      router.replace(url.pathname + (url.search || ""), { scroll: false });
+    }
+  }, [searchParams, router]);
+
+  function closeAuth() {
+    setShowAuth(false);
+    setAuthInitMode("signin");
+  }
 
   return (
     <>
-      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
+      {showAuth && <AuthModal onClose={closeAuth} initialMode={authInitMode} />}
       {/* ── Desktop top nav ── */}
       <header
         className="hidden md:block fixed top-0 left-0 right-0 z-50 border-b"
@@ -133,5 +153,13 @@ export default function NavBar() {
         </div>
       </nav>
     </>
+  );
+}
+
+export default function NavBar() {
+  return (
+    <Suspense>
+      <NavBarInner />
+    </Suspense>
   );
 }
