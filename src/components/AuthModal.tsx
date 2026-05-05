@@ -11,13 +11,13 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ onClose, reason }: AuthModalProps) {
-  const [mode,     setMode]     = useState<"signin" | "signup">("signin");
+  const [mode,     setMode]     = useState<"signin" | "signup" | "forgot">("signin");
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
   const [showPw,   setShowPw]   = useState(false);
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState<string | null>(null);
-  const [sent,     setSent]     = useState(false); // email confirmation sent
+  const [sent,     setSent]     = useState(false); // email sent (confirm or reset)
 
   const supabase = createClient();
 
@@ -31,6 +31,12 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
         const { error } = await supabase.auth.signUp({
           email, password,
           options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+        });
+        if (error) throw error;
+        setSent(true);
+      } else if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/auth/callback`,
         });
         if (error) throw error;
         setSent(true);
@@ -72,7 +78,7 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
         </div>
 
         {sent ? (
-          /* ── Email sent state ── */
+          /* ── Email sent state (signup confirm OR password reset) ── */
           <div className="py-4 text-center">
             <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full"
               style={{ background: "#eff6ff" }}>
@@ -80,7 +86,9 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
             </div>
             <p className="font-semibold" style={{ color: "#0f172a" }}>Check your email</p>
             <p className="mt-1 text-sm" style={{ color: "#64748b" }}>
-              We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.
+              {mode === "forgot"
+                ? <>We sent a password reset link to <strong>{email}</strong>. Click it to set a new password.</>
+                : <>We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.</>}
             </p>
             <button
               onClick={onClose}
@@ -91,7 +99,7 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
           </div>
         ) : (
           <>
-            {reason && (
+            {reason && mode !== "forgot" && (
               <div className="mb-4 rounded-xl border px-3 py-2.5 text-sm"
                 style={{ borderColor: "#bfdbfe", background: "#eff6ff", color: "#1d4ed8" }}>
                 {reason}
@@ -99,12 +107,14 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
             )}
 
             <h2 className="mb-1 text-lg font-bold" style={{ color: "#0f172a" }}>
-              {mode === "signin" ? "Sign in" : "Create your account"}
+              {mode === "signin" ? "Sign in" : mode === "signup" ? "Create your account" : "Reset password"}
             </h2>
             <p className="mb-5 text-sm" style={{ color: "#64748b" }}>
               {mode === "signin"
                 ? "Welcome back — sign in to continue scanning."
-                : "Free — 5 scans a month, no credit card required."}
+                : mode === "signup"
+                ? "Free — 5 scans a month, no credit card required."
+                : "Enter your email and we'll send you a reset link."}
             </p>
 
             {error && (
@@ -124,26 +134,41 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
                 className="w-full rounded-xl border px-4 py-2.5 text-sm outline-none transition-colors focus:border-blue-400"
                 style={{ borderColor: "#dde4ee", color: "#0f172a" }}
               />
-              <div className="relative">
-                <input
-                  type={showPw ? "text" : "password"}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  className="w-full rounded-xl border px-4 py-2.5 pr-10 text-sm outline-none transition-colors focus:border-blue-400"
-                  style={{ borderColor: "#dde4ee", color: "#0f172a" }}
-                />
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
-                  style={{ color: "#94a3b8" }}>
-                  {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
+
+              {mode !== "forgot" && (
+                <div className="relative">
+                  <input
+                    type={showPw ? "text" : "password"}
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className="w-full rounded-xl border px-4 py-2.5 pr-10 text-sm outline-none transition-colors focus:border-blue-400"
+                    style={{ borderColor: "#dde4ee", color: "#0f172a" }}
+                  />
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => setShowPw(!showPw)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    style={{ color: "#94a3b8" }}>
+                    {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              )}
+
+              {mode === "signin" && (
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => { setMode("forgot"); setError(null); }}
+                    className="text-xs underline"
+                    style={{ color: "#64748b" }}>
+                    Forgot password?
+                  </button>
+                </div>
+              )}
 
               <button
                 type="submit"
@@ -151,18 +176,32 @@ export default function AuthModal({ onClose, reason }: AuthModalProps) {
                 className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white disabled:opacity-60"
                 style={{ background: "#2563eb" }}>
                 {loading && <Loader2 size={14} className="animate-spin" />}
-                {mode === "signin" ? "Sign in" : "Create account"}
+                {mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Send reset link"}
               </button>
             </form>
 
             <p className="mt-4 text-center text-sm" style={{ color: "#64748b" }}>
-              {mode === "signin" ? "Don't have an account?" : "Already have an account?"}{" "}
-              <button
-                onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(null); }}
-                className="font-semibold underline"
-                style={{ color: "#2563eb" }}>
-                {mode === "signin" ? "Sign up free" : "Sign in"}
-              </button>
+              {mode === "forgot" ? (
+                <>
+                  Remember your password?{" "}
+                  <button
+                    onClick={() => { setMode("signin"); setError(null); }}
+                    className="font-semibold underline"
+                    style={{ color: "#2563eb" }}>
+                    Sign in
+                  </button>
+                </>
+              ) : (
+                <>
+                  {mode === "signin" ? "Don't have an account?" : "Already have an account?"}{" "}
+                  <button
+                    onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(null); }}
+                    className="font-semibold underline"
+                    style={{ color: "#2563eb" }}>
+                    {mode === "signin" ? "Sign up free" : "Sign in"}
+                  </button>
+                </>
+              )}
             </p>
           </>
         )}
