@@ -14,11 +14,13 @@ const desktopNavItems = [
 ];
 
 function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
-  const iconSize = size === "sm" ? 30 : 34;
-  const textSize = size === "sm" ? "text-[17px]" : "text-[20px]";
+  const iconSize = size === "sm" ? 24 : 26;
+  const textCls  = size === "sm"
+    ? "text-lg font-extrabold tracking-tight"
+    : "text-xl font-extrabold tracking-tight";
   return (
-    <Link href="/" className="flex items-center gap-2 select-none">
-      {/* Paper Plane Pulse — blue background mark */}
+    <Link href="/" className="flex items-center gap-1.5 select-none">
+      {/* Paper Plane Pulse icon — blue bg, white plane + waveform */}
       <svg width={iconSize} height={iconSize} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" rx="22" fill="#2563EB"/>
         <path d="M10 74 C15 65 21 65 26 74 C31 83 37 83 42 74 C47 65 53 65 58 74"
@@ -29,9 +31,9 @@ function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
         <path d="M14 42 L46 56 L16 66 Z" fill="white" opacity="0.3"/>
         <path d="M84 16 L46 56" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" opacity="0.4"/>
       </svg>
-      {/* sono (regular) + pilot (bold), all lowercase */}
-      <span className={`${textSize} tracking-tight leading-none`}>
-        <span style={{ color: "#374151", fontWeight: 400 }}>sono</span><span style={{ color: "#2563eb", fontWeight: 700 }}>pilot</span>
+      <span className="flex items-baseline gap-0 leading-none">
+        <span className={textCls} style={{ color: "#0f172a" }}>Sono</span>
+        <span className={textCls} style={{ color: "#2563eb" }}>Pilot</span>
       </span>
     </Link>
   );
