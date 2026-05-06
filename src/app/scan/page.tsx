@@ -559,7 +559,7 @@ function ScanContent() {
                       <p className="mt-0.5 leading-relaxed opacity-90">{analysisError}</p>
                       {analysisError.includes("high demand") && (
                         <button
-                          onClick={() => { setAnalysisError(null); handleAnalyze(); }}
+                          onClick={() => { setAnalysisError(null); runAnalysis(); }}
                           className="mt-2 rounded-lg px-3 py-1.5 text-xs font-bold text-white"
                           style={{ background: "#dc2626" }}>
                           Try again
