@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     images: [{ url: "/opengraph-image.png", width: 1200, height: 630, alt: "SonoPilot — AI Ultrasound Guide" }],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "SonoPilot — AI Ultrasound Interpretation",
     description:
       "Protocol-first AI ultrasound interpretation for clinicians and sonographers.",
