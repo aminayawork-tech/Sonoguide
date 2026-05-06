@@ -12,9 +12,14 @@ export const metadata: Metadata = {
     "POCUS AI, ultrasound AI analyzer, point of care ultrasound, ultrasound interpretation, bedside ultrasound",
   metadataBase: new URL(APP_URL),
   icons: {
-    icon: "/sonopilot-favicon.png",
+    icon: [
+      { url: "/sonopilot-favicon.png", sizes: "32x32",  type: "image/png" },
+      { url: "/sonopilot-favicon.png", sizes: "48x48",  type: "image/png" },
+      { url: "/sonopilot-favicon.png", sizes: "192x192", type: "image/png" },
+      { url: "/sonopilot-favicon.png", sizes: "512x512", type: "image/png" },
+    ],
     shortcut: "/sonopilot-favicon.png",
-    apple: "/sonopilot-favicon.png",
+    apple:    [{ url: "/sonopilot-favicon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     title: "SonoPilot — AI Ultrasound Interpretation",
