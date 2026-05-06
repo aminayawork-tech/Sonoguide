@@ -169,6 +169,15 @@ Rules:
   } catch (err) {
     console.error("Analyze error:", err);
     const message = err instanceof Error ? err.message : "Unknown error";
+
+    // Anthropic 529 overloaded — surface a clean retry message
+    if (message.includes("overloaded") || message.startsWith("529")) {
+      return NextResponse.json(
+        { error: "The AI is experiencing high demand right now. Please wait a moment and try again." },
+        { status: 503 },
+      );
+    }
+
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

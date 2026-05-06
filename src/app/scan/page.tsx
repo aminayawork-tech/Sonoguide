@@ -295,6 +295,7 @@ function ScanContent() {
         );
       }
 
+
       const analysis = await res.json();
 
       // ── Flash remaining steps quickly then navigate ──
@@ -551,9 +552,19 @@ function ScanContent() {
                   style={{ borderColor: "#fca5a5", background: "#fef2f2", color: "#dc2626" }}>
                   <div className="flex items-start gap-2">
                     <AlertCircle size={15} className="mt-0.5 shrink-0" />
-                    <div>
-                      <p className="font-bold">Analysis failed</p>
+                    <div className="flex-1">
+                      <p className="font-bold">
+                        {analysisError.includes("high demand") ? "AI is busy" : "Analysis failed"}
+                      </p>
                       <p className="mt-0.5 leading-relaxed opacity-90">{analysisError}</p>
+                      {analysisError.includes("high demand") && (
+                        <button
+                          onClick={() => { setAnalysisError(null); handleAnalyze(); }}
+                          className="mt-2 rounded-lg px-3 py-1.5 text-xs font-bold text-white"
+                          style={{ background: "#dc2626" }}>
+                          Try again
+                        </button>
+                      )}
                       {analysisError.includes("API key") && (
                         <p className="mt-2 text-xs font-medium" style={{ color: "#991b1b" }}>
                           → Add <code className="rounded px-1" style={{ background: "#fee2e2" }}>
