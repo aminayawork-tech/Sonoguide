@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "SonoPilot — AI Ultrasound Guide";
+export const alt = "SonoPilot";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -19,52 +19,23 @@ export default function Image() {
     (
       <div
         style={{
-          background: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%)",
-          width: "100%",
-          height: "100%",
+          width: 1200,
+          height: 630,
+          background: "#2563EB",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-          gap: "60px",
         }}
       >
-        {/* Icon */}
-        <div
-          style={{
-            width: 220,
-            height: 220,
-            background: "rgba(255,255,255,0.15)",
-            borderRadius: "52px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
-        >
-          <img
-            src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(planeSvg)}`}
-            width={186}
-            height={186}
-          />
-        </div>
-
-        {/* Text */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <div style={{ display: "flex", alignItems: "baseline" }}>
-            <span style={{ fontSize: "88px", fontWeight: "900", color: "white", lineHeight: 1 }}>Sono</span>
-            <span style={{ fontSize: "88px", fontWeight: "900", color: "rgba(255,255,255,0.75)", lineHeight: 1 }}>Pilot</span>
-          </div>
-          <span style={{ fontSize: "32px", color: "rgba(255,255,255,0.80)", fontWeight: 500 }}>
-            AI-Powered Ultrasound Interpretation
-          </span>
-          <span style={{ fontSize: "24px", color: "rgba(255,255,255,0.55)" }}>
-            sonopilot.app
-          </span>
-        </div>
+        <img
+          src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(planeSvg)}`}
+          width={480}
+          height={480}
+        />
       </div>
     ),
     { ...size },
   );
 }
+
 

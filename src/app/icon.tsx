@@ -18,8 +18,8 @@ export default function Icon() {
     (
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          width: 256,
+          height: 256,
           background: "#2563EB",
           borderRadius: "56px",
           display: "flex",

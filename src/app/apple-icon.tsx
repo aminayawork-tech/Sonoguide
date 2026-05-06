@@ -18,8 +18,8 @@ export default function AppleIcon() {
     (
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          width: 180,
+          height: 180,
           background: "#2563EB",
           display: "flex",
           alignItems: "center",
