@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   keywords:
     "POCUS AI, ultrasound AI analyzer, point of care ultrasound, ultrasound interpretation, bedside ultrasound",
   metadataBase: new URL(APP_URL),
+  icons: {
+    icon: "/sonopilot-favicon.png",
+    shortcut: "/sonopilot-favicon.png",
+    apple: "/sonopilot-favicon.png",
+  },
   openGraph: {
     title: "SonoPilot — AI Ultrasound Interpretation",
     description:
@@ -18,12 +23,14 @@ export const metadata: Metadata = {
     url: APP_URL,
     siteName: "SonoPilot",
     type: "website",
+    images: [{ url: "/opengraph-image.png", width: 1200, height: 630, alt: "SonoPilot — AI Ultrasound Guide" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "SonoPilot — AI Ultrasound Interpretation",
     description:
       "Protocol-first AI ultrasound interpretation for clinicians and sonographers.",
+    images: ["/opengraph-image.png"],
   },
 };
 
