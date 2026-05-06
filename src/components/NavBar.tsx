@@ -20,9 +20,8 @@ function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
     ? "text-lg font-extrabold tracking-tight"
     : "text-xl font-extrabold tracking-tight";
   return (
-    <Link href="/" className="flex items-center gap-1 select-none leading-none">
-      <span className={textCls} style={{ color: "#0f172a" }}>Sono</span>
-      <span className={textCls} style={{ color: "#2563eb" }}>Pilot</span>
+    <Link href="/" className="flex items-center gap-1.5 select-none leading-none">
+      <span><span className={textCls} style={{ color: "#0f172a" }}>Sono</span><span className={textCls} style={{ color: "#2563eb" }}>Pilot</span></span>
       <Image src="/sonopilot-logo.png" alt="" width={imgSize} height={imgSize} priority style={{ objectFit: "contain" }} />
     </Link>
   );

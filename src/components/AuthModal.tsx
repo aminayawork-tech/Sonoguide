@@ -75,9 +75,8 @@ export default function AuthModal({ onClose, reason, initialMode = "signin" }: A
         </button>
 
         {/* Logo */}
-        <div className="mb-5 flex items-center gap-1 select-none">
-          <span className="text-xl font-extrabold tracking-tight" style={{ color: "#0f172a" }}>Sono</span>
-          <span className="text-xl font-extrabold tracking-tight" style={{ color: "#2563eb" }}>Pilot</span>
+        <div className="mb-5 flex items-center gap-1.5 select-none">
+          <span><span className="text-xl font-extrabold tracking-tight" style={{ color: "#0f172a" }}>Sono</span><span className="text-xl font-extrabold tracking-tight" style={{ color: "#2563eb" }}>Pilot</span></span>
           <Image src="/sonopilot-logo.png" alt="" width={20} height={20} style={{ objectFit: "contain" }} />
         </div>
 
