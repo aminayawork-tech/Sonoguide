@@ -22,42 +22,24 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 0,
         }}
       >
-        {/* Icon + wordmark row */}
+        {/* Wordmark on left, icon on right — matches navbar layout */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 36,
-            marginBottom: 32,
+            gap: 40,
+            marginBottom: 36,
           }}
         >
-          {/* Icon in blue rounded square — eliminates transparent-corner black bleed */}
-          <div
-            style={{
-              width: 130,
-              height: 130,
-              background: "#2563eb",
-              borderRadius: 30,
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <img src={iconBase64} width={130} height={130} />
-          </div>
-
-          {/* Wordmark */}
           <div style={{ display: "flex", alignItems: "baseline", gap: 0 }}>
             <span
               style={{
-                fontSize: 100,
+                fontSize: 120,
                 fontWeight: 800,
                 color: "#0f172a",
-                letterSpacing: "-3px",
+                letterSpacing: "-4px",
                 lineHeight: 1,
               }}
             >
@@ -65,28 +47,44 @@ export default async function Image() {
             </span>
             <span
               style={{
-                fontSize: 100,
+                fontSize: 120,
                 fontWeight: 800,
                 color: "#2563eb",
-                letterSpacing: "-3px",
+                letterSpacing: "-4px",
                 lineHeight: 1,
               }}
             >
               Pilot
             </span>
           </div>
+
+          {/* Icon in blue rounded square */}
+          <div
+            style={{
+              width: 140,
+              height: 140,
+              background: "#2563eb",
+              borderRadius: 32,
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img src={iconBase64} width={140} height={140} />
+          </div>
         </div>
 
         {/* Tagline */}
         <div
           style={{
-            fontSize: 34,
+            fontSize: 36,
             color: "#64748b",
             fontWeight: 400,
             letterSpacing: "-0.5px",
           }}
         >
-          AI-Powered Point-of-Care Ultrasound Interpretation
+          AI-Powered Ultrasound Interpretation
         </div>
       </div>
     ),
