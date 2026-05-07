@@ -14,11 +14,13 @@ import {
   Flag,
   Info,
   Loader2,
+  Maximize2,
   MessageCircle,
   RefreshCw,
   Send,
   Share2,
   ShieldAlert,
+  X,
   XCircle,
 } from "lucide-react";
 import type { ChatMessage } from "@/app/api/chat/route";
@@ -153,8 +155,10 @@ function ResultsContent() {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
+  const [chatExpanded, setChatExpanded] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<HTMLInputElement>(null);
+  const chatExpandedInputRef = useRef<HTMLInputElement>(null);
   const chatSectionRef = useRef<HTMLDivElement>(null);
 
   async function sendChatMessage() {
@@ -514,14 +518,94 @@ function ResultsContent() {
           </Card>
         )}
 
-        {/* Follow-up chat */}
+        {/* Follow-up chat — full-screen expanded modal */}
+        {chatExpanded && (
+          <div className="fixed inset-0 z-50 flex flex-col" style={{ background: "#f8fafc" }}>
+            {/* Header */}
+            <div className="flex items-center gap-2.5 border-b px-4 py-3 shrink-0" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+              <MessageCircle size={16} style={{ color: "#2563eb" }} />
+              <div className="flex-1">
+                <p className="text-sm font-semibold" style={{ color: "#1a2235" }}>Ask a Follow-up Question</p>
+                <p className="text-xs" style={{ color: "#94a3b8" }}>Ask Claude anything about this scan</p>
+              </div>
+              <button onClick={() => setChatExpanded(false)} className="rounded-full p-1.5 hover:bg-slate-100" style={{ color: "#64748b" }}>
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+              {chatHistory.length === 0 && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {["What does this finding mean?", "Should I be concerned?", "What view should I get next?", "Explain the measurements"].map((q) => (
+                    <button key={q} onClick={() => { setChatInput(q); setTimeout(() => chatExpandedInputRef.current?.focus(), 50); }}
+                      className="rounded-full border px-3 py-1.5 text-sm font-medium"
+                      style={{ borderColor: "#bfdbfe", color: "#2563eb", background: "#eff6ff" }}>
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {chatHistory.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className="max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed"
+                    style={msg.role === "user"
+                      ? { background: "#2563eb", color: "#ffffff", borderBottomRightRadius: "4px" }
+                      : { background: "#ffffff", color: "#1a2235", borderBottomLeftRadius: "4px", border: "1px solid #e2e8f0" }}>
+                    {msg.role === "assistant"
+                      ? stripMarkdown(msg.content).split(/\n\n+/).filter(Boolean).map((para, pi, arr) => (
+                          <p key={pi} className={pi < arr.length - 1 ? "mb-2" : ""}>{para.trim()}</p>
+                        ))
+                      : msg.content}
+                  </div>
+                </div>
+              ))}
+              {chatLoading && (
+                <div className="flex justify-start">
+                  <div className="flex items-center gap-2 rounded-2xl px-4 py-3 text-sm" style={{ background: "#ffffff", color: "#5a6a85", border: "1px solid #e2e8f0", borderBottomLeftRadius: "4px" }}>
+                    <Loader2 size={13} className="animate-spin" /> Thinking...
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Input pinned at bottom — safe above keyboard */}
+            <div className="shrink-0 border-t px-4 py-3 pb-8" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+              <div className="flex gap-2">
+                <input
+                  ref={chatExpandedInputRef}
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendChatMessage()}
+                  placeholder="Ask about findings, measurements…"
+                  style={{ fontSize: "16px", borderColor: "#dde4ee", background: "#f8fafc", color: "#1a2235" }}
+                  className="flex-1 rounded-xl border px-4 py-3 outline-none transition-all"
+                />
+                <button onClick={sendChatMessage} disabled={!chatInput.trim() || chatLoading}
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white transition-all hover:opacity-90 disabled:opacity-40"
+                  style={{ background: "#2563eb" }}>
+                  <Send size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Follow-up chat — inline card */}
         <div ref={chatSectionRef} className="mt-5 rounded-2xl border shadow-sm overflow-hidden" data-print="hide" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
           <div className="flex items-center gap-2.5 border-b px-5 py-4" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
             <MessageCircle size={16} style={{ color: "#2563eb" }} />
-            <div>
+            <div className="flex-1">
               <p className="text-sm font-semibold" style={{ color: "#1a2235" }}>Ask a Follow-up Question</p>
               <p className="text-xs" style={{ color: "#94a3b8" }}>Ask Claude anything about this scan or protocol</p>
             </div>
+            <button onClick={() => setChatExpanded(true)}
+              className="rounded-lg p-1.5 transition-colors hover:bg-slate-100"
+              style={{ color: "#64748b" }} title="Expand chat">
+              <Maximize2 size={15} />
+            </button>
           </div>
 
           {/* Message list */}
