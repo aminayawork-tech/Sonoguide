@@ -25,23 +25,39 @@ export default async function Image() {
           gap: 0,
         }}
       >
-        {/* Logo row: icon + wordmark */}
+        {/* Icon + wordmark row */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 24,
-            marginBottom: 28,
+            gap: 36,
+            marginBottom: 32,
           }}
         >
-          <img src={iconBase64} width={96} height={96} style={{ borderRadius: 20 }} />
+          {/* Icon in blue rounded square — eliminates transparent-corner black bleed */}
+          <div
+            style={{
+              width: 130,
+              height: 130,
+              background: "#2563eb",
+              borderRadius: 30,
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img src={iconBase64} width={130} height={130} />
+          </div>
+
+          {/* Wordmark */}
           <div style={{ display: "flex", alignItems: "baseline", gap: 0 }}>
             <span
               style={{
-                fontSize: 88,
+                fontSize: 100,
                 fontWeight: 800,
                 color: "#0f172a",
-                letterSpacing: "-2px",
+                letterSpacing: "-3px",
                 lineHeight: 1,
               }}
             >
@@ -49,10 +65,10 @@ export default async function Image() {
             </span>
             <span
               style={{
-                fontSize: 88,
+                fontSize: 100,
                 fontWeight: 800,
                 color: "#2563eb",
-                letterSpacing: "-2px",
+                letterSpacing: "-3px",
                 lineHeight: 1,
               }}
             >
@@ -64,13 +80,13 @@ export default async function Image() {
         {/* Tagline */}
         <div
           style={{
-            fontSize: 32,
+            fontSize: 34,
             color: "#64748b",
             fontWeight: 400,
             letterSpacing: "-0.5px",
           }}
         >
-          AI-Powered Ultrasound Interpretation
+          AI-Powered Point-of-Care Ultrasound Interpretation
         </div>
       </div>
     ),
