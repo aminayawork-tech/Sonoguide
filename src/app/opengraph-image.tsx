@@ -19,17 +19,61 @@ export default async function Image() {
           height: 630,
           background: "#ffffff",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          gap: 0,
         }}
       >
-        <img src={iconBase64} width={500} height={500} />
+        {/* Logo row: icon + wordmark */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 24,
+            marginBottom: 28,
+          }}
+        >
+          <img src={iconBase64} width={96} height={96} style={{ borderRadius: 20 }} />
+          <div style={{ display: "flex", alignItems: "baseline", gap: 0 }}>
+            <span
+              style={{
+                fontSize: 88,
+                fontWeight: 800,
+                color: "#0f172a",
+                letterSpacing: "-2px",
+                lineHeight: 1,
+              }}
+            >
+              Sono
+            </span>
+            <span
+              style={{
+                fontSize: 88,
+                fontWeight: 800,
+                color: "#2563eb",
+                letterSpacing: "-2px",
+                lineHeight: 1,
+              }}
+            >
+              Pilot
+            </span>
+          </div>
+        </div>
+
+        {/* Tagline */}
+        <div
+          style={{
+            fontSize: 32,
+            color: "#64748b",
+            fontWeight: 400,
+            letterSpacing: "-0.5px",
+          }}
+        >
+          AI-Powered Ultrasound Interpretation
+        </div>
       </div>
     ),
     { ...size },
   );
 }
-
-
-
-
