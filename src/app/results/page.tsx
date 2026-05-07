@@ -154,6 +154,8 @@ function ResultsContent() {
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
+  const chatSectionRef = useRef<HTMLDivElement>(null);
 
   async function sendChatMessage() {
     const question = chatInput.trim();
@@ -226,7 +228,7 @@ function ResultsContent() {
   );
 
   return (
-    <div className="min-h-screen pt-14 pb-24 md:pb-8 md:pt-16" style={{ background: "#f8fafc" }}>
+    <div className="min-h-screen pt-14 pb-52 md:pb-8 md:pt-16" style={{ background: "#f8fafc" }}>
       <NavBar />
 
       {/* Floating New Scan button */}
@@ -513,7 +515,7 @@ function ResultsContent() {
         )}
 
         {/* Follow-up chat */}
-        <div className="mt-5 rounded-2xl border shadow-sm overflow-hidden" data-print="hide" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+        <div ref={chatSectionRef} className="mt-5 rounded-2xl border shadow-sm overflow-hidden" data-print="hide" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
           <div className="flex items-center gap-2.5 border-b px-5 py-4" style={{ borderColor: "#dde4ee", background: "#f8fafc" }}>
             <MessageCircle size={16} style={{ color: "#2563eb" }} />
             <div>
@@ -575,13 +577,17 @@ function ResultsContent() {
             )}
             <div className="flex gap-2">
               <input
+                ref={chatInputRef}
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendChatMessage()}
+                onFocus={() => {
+                  setTimeout(() => chatSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
+                }}
                 placeholder="Ask about findings, measurements, next steps..."
-                className="flex-1 rounded-xl border px-4 py-2.5 text-sm outline-none transition-all"
-                style={{ borderColor: "#dde4ee", background: "#f8fafc", color: "#1a2235" }}
+                className="flex-1 rounded-xl border px-4 py-2.5 outline-none transition-all"
+                style={{ borderColor: "#dde4ee", background: "#f8fafc", color: "#1a2235", fontSize: "16px" }}
               />
               <button onClick={sendChatMessage} disabled={!chatInput.trim() || chatLoading}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white transition-all hover:opacity-90 disabled:opacity-40"
