@@ -8,7 +8,7 @@ export const contentType = "image/png";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://sonopilot.app";
 
 export default async function Image() {
-  const iconData = await fetch(`${APP_URL}/Sonopilot-Whiteicon.png`).then((r) => r.arrayBuffer());
+  const iconData = await fetch(`${APP_URL}/sonopilot-share-icon.png`).then((r) => r.arrayBuffer());
   const iconBase64 = `data:image/png;base64,${Buffer.from(iconData).toString("base64")}`;
 
   return new ImageResponse(
