@@ -526,7 +526,7 @@ function ResultsContent() {
               <MessageCircle size={16} style={{ color: "#2563eb" }} />
               <div className="flex-1">
                 <p className="text-sm font-semibold" style={{ color: "#1a2235" }}>Ask a Follow-up Question</p>
-                <p className="text-xs" style={{ color: "#94a3b8" }}>Ask Claude anything about this scan</p>
+                <p className="text-xs" style={{ color: "#94a3b8" }}>Ask anything about this scan</p>
               </div>
               <button onClick={() => setChatExpanded(false)} className="rounded-full p-1.5 hover:bg-slate-100" style={{ color: "#64748b" }}>
                 <X size={18} />
@@ -599,7 +599,7 @@ function ResultsContent() {
             <MessageCircle size={16} style={{ color: "#2563eb" }} />
             <div className="flex-1">
               <p className="text-sm font-semibold" style={{ color: "#1a2235" }}>Ask a Follow-up Question</p>
-              <p className="text-xs" style={{ color: "#94a3b8" }}>Ask Claude anything about this scan or protocol</p>
+              <p className="text-xs" style={{ color: "#94a3b8" }}>Ask anything about this scan or protocol</p>
             </div>
             <button onClick={() => setChatExpanded(true)}
               className="rounded-lg p-1.5 transition-colors hover:bg-slate-100"
