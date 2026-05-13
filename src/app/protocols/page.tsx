@@ -144,11 +144,12 @@ export default function ProtocolsPage() {
             placeholder="Search protocols or indications..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border py-3 pl-10 pr-4 text-sm outline-none transition-all"
+            className="w-full rounded-xl border py-3 pl-10 pr-4 outline-none transition-all"
             style={{
               background: "#ffffff",
               borderColor: "#dde4ee",
               color: "#1a2235",
+              fontSize: "16px",
             }}
             onFocus={(e) => (e.target.style.borderColor = "#2563eb")}
             onBlur={(e) => (e.target.style.borderColor = "#dde4ee")}

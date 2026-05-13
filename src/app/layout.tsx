@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
+import BottomNav from "@/components/BottomNav";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://sonopilot.app";
 
@@ -51,6 +52,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           {children}
+          <BottomNav />
         </AuthProvider>
       </body>
     </html>

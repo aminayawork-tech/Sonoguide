@@ -106,8 +106,8 @@ function ProtocolSheet({
               placeholder="Search protocols..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-xl border py-2.5 pl-9 pr-4 text-sm outline-none focus:border-blue-300"
-              style={{ borderColor: "#e2e8f0", color: "#0f172a", background: "#f8fafc" }}
+              className="w-full rounded-xl border py-2.5 pl-9 pr-4 outline-none focus:border-blue-300"
+              style={{ borderColor: "#e2e8f0", color: "#0f172a", background: "#f8fafc", fontSize: "16px" }}
             />
           </div>
         </div>
