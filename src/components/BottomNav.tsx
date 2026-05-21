@@ -2,16 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BookOpen, Camera } from "lucide-react";
+import { Home, Camera, ClipboardList } from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
 
-const TABS = [
-  { href: "/",          label: "Home",      Icon: Home },
-  { href: "/scan",      label: "Scan",      Icon: Camera },
-  { href: "/protocols", label: "Protocols", Icon: BookOpen },
+const ALL_TABS = [
+  { href: "/",          label: "Home",      Icon: Home,          guestOnly: true },
+  { href: "/scan",      label: "Scan",      Icon: Camera,        guestOnly: false },
+  { href: "/protocols", label: "Protocols", Icon: ClipboardList, guestOnly: false },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
+
+  const tabs = user
+    ? ALL_TABS.filter((t) => !t.guestOnly)
+    : ALL_TABS;
 
   return (
     <nav
@@ -22,7 +28,7 @@ export default function BottomNav() {
         paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
-      {TABS.map(({ href, label, Icon }) => {
+      {tabs.map(({ href, label, Icon }) => {
         const active = pathname === href || (href !== "/" && pathname.startsWith(href));
         return (
           <Link
