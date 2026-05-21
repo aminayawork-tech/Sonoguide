@@ -2,13 +2,40 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { X, LogIn, CreditCard, HelpCircle, MessageCircle, Shield, FileText, ChevronRight } from "lucide-react";
+import { X, LogIn, CreditCard, Shield, FileText, ChevronRight, Upload, Zap, ClipboardList, Camera } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 
 interface Props {
   onSignIn: () => void;
   onClose: () => void;
 }
+
+const HOW_IT_WORKS = [
+  {
+    step: "01",
+    icon: Upload,
+    iconBg: "#eff6ff",
+    iconColor: "#2563eb",
+    title: "Snap or upload",
+    desc: "Photograph your ultrasound screen or upload an image from your device. No special equipment needed.",
+  },
+  {
+    step: "02",
+    icon: Zap,
+    iconBg: "#fefce8",
+    iconColor: "#ca8a04",
+    title: "AI analyzes instantly",
+    desc: "Structures labeled, measurements calculated, anomalies flagged — all in seconds.",
+  },
+  {
+    step: "03",
+    icon: ClipboardList,
+    iconBg: "#f0fdf4",
+    iconColor: "#059669",
+    title: "Instant insights",
+    desc: "Annotated image, clinical summary, key findings, and a one-tap PDF report ready to share.",
+  },
+];
 
 export default function MobileMenu({ onSignIn, onClose }: Props) {
   const { user, profile, signOut } = useAuth();
@@ -30,130 +57,123 @@ export default function MobileMenu({ onSignIn, onClose }: Props) {
     onClose();
   }
 
-  const sections = [
-    {
-      title: "ACCOUNT",
-      items: user
-        ? [
-            {
-              icon: LogIn,
-              label: "Sign Out",
-              sublabel: user.email ?? undefined,
-              action: handleSignOut,
-              color: "#dc2626",
-            },
-          ]
-        : [
-            {
-              icon: LogIn,
-              label: "Sign In",
-              action: () => { onClose(); onSignIn(); },
-              color: "#2563eb",
-            },
-          ],
-    },
-    {
-      title: "SUBSCRIPTION",
-      items: [
-        {
-          icon: CreditCard,
-          label: "Manage Subscription",
-          sublabel: profile ? `${profile.tier.charAt(0).toUpperCase() + profile.tier.slice(1)} plan` : undefined,
-          action: handlePortal,
-          loading: loadingPortal,
-        },
-      ],
-    },
-    {
-      title: "SUPPORT",
-      items: [
-        {
-          icon: HelpCircle,
-          label: "How does this work?",
-          href: "/#how-it-works",
-        },
-        {
-          icon: MessageCircle,
-          label: "Contact Support",
-          href: "mailto:support@sonopilot.app",
-        },
-      ],
-    },
-    {
-      title: "LEGAL",
-      items: [
-        { icon: Shield,   label: "Privacy Policy", href: "/privacy" },
-        { icon: FileText, label: "Terms of Use",    href: "/terms"   },
-      ],
-    },
-  ];
-
   return (
     <div className="fixed inset-0 z-[100] flex flex-col" style={{ background: "#f8fafc" }}>
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
+      <div className="flex items-center justify-between px-5 py-4 border-b shrink-0"
+        style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
         <span className="text-base font-bold" style={{ color: "#1a2235" }}>Menu</span>
         <button onClick={onClose} className="rounded-full p-2 transition-colors hover:bg-slate-100">
           <X size={20} style={{ color: "#64748b" }} />
         </button>
       </div>
 
-      {/* Sections */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
-        {sections.map((section) => (
-          <div key={section.title}>
-            <p className="mb-2 px-1 text-xs font-semibold tracking-widest" style={{ color: "#94a3b8" }}>
-              {section.title}
-            </p>
-            <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
-              {section.items.map((item, i) => {
-                const Icon = item.icon;
-                const isLast = i === section.items.length - 1;
-                const content = (
-                  <div
-                    className={`flex items-center gap-3.5 px-4 py-4 ${!isLast ? "border-b" : ""}`}
-                    style={{ borderColor: "#f1f5f9" }}
-                  >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl shrink-0"
-                      style={{ background: "#eff6ff" }}>
-                      <Icon size={18} style={{ color: (item as { color?: string }).color ?? "#2563eb" }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold" style={{ color: (item as { color?: string }).color ?? "#1a2235" }}>
-                        {(item as { loading?: boolean }).loading ? "Loading…" : item.label}
-                      </p>
-                      {(item as { sublabel?: string }).sublabel && (
-                        <p className="text-xs mt-0.5 truncate" style={{ color: "#94a3b8" }}>
-                          {(item as { sublabel?: string }).sublabel}
-                        </p>
-                      )}
-                    </div>
-                    <ChevronRight size={16} style={{ color: "#cbd5e1" }} />
-                  </div>
-                );
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-6">
 
-                if ((item as { href?: string }).href) {
-                  return (
-                    <Link key={item.label} href={(item as { href: string }).href} onClick={onClose}>
-                      {content}
-                    </Link>
-                  );
-                }
-                return (
-                  <button key={item.label} className="w-full text-left" onClick={(item as { action?: () => void }).action}>
-                    {content}
-                  </button>
-                );
-              })}
-            </div>
+        {/* Account */}
+        <MenuSection title="ACCOUNT">
+          {user ? (
+            <MenuItem icon={LogIn} label="Sign Out" sublabel={user.email ?? undefined}
+              iconColor="#dc2626" labelColor="#dc2626" onClick={handleSignOut} />
+          ) : (
+            <MenuItem icon={LogIn} label="Sign In" iconColor="#2563eb" labelColor="#2563eb"
+              onClick={() => { onClose(); onSignIn(); }} />
+          )}
+        </MenuSection>
+
+        {/* Subscription */}
+        <MenuSection title="SUBSCRIPTION">
+          <MenuItem icon={CreditCard} label={loadingPortal ? "Loading…" : "Manage Subscription"}
+            sublabel={profile ? `${profile.tier.charAt(0).toUpperCase() + profile.tier.slice(1)} plan` : undefined}
+            onClick={handlePortal} />
+        </MenuSection>
+
+        {/* How it works */}
+        <div>
+          <p className="mb-3 px-1 text-xs font-semibold tracking-widest" style={{ color: "#94a3b8" }}>
+            HOW IT WORKS
+          </p>
+          <div className="space-y-3">
+            {HOW_IT_WORKS.map(({ step, icon: Icon, iconBg, iconColor, title, desc }) => (
+              <div key={step} className="rounded-2xl border p-4" style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
+                <div className="flex items-start gap-3">
+                  <div className="relative shrink-0">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl"
+                      style={{ background: iconBg }}>
+                      <Icon size={18} style={{ color: iconColor }} />
+                    </div>
+                    <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-bold text-white"
+                      style={{ background: "#2563eb" }}>
+                      {step}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold mb-0.5" style={{ color: "#1a2235" }}>{title}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: "#64748b" }}>{desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+
+          {/* Start Scanning CTA */}
+          <Link href="/scan" onClick={onClose}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold text-white shadow-sm transition-all active:scale-95"
+            style={{ background: "#2563eb" }}>
+            <Camera size={16} />
+            Start Scanning Now
+          </Link>
+        </div>
+
+        {/* Legal */}
+        <MenuSection title="LEGAL">
+          <MenuItem icon={Shield}   label="Privacy Policy" href="/privacy" onClose={onClose} />
+          <MenuItem icon={FileText} label="Terms of Use"    href="/terms"   onClose={onClose} last />
+        </MenuSection>
+
       </div>
 
       {/* Version footer */}
-      <div className="py-6 text-center">
+      <div className="py-5 text-center shrink-0">
         <p className="text-xs tracking-widest font-medium" style={{ color: "#cbd5e1" }}>SONOPILOT V1.0</p>
       </div>
     </div>
   );
+}
+
+function MenuSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="mb-2 px-1 text-xs font-semibold tracking-widest" style={{ color: "#94a3b8" }}>{title}</p>
+      <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: "#e2e8f0", background: "#ffffff", borderColor2: "#f1f5f9" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function MenuItem({
+  icon: Icon, label, sublabel, iconColor = "#2563eb", labelColor = "#1a2235",
+  onClick, href, onClose, last,
+}: {
+  icon: React.ElementType; label: string; sublabel?: string;
+  iconColor?: string; labelColor?: string;
+  onClick?: () => void; href?: string; onClose?: () => void; last?: boolean;
+}) {
+  const inner = (
+    <div className="flex items-center gap-3.5 px-4 py-4">
+      <div className="flex h-9 w-9 items-center justify-center rounded-xl shrink-0" style={{ background: "#eff6ff" }}>
+        <Icon size={18} style={{ color: iconColor }} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold" style={{ color: labelColor }}>{label}</p>
+        {sublabel && <p className="text-xs mt-0.5 truncate" style={{ color: "#94a3b8" }}>{sublabel}</p>}
+      </div>
+      <ChevronRight size={16} style={{ color: "#cbd5e1" }} />
+    </div>
+  );
+
+  if (href) return <Link href={href} onClick={onClose}>{inner}</Link>;
+  return <button className="w-full text-left" onClick={onClick}>{inner}</button>;
 }
