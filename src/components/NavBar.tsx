@@ -15,10 +15,10 @@ const desktopNavItems = [
 ];
 
 function SonoLogo({ size = "md" }: { size?: "sm" | "md" }) {
-  const imgSize = size === "sm" ? 26 : 30;
+  const imgSize = size === "sm" ? 26 : 22;
   const textCls = size === "sm"
     ? "text-2xl font-extrabold tracking-tight"
-    : "text-3xl font-extrabold tracking-tight";
+    : "text-xl font-extrabold tracking-tight";
   return (
     <Link href="/" className="flex items-center gap-2 select-none leading-none">
       <span><span className={textCls} style={{ color: "#0f172a" }}>Sono</span><span className={textCls} style={{ color: "#2563eb" }}>Pilot</span></span>
