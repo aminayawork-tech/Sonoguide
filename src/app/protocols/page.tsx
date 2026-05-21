@@ -3,23 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Activity,
   ArrowRight,
-  Baby,
-  Bone,
-  Brain,
   ChevronRight,
   Clock,
-  Crosshair,
-  Droplets,
-  Heart,
-  Microscope,
-  Scan,
-  ScanLine,
   Search,
   Star,
-  Wind,
-  type LucideIcon,
 } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import {
@@ -30,19 +18,6 @@ import {
   type Protocol,
 } from "@/lib/protocols";
 
-const CATEGORY_ICON: Record<string, LucideIcon> = {
-  Trauma:     Crosshair,
-  Cardiac:    Heart,
-  Lung:       Wind,
-  "OB/GYN":   Baby,
-  Abdominal:  Scan,
-  Vascular:   Droplets,
-  Neuro:      Brain,
-  Thyroid:    ScanLine,
-  MSK:        Bone,
-  Procedural: Microscope,
-};
-
 const DIFFICULTY_COLOR: Record<string, string> = {
   Basic:        "#059669",
   Intermediate: "#d97706",
@@ -51,7 +26,6 @@ const DIFFICULTY_COLOR: Record<string, string> = {
 
 function ProtocolCard({ protocol }: { protocol: Protocol }) {
   const pill = CATEGORY_PILL[protocol.category];
-  const IconComp = CATEGORY_ICON[protocol.category] ?? Activity;
   return (
     <Link
       href={`/protocols/${protocol.id}`}
@@ -59,15 +33,10 @@ function ProtocolCard({ protocol }: { protocol: Protocol }) {
       style={{ background: "#ffffff", borderColor: "#dde4ee" }}
     >
       <div className="mb-3 flex items-center">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
-          style={{ background: pill.bg }}>
-          <IconComp size={20} style={{ color: pill.text }} />
-        </div>
-        <span className="mx-auto rounded-full px-2.5 py-0.5 text-xs font-semibold"
+        <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
           style={{ background: pill.bg, color: pill.text }}>
           {protocol.category}
         </span>
-        <div className="w-10 shrink-0" />
       </div>
 
       <h3 className="mb-1 font-semibold transition-colors group-hover:text-blue-600"
@@ -264,12 +233,11 @@ export default function ProtocolsPage() {
           <div className="flex flex-wrap justify-center gap-2">
             {["efast", "cardiac-plax", "ob-first-trimester"].map((id) => {
               const p = PROTOCOLS.find((x) => x.id === id)!;
-              const QIcon = CATEGORY_ICON[p.category] ?? Activity;
               return (
                 <Link key={id} href={`/protocols/${id}`}
                   className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all hover:opacity-80"
                   style={{ borderColor: "#93c5fd", background: "#dbeafe", color: "#1d4ed8" }}>
-                  <QIcon size={12} /> {p.shortName} <ArrowRight size={10} />
+                  {p.shortName} <ArrowRight size={10} />
                 </Link>
               );
             })}
