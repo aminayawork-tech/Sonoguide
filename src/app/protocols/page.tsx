@@ -90,7 +90,7 @@ export default function ProtocolsPage() {
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8 md:pt-16" style={{ background: "#eef3f8" }}>
+    <div className="min-h-screen pt-14 pb-24 md:pb-8 md:pt-16" style={{ background: "#eef3f8" }}>
       <NavBar />
 
       <div className="mx-auto max-w-5xl px-4 py-8">
