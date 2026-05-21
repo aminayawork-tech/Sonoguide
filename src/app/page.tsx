@@ -36,7 +36,7 @@ export default function HomePage() {
         <p className="relative mx-auto mb-10 max-w-xl text-lg leading-relaxed md:text-xl"
           style={{ color: "#64748b" }}>
           Point your phone at any ultrasound screen. AI labels structures,
-          takes measurements, and flags findings in under 2 seconds.
+          takes measurements, and flags findings in seconds.
         </p>
 
         {/* Primary CTA */}
@@ -88,7 +88,7 @@ export default function HomePage() {
                 iconBg: "#fefce8",
                 iconColor: "#ca8a04",
                 title: "AI analyzes instantly",
-                desc: "Structures labeled, measurements calculated, anomalies flagged — all in under 2 seconds.",
+                desc: "Structures labeled, measurements calculated, anomalies flagged — all in seconds.",
               },
               {
                 step: "03",
@@ -134,7 +134,7 @@ export default function HomePage() {
               {
                 icon: Zap,
                 title: "Instant AI Analysis",
-                desc: "Structure labels, automated measurements, and anomaly detection in under 2 seconds.",
+                desc: "Structure labels, automated measurements, and anomaly detection in seconds.",
               },
               {
                 icon: Shield,

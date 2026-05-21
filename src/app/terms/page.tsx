@@ -1,0 +1,91 @@
+import Link from "next/link";
+import NavBar from "@/components/NavBar";
+
+export const metadata = {
+  title: "Terms of Use — SonoPilot",
+  description: "SonoPilot terms of use and service agreement.",
+};
+
+export default function TermsPage() {
+  return (
+    <div className="min-h-screen pt-14 pb-24 md:pt-16 md:pb-8" style={{ background: "#f8fafc" }}>
+      <NavBar />
+      <div className="mx-auto max-w-2xl px-5 py-8">
+        <h1 className="mb-1 text-3xl font-extrabold" style={{ color: "#1a2235" }}>Terms of Use</h1>
+        <p className="mb-8 text-sm" style={{ color: "#94a3b8" }}>Last updated: May 2025</p>
+
+        <Section title="1. Acceptance of Terms">
+          By accessing or using SonoPilot ("the Service"), you agree to be bound by these Terms of Use. If you do not agree, do not use the Service.
+        </Section>
+
+        <Section title="2. Medical Disclaimer">
+          SonoPilot is an educational and clinical decision-support tool intended for use by licensed healthcare professionals. It does <strong>not</strong> constitute medical advice, diagnosis, or treatment. All AI-generated output must be reviewed and validated by a qualified clinician before any clinical action is taken. SonoPilot is <strong>not for primary diagnosis</strong>.
+        </Section>
+
+        <Section title="3. Eligibility">
+          You must be at least 18 years of age and a licensed or training healthcare professional to use SonoPilot. By creating an account, you represent that you meet these requirements.
+        </Section>
+
+        <Section title="4. Account Responsibilities">
+          You are responsible for maintaining the confidentiality of your login credentials and for all activity under your account. Notify us immediately at support@sonopilot.app if you suspect unauthorized access.
+        </Section>
+
+        <Section title="5. Acceptable Use">
+          You agree not to:
+          <ul className="mt-2 list-disc pl-5 space-y-1">
+            <li>Upload protected health information (PHI) or identifiable patient data</li>
+            <li>Use the Service to provide medical advice to patients without appropriate clinical oversight</li>
+            <li>Attempt to reverse-engineer, copy, or resell any part of the Service</li>
+            <li>Use automated scripts to access or scrape the Service</li>
+            <li>Violate any applicable laws or regulations</li>
+          </ul>
+        </Section>
+
+        <Section title="6. Subscription and Billing">
+          Paid plans are billed on a recurring basis (monthly or annually) via Stripe. You may cancel your subscription at any time through the Manage Subscription portal. Cancellation takes effect at the end of the current billing period. We do not offer refunds for partial billing periods except where required by law.
+        </Section>
+
+        <Section title="7. Intellectual Property">
+          All content, features, and functionality of SonoPilot — including the AI models, interface design, protocols, and educational content — are the exclusive property of SonoPilot and are protected by applicable intellectual property laws. You may not reproduce or distribute any part of the Service without written permission.
+        </Section>
+
+        <Section title="8. Limitation of Liability">
+          To the maximum extent permitted by law, SonoPilot and its operators shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service, including any clinical decisions made in reliance on AI-generated output. Our total liability to you shall not exceed the amount you paid us in the 12 months preceding the claim.
+        </Section>
+
+        <Section title="9. Indemnification">
+          You agree to indemnify and hold harmless SonoPilot, its operators, and affiliates from any claims, damages, or expenses (including legal fees) arising from your use of the Service, violation of these Terms, or any clinical decisions you make.
+        </Section>
+
+        <Section title="10. Termination">
+          We reserve the right to suspend or terminate your account at any time for violation of these Terms or for any conduct we determine to be harmful to the Service or its users.
+        </Section>
+
+        <Section title="11. Changes to Terms">
+          We may update these Terms from time to time. We will notify you of material changes by email or in-app notice. Continued use after changes are posted constitutes acceptance.
+        </Section>
+
+        <Section title="12. Governing Law">
+          These Terms are governed by the laws of the United States. Any disputes shall be resolved in the courts of the applicable jurisdiction.
+        </Section>
+
+        <Section title="13. Contact">
+          Questions? Contact us at <a href="mailto:support@sonopilot.app" className="text-blue-600 underline">support@sonopilot.app</a>.
+        </Section>
+
+        <div className="mt-10 text-center">
+          <Link href="/" className="text-sm font-medium" style={{ color: "#2563eb" }}>← Back to SonoPilot</Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-8">
+      <h2 className="mb-3 text-lg font-bold" style={{ color: "#1a2235" }}>{title}</h2>
+      <p className="text-sm leading-relaxed" style={{ color: "#374151" }}>{children}</p>
+    </div>
+  );
+}

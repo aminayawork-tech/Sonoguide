@@ -4,10 +4,11 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { Camera, Home, Library, LogIn } from "lucide-react";
+import { Camera, Home, Library, LogIn, Menu } from "lucide-react";
 import { useAuth } from "./AuthProvider";
 import UserMenu from "./UserMenu";
 import AuthModal from "./AuthModal";
+import MobileMenu from "./MobileMenu";
 
 const desktopNavItems = [
   { href: "/", label: "Home", icon: Home },
@@ -32,8 +33,9 @@ function NavBarInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user, loading } = useAuth();
-  const [showAuth, setShowAuth]       = useState(false);
+  const [showAuth, setShowAuth]         = useState(false);
   const [authInitMode, setAuthInitMode] = useState<"signin" | "signup" | "forgot">("signin");
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   useEffect(() => {
     const authParam = searchParams.get("auth");
@@ -55,6 +57,12 @@ function NavBarInner() {
   return (
     <>
       {showAuth && <AuthModal onClose={closeAuth} initialMode={authInitMode} />}
+      {showMobileMenu && (
+        <MobileMenu
+          onClose={() => setShowMobileMenu(false)}
+          onSignIn={() => { setAuthInitMode("signin"); setShowAuth(true); }}
+        />
+      )}
       {/* ── Desktop top nav ── */}
       <header
         className="hidden md:block fixed top-0 left-0 right-0 z-50 border-b"
@@ -99,26 +107,19 @@ function NavBarInner() {
         </div>
       </header>
 
-      {/* ── Mobile top bar (logo + auth) ── */}
+      {/* ── Mobile top bar (logo + hamburger) ── */}
       <header
         className="md:hidden fixed top-0 left-0 right-0 z-50 border-b"
         style={{ background: "rgba(255,255,255,0.97)", borderColor: "#e2e8f0" }}>
         <div className="flex items-center justify-between px-4 py-3">
           <SonoLogo size="sm" />
-          <div>
-            {!loading && (
-              user
-                ? <UserMenu />
-                : (
-                  <button onClick={() => setShowAuth(true)}
-                    className="flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all"
-                    style={{ borderColor: "#e2e8f0", color: "#374151" }}>
-                    <LogIn size={13} />
-                    Sign in
-                  </button>
-                )
-            )}
-          </div>
+          <button
+            onClick={() => setShowMobileMenu(true)}
+            className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors hover:bg-slate-100"
+            style={{ color: "#374151" }}
+          >
+            <Menu size={22} />
+          </button>
         </div>
       </header>
 
