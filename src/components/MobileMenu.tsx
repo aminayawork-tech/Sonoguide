@@ -147,7 +147,7 @@ function MenuSection({ title, children }: { title: string; children: ReactNode }
   return (
     <div>
       <p className="mb-2 px-1 text-xs font-semibold tracking-widest" style={{ color: "#94a3b8" }}>{title}</p>
-      <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: "#e2e8f0", background: "#ffffff", borderColor2: "#f1f5f9" }}>
+      <div className="rounded-2xl overflow-hidden border divide-y" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
         {children}
       </div>
     </div>
