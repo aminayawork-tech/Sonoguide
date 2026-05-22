@@ -660,6 +660,20 @@ export const PROTOCOLS: Protocol[] = [
       "Assess for wall thickening (>3mm when full = abnormal), intraluminal debris, or masses.",
       "If post-void residual needed: scan immediately after voiding. PVR >100mL is significant.",
     ],
+    measurements: [
+      {
+        structure: "Bladder Volume / Post-Void Residual",
+        landmark: "Three orthogonal dimensions measured at maximum bladder dimensions: transverse width (W) in the transverse plane, anteroposterior depth (AP) in the transverse plane, and craniocaudal height (H) in the sagittal plane.",
+        normal: "Pre-void: volume >300 mL suggests retention. Post-void residual: < 50 mL = normal; 50–100 mL = borderline; > 100 mL = incomplete emptying",
+        technique: "Formula: Volume (mL) = 0.523 × W × AP × H. Scan immediately after voiding for accurate PVR. Trace the bladder wall continuously to confirm it is the bladder (not an adnexal cyst).",
+      },
+      {
+        structure: "Bladder Wall Thickness",
+        landmark: "Anterolateral wall measured in the transverse plane, at a site free of trabeculation, when the bladder is adequately filled.",
+        normal: "≤ 3 mm (when bladder is full/adequately distended); > 3 mm with full bladder = wall thickening",
+        technique: "Wall thickness is dependent on distension — always note the estimated bladder volume at the time of measurement. A poorly filled bladder will appear falsely thick.",
+      },
+    ],
   },
 
   // ── VASCULAR ─────────────────────────────────────────────────────────────────
@@ -962,6 +976,20 @@ export const PROTOCOLS: Protocol[] = [
       "Longitudinal view: confirm diameter and assess for mural thrombus (echogenic crescent lining vessel wall).",
       "Look for periaortic hematoma (hypoechoic shadowing around aorta) — in the right clinical context this suggests rupture.",
       "Measure iliac arteries bilaterally if aorta is dilated. Normal iliac <1.5cm.",
+    ],
+    measurements: [
+      {
+        structure: "Abdominal Aortic Diameter",
+        landmark: "Widest transverse outer-wall-to-outer-wall diameter. Measure at the level of maximum dilation — typically at or just below the renal arteries.",
+        normal: "< 3 cm = normal; 3.0–5.4 cm = AAA (monitor); ≥ 5.5 cm = surgical threshold (men); ≥ 5.0 cm = surgical threshold (women)",
+        technique: "ALWAYS measure in TRANSVERSE — sagittal views underestimate true diameter. Measure outer edge to outer edge (including walls). Check at the celiac axis, SMA origin, and just above bifurcation.",
+      },
+      {
+        structure: "Iliac Artery Diameter",
+        landmark: "Common iliac arteries bilaterally, transverse view, outer wall to outer wall at the widest point.",
+        normal: "< 1.5 cm; ≥ 1.5 cm = iliac aneurysm",
+        technique: "Trace the aorta to its bifurcation (level of umbilicus, ~L4). Evaluate both common iliac arteries. Iliac aneurysms often coexist with AAA.",
+      },
     ],
   },
   {
