@@ -26,6 +26,12 @@ export interface Protocol {
   aiMeasurements: string[];
   anomaliesDetected: string[];
   steps?: string[];
+  measurements?: {
+    structure: string;
+    landmark: string;
+    normal: string;
+    technique?: string;
+  }[];
 }
 
 export const PROTOCOLS: Protocol[] = [
@@ -116,6 +122,44 @@ export const PROTOCOLS: Protocol[] = [
       "Measure EPSS (E-point septal separation) in M-mode through the mitral valve — >1cm suggests reduced EF.",
       "Measure LV internal dimension, posterior wall, IVS, LA diameter, and aortic root in 2D or M-mode.",
       "Check posterior pericardial space for effusion. Note valve morphology and mobility.",
+    ],
+    measurements: [
+      {
+        structure: "LV End-Diastolic Diameter (LVEDD)",
+        landmark: "M-mode or 2D at the level of the mitral valve leaflet tips, inner edge to inner edge, at end-diastole (largest LV dimension, onset of QRS).",
+        normal: "3.9–5.3 cm (women); 4.2–5.9 cm (men); > 6.0 cm = dilated",
+        technique: "Use M-mode through the PLAX view at the tip of the anterior mitral leaflet. Perpendicular to the long axis of the LV.",
+      },
+      {
+        structure: "LV End-Systolic Diameter (LVESD)",
+        landmark: "Same position as LVEDD, measured at end-systole (smallest LV dimension, peak of T-wave).",
+        normal: "2.3–3.9 cm (women); 2.5–4.0 cm (men); > 4.0 cm = systolic dysfunction",
+        technique: "Fractional shortening (FS) = (LVEDD − LVESD) / LVEDD × 100. Normal FS > 25%.",
+      },
+      {
+        structure: "Interventricular Septum (IVS) Thickness",
+        landmark: "Diastolic thickness of the IVS at the same M-mode position as LVEDD. Right side of septum to left side.",
+        normal: "0.6–1.0 cm (women); 0.6–1.0 cm (men); > 1.2 cm = hypertrophy",
+        technique: "Measure at end-diastole. Asymmetric hypertrophy (IVS/PW ratio > 1.3) suggests HCM.",
+      },
+      {
+        structure: "Posterior Wall (PW) Thickness",
+        landmark: "Diastolic thickness of the posterior LV wall, from the endocardial to epicardial surface.",
+        normal: "0.6–1.0 cm; > 1.2 cm = hypertrophy",
+        technique: "Measured at the same level as IVS (mitral valve tips). Increases with hypertension, HCM, amyloid.",
+      },
+      {
+        structure: "Aortic Root / LVOT Diameter",
+        landmark: "Aortic root: sinus of Valsalva to sinus of Valsalva at end-diastole, inner edge to inner edge.",
+        normal: "Aortic root ≤ 3.7 cm (men) / ≤ 3.6 cm (women); LVOT ≈ 1.8–2.2 cm",
+        technique: "Used to calculate stroke volume (SV = LVOT area × VTI from PSAX or A5C). Aortic root > 4.5 cm warrants referral.",
+      },
+      {
+        structure: "Pericardial Effusion",
+        landmark: "Largest echo-free space between pericardium and myocardium. Measure in diastole, in the view where effusion is largest.",
+        normal: "< 0.5 cm = trivial; 0.5–1.0 cm = small; 1.0–2.0 cm = moderate; > 2.0 cm = large",
+        technique: "PLAX is most sensitive. Confirm in PSAX and apical views. Circumferential vs. loculated. Tamponade: RV free wall collapse in diastole.",
+      },
     ],
   },
   {
@@ -366,6 +410,124 @@ export const PROTOCOLS: Protocol[] = [
 
   // ── ABDOMINAL ────────────────────────────────────────────────────────────────
   {
+    id: "abdominal-complete",
+    name: "Complete Abdominal Ultrasound",
+    shortName: "Abdominal US",
+    category: "Abdominal",
+    indication: "Abdominal pain; abnormal LFTs; elevated creatinine; abdominal mass; general survey; pre-operative assessment",
+    views: [
+      "Liver — right lobe sagittal (hepatic veins)",
+      "Liver — left lobe sagittal + transverse",
+      "Gallbladder — long axis",
+      "Gallbladder — short axis + Murphy's sign",
+      "Common bile duct at porta hepatis",
+      "Pancreas — transverse (head, body, tail)",
+      "Spleen — long axis (craniocaudal length)",
+      "Right kidney — long axis + transverse",
+      "Left kidney — long axis + transverse",
+      "Aorta — transverse (at celiac, SMA, bifurcation)",
+      "IVC — longitudinal",
+      "Bladder — transverse + sagittal (post-void if indicated)",
+    ],
+    keyFindings: [
+      "Liver echogenicity, size, and surface contour",
+      "Gallstones (hyperechoic + posterior shadowing + mobility)",
+      "GB wall thickness and pericholecystic fluid",
+      "CBD diameter",
+      "Pancreatic duct dilation or masses",
+      "Spleen size and echogenicity",
+      "Kidney size, cortical thickness, hydronephrosis",
+      "Aortic diameter (rule out AAA)",
+      "Free fluid / ascites in all quadrants",
+    ],
+    commonPitfalls: [
+      "Patient must fast ≥4h for GB assessment — contracted GB misses stones",
+      "Bowel gas commonly obscures pancreas — scan in various positions or use water as acoustic window",
+      "Always measure the aorta in TRANSVERSE — sagittal view underestimates diameter",
+      "Kidney echogenicity is relative — compare to liver (right) and spleen (left)",
+      "Absent or collapsed IVC suggests hypovolemia",
+    ],
+    tip: "Start with the gallbladder in the right lateral decubitus position for best distension. Scan the aorta last — patient will often have passed more gas by then.",
+    icon: "🫁",
+    difficulty: "Intermediate",
+    estimatedTime: "45–60 min",
+    aiMeasurements: [
+      "Liver span (cm)", "GB wall thickness (mm)", "CBD diameter (mm)",
+      "Pancreatic duct diameter (mm)", "Spleen length (cm)",
+      "Right kidney length (cm)", "Left kidney length (cm)",
+      "Aortic diameter (cm)", "Bladder volume (mL)",
+    ],
+    anomaliesDetected: [
+      "Cholelithiasis / cholecystitis", "CBD dilation", "Hepatomegaly / steatosis / cirrhosis",
+      "Splenomegaly", "Hydronephrosis / renal calculi", "AAA (aorta >3 cm)",
+      "Ascites", "Pancreatic duct dilation", "Bladder wall thickening",
+    ],
+    steps: [
+      "Patient fasting ≥4h. Position supine. Use curvilinear probe (3.5–5 MHz). Begin with gallbladder.",
+      "Gallbladder: intercostal oblique view (right mid-axillary line). Scan in long and short axis. Roll patient left to confirm stone mobility. Apply direct probe pressure for sonographic Murphy's sign.",
+      "Measure GB wall (anterior, inner-to-outer) and CBD (inner-to-inner, at porta hepatis anterior to portal vein).",
+      "Liver: sagittal sweep right to left — assess echogenicity (compare to right kidney cortex), surface contour, size. Measure craniocaudal span at mid-clavicular line.",
+      "Identify hepatic veins draining to IVC, and portal vein at porta hepatis. Note any dilation, thrombosis, or mass.",
+      "Pancreas: transverse view at epigastrium, angling inferiorly. Use the splenic vein as a posterior landmark. Survey head (anterior to IVC), body (anterior to aorta), and tail (anterior to left kidney). Note echogenicity and duct size.",
+      "Spleen: left lateral decubitus or right posterior oblique. Measure maximum craniocaudal length in long axis. Assess echogenicity and parenchymal texture.",
+      "Right kidney: right flank, coronal view. Measure length in long axis. Assess cortical echogenicity, cortical thickness, central sinus, and collecting system. Grade any hydronephrosis.",
+      "Left kidney: left flank or posterior approach. Same assessment as right — compare cortical echogenicity to spleen.",
+      "Aorta: midline transverse at epigastrium. Follow aorta from diaphragm (celiac axis) to bifurcation. Measure outer-to-outer diameter at widest point. Document in TRANSVERSE only.",
+      "IVC: longitudinal, right of midline. Assess diameter and respiratory variation (collapsed on inspiration = hypovolemia).",
+      "Bladder: suprapubic transverse and sagittal. Measure three dimensions if post-void volume needed. Note wall thickness and intraluminal contents.",
+    ],
+    measurements: [
+      {
+        structure: "Liver Span",
+        landmark: "Right mid-clavicular line, sagittal view. Place calipers at the dome of the right lobe to the inferior tip.",
+        normal: "≤ 15 cm (mid-clavicular line); > 17 cm = hepatomegaly",
+        technique: "Obtain with patient in inspiration. Ensure the full craniocaudal extent is visible before measuring.",
+      },
+      {
+        structure: "Gallbladder Wall Thickness",
+        landmark: "Anterior GB wall only, in long axis. Outer wall margin to inner wall margin (where GB lumen begins).",
+        normal: "< 3 mm (fasting); wall ≥ 3 mm + Murphy's + stones = acute cholecystitis",
+        technique: "Measure the ANTERIOR wall only — posterior wall is artifactually thickened by acoustic enhancement from GB bile.",
+      },
+      {
+        structure: "Common Bile Duct (CBD)",
+        landmark: "At the porta hepatis, anterior to the portal vein, inner wall to inner wall. Use the widest visible lumen.",
+        normal: "≤ 6 mm; ≤ 7–8 mm post-cholecystectomy; add ~1 mm per decade after age 60",
+        technique: "Do not include wall. Scan in intercostal oblique or subcostal approach. If dilated, follow duct distally to identify obstruction level.",
+      },
+      {
+        structure: "Spleen Length",
+        landmark: "Maximum craniocaudal length in the long axis, coronal view. Dome to inferior tip.",
+        normal: "≤ 12 cm (adults); > 13 cm = splenomegaly",
+        technique: "Left lateral decubitus position improves visualization. Place probe in left posterior axillary line.",
+      },
+      {
+        structure: "Kidney Length",
+        landmark: "Long axis, maximum pole-to-pole length. Include full extent of renal parenchyma from upper to lower pole.",
+        normal: "9–12 cm (adults); < 8 cm suggests chronic renal disease; asymmetry > 1.5 cm is significant",
+        technique: "Measure in a single sweep from upper to lower pole. Compare both sides. Cortical thickness: normal ≥ 1 cm.",
+      },
+      {
+        structure: "Abdominal Aortic Diameter",
+        landmark: "Widest transverse diameter, outer wall to outer wall. Measure at the level of maximum dilation.",
+        normal: "< 3 cm; 3–5.4 cm = AAA (monitor); ≥ 5.5 cm = surgical threshold in most guidelines",
+        technique: "Always measure in TRANSVERSE — sagittal views underestimate diameter. Measure at celiac axis, SMA, and just above bifurcation.",
+      },
+      {
+        structure: "Pancreatic Duct",
+        landmark: "Body of pancreas, transverse view. Lumen of the main pancreatic duct, inner wall to inner wall.",
+        normal: "≤ 2 mm (body); ≤ 3 mm acceptable; > 3 mm = dilation (worry: chronic pancreatitis, pancreatic mass)",
+        technique: "Use the splenic vein as a landmark just posterior to the pancreas body. Fan the probe slightly inferior to see the duct.",
+      },
+      {
+        structure: "Bladder Volume (Post-Void Residual)",
+        landmark: "Three orthogonal dimensions: transverse width (W), anteroposterior depth (AP), and craniocaudal height (H) — all in cm.",
+        normal: "Post-void residual < 50 mL normal; 50–100 mL borderline; > 100 mL = incomplete emptying",
+        technique: "Formula: Volume (mL) = 0.52 × W × AP × H. Measure immediately after voiding for PVR.",
+      },
+    ],
+  },
+  {
     id: "ruq",
     name: "Right Upper Quadrant (RUQ) Ultrasound",
     shortName: "RUQ US",
@@ -396,6 +558,32 @@ export const PROTOCOLS: Protocol[] = [
       "Measure GB wall thickness at the anterior wall (normal <3mm). Apply direct probe pressure for sonographic Murphy's sign.",
       "Locate CBD at the porta hepatis (anterior to portal vein). Measure inner-to-inner diameter (normal ≤6mm).",
       "Scan right kidney longitudinally as comparison for echogenicity assessment vs. liver.",
+    ],
+    measurements: [
+      {
+        structure: "Gallbladder Wall Thickness",
+        landmark: "Anterior GB wall, perpendicular to the wall, in long-axis view. Place calipers at the outer to inner wall margin.",
+        normal: "< 3 mm (fasting state)",
+        technique: "Measure the anterior wall only — posterior wall measurement is artifactually thickened by acoustic enhancement.",
+      },
+      {
+        structure: "Common Bile Duct (CBD)",
+        landmark: "At the porta hepatis, anterior to the portal vein, in the long axis. Measure inner wall to inner wall.",
+        normal: "≤ 6 mm (≤ 7–8 mm post-cholecystectomy; add 1 mm per decade over 60)",
+        technique: "Do not include the wall itself. Use the widest visible lumen diameter in the oblique subcostal or intercostal view.",
+      },
+      {
+        structure: "Liver Span",
+        landmark: "Right lobe in the right mid-clavicular line, sagittal view. Measure craniocaudal length from dome to inferior tip.",
+        normal: "≤ 15 cm (mid-clavicular line)",
+        technique: "Include the full craniocaudal extent. A liver >17 cm is strongly suggestive of hepatomegaly.",
+      },
+      {
+        structure: "Gallstone Size",
+        landmark: "Measure the largest stone in two perpendicular planes. Place calipers at the leading edges of the hyperechoic focus.",
+        normal: "N/A — any stone is abnormal",
+        technique: "Confirm mobility by rolling the patient. Stones >1 cm carry higher risk of complications.",
+      },
     ],
   },
   {
@@ -538,6 +726,20 @@ export const PROTOCOLS: Protocol[] = [
       "Add color Doppler and augmentation (calf squeeze releases): normal response is flow augmentation. Loss = proximal obstruction.",
       "Assess phasicity: normal venous flow waxes/wanes with respiration. Continuous non-phasic flow = proximal obstruction.",
       "Document each segment: compressible (normal), non-compressible (DVT), echogenic thrombus characteristics.",
+    ],
+    measurements: [
+      {
+        structure: "Common Femoral Vein (CFV) Diameter",
+        landmark: "Transverse view at the groin, at the level of the saphenofemoral junction. Measure lumen diameter before compression.",
+        normal: "Variable; non-compressibility is more important than diameter alone",
+        technique: "Compress fully — normal vein walls fully touch (compressible = no DVT). Do not rely on diameter alone.",
+      },
+      {
+        structure: "Popliteal Vein Diameter",
+        landmark: "Posterior popliteal fossa, transverse view, with the knee slightly flexed. Inner wall to inner wall.",
+        normal: "Variable; non-compressibility is diagnostic of DVT",
+        technique: "Patient prone or knee flexed. Apply compression — walls should fully touch. Measure at mid-popliteal fossa.",
+      },
     ],
   },
   {

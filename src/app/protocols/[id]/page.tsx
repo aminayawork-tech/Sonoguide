@@ -10,6 +10,7 @@ import {
   Clock,
   ListOrdered,
   Lightbulb,
+  Ruler,
   Search,
   Zap,
   Camera,
@@ -87,6 +88,41 @@ export default function ProtocolDetailPage({ params }: { params: Promise<{ id: s
                 </li>
               ))}
             </ol>
+          </div>
+        )}
+
+        {/* Measurement Guide */}
+        {protocol.measurements && protocol.measurements.length > 0 && (
+          <div className="mb-5 rounded-2xl border p-5" style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
+            <div className="mb-4 flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#fdf4ff" }}>
+                <Ruler size={15} style={{ color: "#9333ea" }} />
+              </div>
+              <h2 className="font-semibold" style={{ color: "#0f172a" }}>Measurement Guide</h2>
+            </div>
+            <div className="space-y-4">
+              {protocol.measurements.map((m, i) => (
+                <div key={i} className={i < protocol.measurements!.length - 1 ? "border-b pb-4" : ""} style={{ borderColor: "#f1f5f9" }}>
+                  <p className="mb-1.5 text-sm font-semibold" style={{ color: "#1a2235" }}>{m.structure}</p>
+                  <div className="space-y-1.5">
+                    <div className="flex gap-2 text-xs">
+                      <span className="shrink-0 font-semibold" style={{ color: "#9333ea" }}>Where:</span>
+                      <span style={{ color: "#374151" }}>{m.landmark}</span>
+                    </div>
+                    <div className="flex gap-2 text-xs">
+                      <span className="shrink-0 font-semibold" style={{ color: "#059669" }}>Normal:</span>
+                      <span style={{ color: "#374151" }}>{m.normal}</span>
+                    </div>
+                    {m.technique && (
+                      <div className="flex gap-2 text-xs">
+                        <span className="shrink-0 font-semibold" style={{ color: "#d97706" }}>Tip:</span>
+                        <span style={{ color: "#374151" }}>{m.technique}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
