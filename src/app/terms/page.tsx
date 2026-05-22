@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import NavBar from "@/components/NavBar";
 
 export const metadata = {
@@ -81,7 +82,7 @@ export default function TermsPage() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="mb-8">
       <h2 className="mb-3 text-lg font-bold" style={{ color: "#1a2235" }}>{title}</h2>

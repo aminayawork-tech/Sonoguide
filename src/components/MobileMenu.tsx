@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode, ElementType } from "react";
 import Link from "next/link";
 import { X, LogIn, CreditCard, Shield, FileText, ChevronRight, Upload, Zap, ClipboardList, Camera } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
@@ -142,7 +143,7 @@ export default function MobileMenu({ onSignIn, onClose }: Props) {
   );
 }
 
-function MenuSection({ title, children }: { title: string; children: React.ReactNode }) {
+function MenuSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
       <p className="mb-2 px-1 text-xs font-semibold tracking-widest" style={{ color: "#94a3b8" }}>{title}</p>
@@ -157,7 +158,7 @@ function MenuItem({
   icon: Icon, label, sublabel, iconColor = "#2563eb", labelColor = "#1a2235",
   onClick, href, onClose, last,
 }: {
-  icon: React.ElementType; label: string; sublabel?: string;
+  icon: ElementType; label: string; sublabel?: string;
   iconColor?: string; labelColor?: string;
   onClick?: () => void; href?: string; onClose?: () => void; last?: boolean;
 }) {
