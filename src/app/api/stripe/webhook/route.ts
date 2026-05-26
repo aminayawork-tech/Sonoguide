@@ -6,18 +6,24 @@ import { createServiceClient } from "@/lib/supabase/server";
 // Raw body needed for Stripe signature verification
 export const runtime = "nodejs";
 
-function tierFromPriceId(priceId: string): "student" | "pro" | "team" | "free" {
+function tierFromPriceId(priceId: string): "pro" | "free" {
   const {
-    STRIPE_STUDENT_MONTHLY_PRICE_ID,
-    STRIPE_STUDENT_YEARLY_PRICE_ID,
     STRIPE_PRO_MONTHLY_PRICE_ID,
     STRIPE_PRO_YEARLY_PRICE_ID,
+    // Legacy price IDs — kept so existing subscriber renewals still resolve to pro
+    STRIPE_STUDENT_MONTHLY_PRICE_ID,
+    STRIPE_STUDENT_YEARLY_PRICE_ID,
     STRIPE_TEAM_MONTHLY_PRICE_ID,
     STRIPE_TEAM_YEARLY_PRICE_ID,
   } = process.env;
-  if (priceId === STRIPE_TEAM_MONTHLY_PRICE_ID || priceId === STRIPE_TEAM_YEARLY_PRICE_ID) return "team";
-  if (priceId === STRIPE_PRO_MONTHLY_PRICE_ID || priceId === STRIPE_PRO_YEARLY_PRICE_ID) return "pro";
-  if (priceId === STRIPE_STUDENT_MONTHLY_PRICE_ID || priceId === STRIPE_STUDENT_YEARLY_PRICE_ID) return "student";
+  if (
+    priceId === STRIPE_PRO_MONTHLY_PRICE_ID ||
+    priceId === STRIPE_PRO_YEARLY_PRICE_ID ||
+    priceId === STRIPE_STUDENT_MONTHLY_PRICE_ID ||
+    priceId === STRIPE_STUDENT_YEARLY_PRICE_ID ||
+    priceId === STRIPE_TEAM_MONTHLY_PRICE_ID ||
+    priceId === STRIPE_TEAM_YEARLY_PRICE_ID
+  ) return "pro";
   return "free";
 }
 

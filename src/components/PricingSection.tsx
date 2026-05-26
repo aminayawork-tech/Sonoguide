@@ -2,54 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle, Loader2, Mail, Sparkles, Users, X } from "lucide-react";
+import { CheckCircle, Loader2, Sparkles } from "lucide-react";
 
 type BillingCycle = "monthly" | "yearly";
-type PlanKey = "student_monthly" | "student_yearly" | "pro_monthly" | "pro_yearly" | "team_monthly" | "team_yearly";
+type PlanKey = "pro_monthly" | "pro_yearly";
 
-function ContactModal({ onClose }: { onClose: () => void }) {
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
-      style={{ background: "rgba(0,0,0,0.45)" }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="relative w-full max-w-sm rounded-2xl border p-7 shadow-2xl"
-        style={{ background: "#ffffff", borderColor: "#dde4ee" }}>
-        <button onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-1.5 transition-colors hover:bg-slate-100"
-          style={{ color: "#94a3b8" }}>
-          <X size={16} />
-        </button>
-        <div className="mb-5 flex items-baseline gap-0.5">
-          <span className="text-lg font-extrabold" style={{ color: "#0f172a" }}>Sono</span>
-          <span className="text-lg font-extrabold" style={{ color: "#2563eb" }}>Pilot</span>
-        </div>
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl"
-          style={{ background: "#eff6ff" }}>
-          <Mail size={22} style={{ color: "#2563eb" }} />
-        </div>
-        <h2 className="mb-1 text-lg font-bold" style={{ color: "#0f172a" }}>Contact Sales</h2>
-        <p className="mb-5 text-sm" style={{ color: "#64748b" }}>
-          Interested in the Team plan? Reach out and we&apos;ll get your program set up.
-        </p>
-        <a
-          href="mailto:sales@sonopilot.app?subject=Team Plan Inquiry"
-          className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition-all hover:opacity-90"
-          style={{ background: "#2563eb" }}>
-          <Mail size={14} />
-          Email us at sales@sonopilot.app
-        </a>
-        <button onClick={onClose}
-          className="mt-3 w-full rounded-xl border py-2.5 text-sm font-medium transition-all hover:bg-slate-50"
-          style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: string; primary?: boolean }) {
+function PaidButton({ planKey, label }: { planKey: PlanKey; label: string }) {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState<string | null>(null);
 
@@ -80,10 +38,8 @@ function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: stri
       <button
         onClick={startCheckout}
         disabled={loading}
-        className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all hover:opacity-90 disabled:opacity-60 ${primary ? "text-white" : "border"}`}
-        style={primary
-          ? { background: "#2563eb" }
-          : { borderColor: "#e2e8f0", color: "#475569" }}>
+        className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold text-white transition-all hover:opacity-90 disabled:opacity-60"
+        style={{ background: "#2563eb" }}>
         {loading && <Loader2 size={12} className="animate-spin" />}
         {label}
       </button>
@@ -95,17 +51,12 @@ function PaidButton({ planKey, label, primary }: { planKey: PlanKey; label: stri
 }
 
 export default function PricingSection() {
-  const [showContact, setShowContact] = useState(false);
   const [billing, setBilling] = useState<BillingCycle>("monthly");
-
-  const studentPlan = billing === "monthly" ? "student_monthly" : "student_yearly";
-  const proPlan     = billing === "monthly" ? "pro_monthly"     : "pro_yearly";
-  const teamPlan    = billing === "monthly" ? "team_monthly"    : "team_yearly";
+  const proPlan: PlanKey = billing === "monthly" ? "pro_monthly" : "pro_yearly";
 
   return (
     <section className="py-20">
-      {showContact && <ContactModal onClose={() => setShowContact(false)} />}
-      <div className="mx-auto max-w-5xl px-4">
+      <div className="mx-auto max-w-2xl px-4">
         <h2 className="mb-3 text-center text-3xl font-bold" style={{ color: "#0f172a" }}>
           Simple, transparent pricing
         </h2>
@@ -133,12 +84,12 @@ export default function PricingSection() {
             Yearly
             <span className="rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
               style={{ background: "#059669" }}>
-              Save 34%
+              4 months free
             </span>
           </button>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2">
           {/* Free */}
           <div className="flex flex-col rounded-2xl border p-6"
             style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
@@ -159,105 +110,42 @@ export default function PricingSection() {
             </Link>
           </div>
 
-          {/* Student */}
-          <div className="flex flex-col rounded-2xl border p-6"
-            style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Student</p>
-            {billing === "monthly" ? (
-              <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                $9.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
-              </p>
-            ) : (
-              <>
-                <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                  $79<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
-                </p>
-                <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$6.58/mo — save 34%</p>
-              </>
-            )}
-            <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["50 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (150 msgs/mo)", "PHI auto-redaction"].map((f) => (
-                <li key={f} className="flex items-center gap-2">
-                  <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <PaidButton planKey={studentPlan} label="Start Student Pro" />
-          </div>
-
-          {/* Professional */}
+          {/* Pro */}
           <div className="relative flex flex-col rounded-2xl border p-6 shadow-lg"
             style={{ borderColor: "#93c5fd", background: "#eff6ff" }}>
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold text-white"
               style={{ background: "#2563eb" }}>
               Most Popular
             </div>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Professional</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#2563eb" }}>Pro</p>
             {billing === "monthly" ? (
               <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                $19.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
+                $9.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
               </p>
             ) : (
-              <div className="mb-1 flex items-center gap-2">
-                <p className="text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                  $159<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
-                </p>
-                <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                  style={{ background: "#059669" }}>
-                  <Sparkles size={9} />
-                  SAVE 34%
-                </span>
-              </div>
-            )}
-            {billing === "yearly" && (
-              <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$13.25/mo</p>
+              <>
+                <div className="mb-1 flex items-center gap-2">
+                  <p className="text-3xl font-extrabold" style={{ color: "#0f172a" }}>
+                    $69.99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
+                  </p>
+                  <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                    style={{ background: "#059669" }}>
+                    <Sparkles size={9} />
+                    4 MONTHS FREE
+                  </span>
+                </div>
+                <p className="mb-5 text-xs" style={{ color: "#64748b" }}>~$5.83/mo</p>
+              </>
             )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
-              {["150 AI analyses/month", "All 31 protocols", "Full measurements suite", "AI chat (500 msgs/mo)", "PDF report export", "PHI auto-redaction", "Priority AI queue"].map((f) => (
+              {["Unlimited AI analyses", "All 31 protocols", "Full measurements suite", "AI chat", "PDF report export", "PHI auto-redaction", "Priority AI queue"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#2563eb", flexShrink: 0 }} />
                   {f}
                 </li>
               ))}
             </ul>
-            <PaidButton planKey={proPlan} label="Start Pro Trial" primary />
-          </div>
-
-          {/* Team */}
-          <div className="flex flex-col rounded-2xl border p-6"
-            style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Team</p>
-            {billing === "monthly" ? (
-              <p className="mb-1 text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                $99<span className="text-sm font-normal" style={{ color: "#64748b" }}>/mo</span>
-              </p>
-            ) : (
-              <div className="mb-1 flex items-center gap-2">
-                <p className="text-3xl font-extrabold" style={{ color: "#0f172a" }}>
-                  $799<span className="text-sm font-normal" style={{ color: "#64748b" }}>/yr</span>
-                </p>
-                <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                  style={{ background: "#059669" }}>
-                  <Sparkles size={9} />
-                  SAVE 33%
-                </span>
-              </div>
-            )}
-            <p className="mb-5 text-xs" style={{ color: "#64748b" }}>
-              {billing === "yearly" ? "~$66.58/mo · " : ""}Up to 10 seats · 500 scans pooled
-            </p>
-            <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["500 AI analyses/month (pooled)", "Up to 10 seats", "All 31 protocols", "Full measurements suite", "AI chat (2,000 msgs/mo)", "PDF export", "PHI auto-redaction", "Priority support"].map((f) => (
-                <li key={f} className="flex items-center gap-2">
-                  {f === "Up to 10 seats"
-                    ? <Users size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
-                    : <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />}
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <PaidButton planKey={teamPlan} label="Start Team Pro" />
+            <PaidButton planKey={proPlan} label="Get Pro" />
           </div>
         </div>
       </div>

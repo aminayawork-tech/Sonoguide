@@ -19,99 +19,35 @@ export const stripe = new Proxy({} as Stripe, {
 });
 
 export const PLANS = {
-  student_monthly: {
-    name: "Student",
-    price: "$9.99",
-    period: "month",
-    priceId: process.env.STRIPE_STUDENT_MONTHLY_PRICE_ID!,
-    features: [
-      "50 AI analyses/month",
-      "All 31 protocols",
-      "Full measurements suite",
-      "AI chat (150 msgs/mo)",
-      "PHI auto-redaction",
-    ],
-  },
-  student_yearly: {
-    name: "Student",
-    price: "$79",
-    period: "year",
-    badge: "Save 34%",
-    priceId: process.env.STRIPE_STUDENT_YEARLY_PRICE_ID!,
-    features: [
-      "50 AI analyses/month",
-      "All 31 protocols",
-      "Full measurements suite",
-      "AI chat (150 msgs/mo)",
-      "PHI auto-redaction",
-    ],
-  },
   pro_monthly: {
-    name: "Professional",
-    price: "$19.99",
+    name: "Pro",
+    price: "$9.99",
     period: "month",
     priceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID!,
     features: [
-      "150 AI analyses/month",
+      "Unlimited AI analyses",
       "All 31 protocols",
       "Full measurements suite",
-      "AI chat (500 msgs/mo)",
+      "AI chat",
       "PDF report export",
-
       "PHI auto-redaction",
       "Priority AI queue",
     ],
   },
   pro_yearly: {
-    name: "Professional",
-    price: "$159",
+    name: "Pro",
+    price: "$69.99",
     period: "year",
-    badge: "Save 34%",
+    badge: "4 months free",
     priceId: process.env.STRIPE_PRO_YEARLY_PRICE_ID!,
     features: [
-      "150 AI analyses/month",
+      "Unlimited AI analyses",
       "All 31 protocols",
       "Full measurements suite",
-      "AI chat (500 msgs/mo)",
+      "AI chat",
       "PDF report export",
-
       "PHI auto-redaction",
       "Priority AI queue",
-    ],
-  },
-  team_monthly: {
-    name: "Team",
-    price: "$99",
-    period: "month",
-    priceId: process.env.STRIPE_TEAM_MONTHLY_PRICE_ID!,
-    features: [
-      "500 AI analyses/month (pooled)",
-      "Up to 10 seats",
-      "All 31 protocols",
-      "Full measurements suite",
-      "AI chat (2,000 msgs/mo)",
-      "PDF export",
-
-      "PHI auto-redaction",
-      "Priority support",
-    ],
-  },
-  team_yearly: {
-    name: "Team",
-    price: "$799",
-    period: "year",
-    badge: "Save 33%",
-    priceId: process.env.STRIPE_TEAM_YEARLY_PRICE_ID!,
-    features: [
-      "500 AI analyses/month (pooled)",
-      "Up to 10 seats",
-      "All 31 protocols",
-      "Full measurements suite",
-      "AI chat (2,000 msgs/mo)",
-      "PDF export",
-
-      "PHI auto-redaction",
-      "Priority support",
     ],
   },
 } as const;

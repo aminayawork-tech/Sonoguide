@@ -12,16 +12,16 @@ interface UpgradeModalProps {
 type BillingCycle = "monthly" | "yearly";
 
 export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProps) {
-  const [loading,  setLoading]  = useState<PlanKey | null>(null);
+  const [loading,  setLoading]  = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [billing,  setBilling]  = useState<BillingCycle>("monthly");
 
-  const visiblePlans: PlanKey[] = billing === "monthly"
-    ? ["student_monthly", "pro_monthly"]
-    : ["student_yearly", "pro_yearly"];
+  const planKey: PlanKey = billing === "monthly" ? "pro_monthly" : "pro_yearly";
+  const plan = PLANS[planKey];
+  const isYearly = billing === "yearly";
 
-  async function handleUpgrade(planKey: PlanKey) {
-    setLoading(planKey);
+  async function handleUpgrade() {
+    setLoading(true);
     setErrorMsg(null);
     try {
       const res = await fetch("/api/stripe/checkout", {
@@ -34,7 +34,7 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
       window.location.href = data.url;
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
-      setLoading(null);
+      setLoading(false);
     }
   }
 
@@ -82,7 +82,7 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
             </>
           ) : (
             <p className="text-sm" style={{ color: "#64748b" }}>
-              Unlock more scans, all protocols, and priority AI analysis.
+              Unlock unlimited scans, all protocols, and priority AI analysis.
             </p>
           )}
         </div>
@@ -108,7 +108,7 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
               Yearly
               <span className="rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white"
                 style={{ background: "#059669" }}>
-                Save 34%
+                4 months free
               </span>
             </button>
           </div>
@@ -121,66 +121,49 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
           </div>
         )}
 
-        {/* Plan cards */}
-        <div className="space-y-3 px-6 pb-6 pt-3">
-          {visiblePlans.map((key) => {
-            const plan = PLANS[key];
-            const isPro = key === "pro_monthly" || key === "pro_yearly";
-            const isYearly = key === "student_yearly" || key === "pro_yearly";
-            return (
-              <div key={key}
-                className="rounded-xl border p-4"
-                style={{
-                  borderColor: isPro ? "#2563eb" : "#dde4ee",
-                  background:  isPro ? "#eff6ff"  : "#fafafa",
-                }}>
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-bold text-sm" style={{ color: "#0f172a" }}>
-                        {plan.name}
-                      </span>
-                      {isYearly && (
-                        <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
-                          style={{ background: "#059669" }}>
-                          <Sparkles size={9} />
-                          SAVE 34%
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-0.5 text-xs" style={{ color: "#64748b" }}>
-                      <span className="text-base font-extrabold" style={{ color: "#0f172a" }}>
-                        {plan.price}
-                      </span>
-                      {" "}/{plan.period}
-                      {isYearly && (
-                        <span className="ml-1">
-                          — ~${isPro ? "13.25" : "6.58"}/mo
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handleUpgrade(key)}
-                    disabled={loading !== null}
-                    className="flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold text-white disabled:opacity-60 transition-all hover:opacity-90"
-                    style={{ background: isPro ? "#2563eb" : "#374151", minWidth: 80 }}>
-                    {loading === key ? <Loader2 size={12} className="animate-spin" /> : null}
-                    {loading === key ? "Loading…" : "Upgrade"}
-                  </button>
+        {/* Pro plan card */}
+        <div className="px-6 pb-6 pt-3">
+          <div className="rounded-xl border p-4"
+            style={{ borderColor: "#2563eb", background: "#eff6ff" }}>
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-sm" style={{ color: "#0f172a" }}>Pro</span>
+                  {isYearly && (
+                    <span className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold text-white"
+                      style={{ background: "#059669" }}>
+                      <Sparkles size={9} />
+                      4 MONTHS FREE
+                    </span>
+                  )}
                 </div>
-
-                <ul className="space-y-1.5">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-xs" style={{ color: "#374151" }}>
-                      <Check size={12} className="mt-0.5 shrink-0" style={{ color: "#2563eb" }} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+                <p className="mt-0.5 text-xs" style={{ color: "#64748b" }}>
+                  <span className="text-base font-extrabold" style={{ color: "#0f172a" }}>
+                    {plan.price}
+                  </span>
+                  {" "}/{plan.period}
+                  {isYearly && <span className="ml-1">— ~$5.83/mo</span>}
+                </p>
               </div>
-            );
-          })}
+              <button
+                onClick={handleUpgrade}
+                disabled={loading}
+                className="flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold text-white disabled:opacity-60 transition-all hover:opacity-90"
+                style={{ background: "#2563eb", minWidth: 80 }}>
+                {loading ? <Loader2 size={12} className="animate-spin" /> : null}
+                {loading ? "Loading…" : "Upgrade"}
+              </button>
+            </div>
+
+            <ul className="space-y-1.5">
+              {plan.features.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-xs" style={{ color: "#374151" }}>
+                  <Check size={12} className="mt-0.5 shrink-0" style={{ color: "#2563eb" }} />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <p className="pb-4 text-center text-xs" style={{ color: "#94a3b8" }}>
