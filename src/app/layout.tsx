@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import BottomNav from "@/components/BottomNav";
+import PwaInit from "@/components/PwaInit";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://sonopilot.app";
 
@@ -12,6 +13,13 @@ export const metadata: Metadata = {
   keywords:
     "POCUS AI, ultrasound AI analyzer, point of care ultrasound, ultrasound interpretation, bedside ultrasound",
   metadataBase: new URL(APP_URL),
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "SonoPilot",
+    statusBarStyle: "default",
+    startupImage: "/sonopilot-favicon.png",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "48x48 32x32 16x16", type: "image/x-icon" },
@@ -39,6 +47,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#2563eb",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -51,6 +66,7 @@ export default function RootLayout({
         style={{ background: "#eef3f8", color: "#1a2235", fontFamily: "system-ui, -apple-system, sans-serif" }}
       >
         <AuthProvider>
+          <PwaInit />
           {children}
           <BottomNav />
         </AuthProvider>
