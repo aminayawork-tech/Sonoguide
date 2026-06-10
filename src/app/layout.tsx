@@ -3,6 +3,7 @@ import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import BottomNav from "@/components/BottomNav";
 import PwaInit from "@/components/PwaInit";
+import OnboardingFlow from "@/components/OnboardingFlow";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://sonopilot.app";
 
@@ -67,6 +68,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <PwaInit />
+          <OnboardingFlow />
           {children}
           <BottomNav />
         </AuthProvider>
