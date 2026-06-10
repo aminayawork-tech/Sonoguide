@@ -12,7 +12,10 @@
     "cap:android": "npx cap open android",
     "cap:run:ios": "npx cap run ios",
     "cap:run:android": "npx cap run android",
-    "native:setup": "node scripts/setup-native.js"
+    "native:setup": "node scripts/setup-native.js",
+    "icons:generate": "npx @capacitor/assets generate",
+    "icons:ios": "npx @capacitor/assets generate --ios",
+    "icons:android": "npx @capacitor/assets generate --android"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.79.0",
@@ -31,6 +34,7 @@
     "stripe": "^20.4.1"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^6.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

@@ -1,0 +1,138 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  APPLE APP STORE — LISTING COPY
+  Paste each section directly into App Store Connect
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+APP NAME  (30 chars max)
+────────────────────────
+SonoPilot
+
+
+SUBTITLE  (30 chars max)
+────────────────────────
+AI Ultrasound Guide
+
+
+DESCRIPTION  (4000 chars max — Apple shows ~250 chars before "More")
+────────────────────────────────────────────────────────────────────
+SonoPilot turns any smartphone into an intelligent ultrasound assistant.
+Point your camera at any ultrasound screen — AI instantly labels anatomy,
+calculates measurements, and flags key findings in seconds.
+
+── HOW IT WORKS ──
+1. Snap a photo of any ultrasound screen (no special equipment needed)
+2. AI analyzes the image — structures labeled, measurements calculated,
+   anomalies automatically flagged
+3. Review annotated findings, share results, or export a one-tap PDF report
+
+── 31+ PROTOCOLS SUPPORTED ──
+• Emergency / eFAST (FAST, extended FAST)
+• Cardiac Echo (parasternal, apical, subcostal views)
+• OB/GYN (first trimester, biophysical profile)
+• Vascular (DVT, aorta, IVC)
+• Musculoskeletal (MSK)
+• Lung / Pleural
+• Renal & Bladder
+• Soft Tissue
+• And more
+
+── KEY FEATURES ──
+• Instant AI structure labeling
+• Automated measurements
+• Anomaly detection and flagging
+• AI chat — ask questions about your scan
+• One-tap PDF report export
+• Automatic patient data redaction (PHI protection)
+• HIPAA-ready privacy architecture
+• Works offline — view past scans without connectivity
+
+── BUILT FOR CLINICIANS ──
+Designed for emergency medicine physicians, critical care specialists,
+hospitalists, residents, medical students, and point-of-care ultrasound
+(POCUS) practitioners.
+
+IMPORTANT: SonoPilot is an educational and clinical decision support tool.
+It is NOT FDA-cleared and is not intended for primary diagnosis. Always
+apply clinical judgment and follow your institution's protocols.
+
+── PLANS ──
+Free: 5 AI analyses per month, all 31 protocols
+Pro: Unlimited analyses — $9.99/month or $69.99/year
+
+
+KEYWORDS  (100 chars max, comma-separated, no spaces after commas)
+────────────────────────────────────────────────────────────────────
+ultrasound,POCUS,echo,eFAST,AI,bedside,sonography,clinical,medical,anatomy
+
+
+PROMOTIONAL TEXT  (170 chars max — can be updated without a new build)
+────────────────────────────────────────────────────────────────────
+Snap. Analyze. Understand. AI-powered ultrasound interpretation for
+clinicians — 31 protocols, instant measurements, one-tap PDF reports.
+
+
+WHAT'S NEW  (version 1.0)
+─────────────────────────
+Initial release. AI-powered point-of-care ultrasound interpretation with
+31+ protocols, automated measurements, anomaly detection, and one-tap
+PDF report export.
+
+
+APP STORE CONNECT — GENERAL INFO
+─────────────────────────────────
+Category (Primary):   Medical
+Category (Secondary): Education
+
+Age Rating:           4+ (no objectionable content)
+
+Price:                Free (with in-app purchases)
+
+In-App Purchase 1:    SonoPilot Pro Monthly
+  Type:               Auto-Renewable Subscription
+  Duration:           1 Month
+  Price:              $9.99 USD
+
+In-App Purchase 2:    SonoPilot Pro Annual
+  Type:               Auto-Renewable Subscription
+  Duration:           1 Year
+  Price:              $69.99 USD
+
+Privacy Policy URL:   https://sonopilot.app/privacy
+Support URL:          https://sonopilot.app
+Marketing URL:        https://sonopilot.app
+
+
+REVIEW NOTES  (for App Store reviewers)
+────────────────────────────────────────
+This app is a medical education and clinical decision support tool for
+licensed healthcare professionals. The camera is used to photograph
+ultrasound machine screens for AI-assisted image analysis.
+
+Test account:
+  Email:    (create a free test account before submission)
+  Password: (set before submission)
+
+The app requires an internet connection to perform AI analysis
+(processed server-side). Existing scan results are viewable offline.
+
+
+SCREENSHOT CAPTIONS  (optional — appears below screenshot in store)
+────────────────────────────────────────────────────────────────────
+Screenshot 1: "Welcome to SonoPilot — AI Ultrasound in Seconds"
+Screenshot 2: "Snap or Upload Any Ultrasound Screen"
+Screenshot 3: "AI Labels Structures in Seconds"
+Screenshot 4: "Instant Clinical Insights & PDF Reports"
+Screenshot 5: "31+ POCUS Protocols Supported"
+Screenshot 6: "Your Personal Scan Library"
+Screenshot 7: "One-Tap PDF Report Export"
+
+
+REQUIRED SCREENSHOT SIZES  (App Store Connect — use iPhone 15 Pro Max)
+────────────────────────────────────────────────────────────────────────
+iPhone 6.7"  (required):  1290 × 2796 px
+iPhone 6.5"  (optional):  1242 × 2688 px
+iPad 12.9"   (optional):  2048 × 2732 px
+
+Minimum required: 1 screenshot per device class you support.
+Recommended: 6–8 screenshots to maximize conversion.
