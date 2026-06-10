@@ -14,6 +14,11 @@
   "lang": "en",
   "categories": ["medical", "health"],
   "prefer_related_applications": false,
+  "serviceworker": {
+    "src": "/sw.js",
+    "scope": "/",
+    "update_via_cache": "none"
+  },
   "icons": [
     { "src": "/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any" },
     { "src": "/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" },
