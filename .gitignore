@@ -40,3 +40,18 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 node_modules\n.next\n.env*\n*.local
+
+# iOS / Capacitor
+ios/App/Pods/
+ios/App/App/build/
+*.xcuserstate
+**/xcuserdata/
+*.xccheckout
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Android / Capacitor
+android/.gradle/
+android/app/build/
