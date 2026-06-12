@@ -38,12 +38,14 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+tsconfig.tsbuildinfo
 next-env.d.ts
 node_modules\n.next\n.env*\n*.local
 
 # iOS / Capacitor
 ios/App/Pods/
 ios/App/App/build/
+ios/Pods/
 *.xcuserstate
 **/xcuserdata/
 *.xccheckout
