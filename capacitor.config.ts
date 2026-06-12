@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.sonopilot',
+  appId: 'app.sonopilot.www',
   appName: 'SonoPilot',
   webDir: 'public',
   server: {
