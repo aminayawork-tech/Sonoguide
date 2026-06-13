@@ -235,15 +235,6 @@ function ResultsContent() {
     <div className="min-h-screen pt-14 pb-52 md:pb-8 md:pt-16" style={{ background: "#f8fafc" }}>
       <NavBar />
 
-      {/* Floating New Scan button */}
-      <Link
-        href="/scan"
-        data-print="hide"
-        className="fixed bottom-20 right-4 z-40 flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white shadow-xl transition-all hover:opacity-90 active:scale-95 md:bottom-6 md:right-6"
-        style={{ background: "#2563eb" }}>
-        <Camera size={16} />
-        New Scan
-      </Link>
       <div className="mx-auto max-w-2xl px-4 py-8 print-container">
 
         {/* Print-only header — hidden on screen */}
@@ -465,28 +456,32 @@ function ResultsContent() {
         </div>
 
         {/* Actions */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" data-print="hide">
-          <button onClick={() => reviewConfirmed && setShowExportModal(true)} disabled={!reviewConfirmed}
-            className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
-            style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
-            <Download size={17} /> Export PDF
-          </button>
-          <button onClick={handleShare}
-            className="relative flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
-            style={{ borderColor: "#dde4ee", color: shareCopied ? "#059669" : "#5a6a85", background: "#ffffff" }}>
-            <Share2 size={17} />
-            {shareCopied ? "Link copied!" : "Share"}
-          </button>
-          <Link href={`/scan?protocol=${protocolId}`}
-            className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
-            style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
-            <RefreshCw size={17} /> New View
+        <div className="space-y-3" data-print="hide">
+          {/* Primary: New Scan */}
+          <Link href="/scan"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold text-white transition-all hover:opacity-90 active:scale-95"
+            style={{ background: "#2563eb" }}>
+            <Camera size={17} /> New Scan
           </Link>
-          <button onClick={() => setShowReportModal(true)}
-            className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
-            style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
-            <Flag size={17} /> Report Error
-          </button>
+          {/* Secondary actions */}
+          <div className="grid grid-cols-3 gap-3">
+            <button onClick={() => reviewConfirmed && setShowExportModal(true)} disabled={!reviewConfirmed}
+              className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
+              <Download size={17} /> Export PDF
+            </button>
+            <button onClick={handleShare}
+              className="relative flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
+              style={{ borderColor: "#dde4ee", color: shareCopied ? "#059669" : "#5a6a85", background: "#ffffff" }}>
+              <Share2 size={17} />
+              {shareCopied ? "Copied!" : "Share"}
+            </button>
+            <button onClick={() => setShowReportModal(true)}
+              className="flex flex-col items-center gap-1.5 rounded-xl border py-3 text-xs font-medium transition-all hover:bg-slate-50"
+              style={{ borderColor: "#dde4ee", color: "#5a6a85", background: "#ffffff" }}>
+              <Flag size={17} /> Report
+            </button>
+          </div>
         </div>
 
         {/* Protocol checklist */}
@@ -570,8 +565,8 @@ function ResultsContent() {
               <div ref={chatEndRef} />
             </div>
 
-            {/* Input pinned at bottom — safe above keyboard */}
-            <div className="shrink-0 border-t px-4 py-3 pb-8" style={{ borderColor: "#dde4ee", background: "#ffffff" }}>
+      {/* Input pinned at bottom — safe above keyboard and BottomNav */}
+            <div className="shrink-0 border-t px-4 py-3" style={{ borderColor: "#dde4ee", background: "#ffffff", paddingBottom: "max(env(safe-area-inset-bottom), 80px)" }}>
               <div className="flex gap-2">
                 <input
                   ref={chatExpandedInputRef}
