@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Camera, ClipboardList } from "lucide-react";
+import { Home, Camera, ClipboardList, Clock } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
 
 const ALL_TABS = [
-  { href: "/",          label: "Home",      Icon: Home,          guestOnly: true },
+  { href: "/",          label: "Home",      Icon: Home,          guestOnly: true  },
   { href: "/scan",      label: "Scan",      Icon: Camera,        guestOnly: false },
   { href: "/protocols", label: "Protocols", Icon: ClipboardList, guestOnly: false },
+  { href: "/history",   label: "History",   Icon: Clock,         guestOnly: false, authOnly: true },
 ];
 
 export default function BottomNav() {
@@ -17,7 +18,7 @@ export default function BottomNav() {
 
   const tabs = user
     ? ALL_TABS.filter((t) => !t.guestOnly)
-    : ALL_TABS;
+    : ALL_TABS.filter((t) => !t.authOnly);
 
   return (
     <nav

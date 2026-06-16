@@ -310,6 +310,13 @@ function ScanContent() {
       if (compressedDataUrl) sessionStorage.setItem("lastImage", compressedDataUrl);
       else sessionStorage.removeItem("lastImage");
 
+      // Fire-and-forget: save AI result to history (no image, no PHI)
+      fetch("/api/scans/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(analysis),
+      });
+
       refreshProfile();
       router.push(`/results?protocol=${effectiveProtocolId}`);
     } catch (err) {
