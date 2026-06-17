@@ -198,6 +198,16 @@ function ScanContent() {
     }
   }, [searchParams, refreshProfile, router]);
 
+  // Receive images injected by the native iOS WKWebView image picker
+  useEffect(() => {
+    function onNativeImage(e: Event) {
+      const dataUrl = (e as CustomEvent<string>).detail;
+      if (dataUrl) setImage(dataUrl);
+    }
+    window.addEventListener("native-image-selected", onNativeImage);
+    return () => window.removeEventListener("native-image-selected", onNativeImage);
+  }, []);
+
   function handleFile(file: File) {
     // iOS Safari reports empty MIME type for HEIC/iCloud gallery photos — allow those through
     if (file.type && !file.type.startsWith("image/")) return;

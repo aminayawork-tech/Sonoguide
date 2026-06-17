@@ -409,17 +409,39 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
 extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        picker.dismiss(animated: true)
-        let tempDir = FileManager.default.temporaryDirectory
-        let fileURL = tempDir.appendingPathComponent(UUID().uuidString + ".jpg")
-        if let image = (info[.editedImage] ?? info[.originalImage]) as? UIImage,
-           let data = image.jpegData(compressionQuality: 0.9) {
-            try? data.write(to: fileURL)
-            filePickerCompletion?([fileURL])
-        } else {
+        guard let uiImage = (info[.editedImage] ?? info[.originalImage]) as? UIImage else {
+            picker.dismiss(animated: true)
             filePickerCompletion?(nil)
+            filePickerCompletion = nil
+            return
         }
+
+        // Resize to ≤1200px on longest side before encoding
+        let maxPx: CGFloat = 1200
+        let s = min(1.0, maxPx / max(uiImage.size.width, uiImage.size.height))
+        let sz = CGSize(width: uiImage.size.width * s, height: uiImage.size.height * s)
+        let renderer = UIGraphicsImageRenderer(size: sz)
+        let resized = renderer.image { _ in uiImage.draw(in: CGRect(origin: .zero, size: sz)) }
+
+        guard let data = resized.jpegData(compressionQuality: 0.85) else {
+            picker.dismiss(animated: true)
+            filePickerCompletion?(nil)
+            filePickerCompletion = nil
+            return
+        }
+
+        let base64 = data.base64EncodedString()
+        // Capture and clear before async block to avoid retain issues
+        let completion = filePickerCompletion
         filePickerCompletion = nil
+
+        // Dismiss, then inject image via JS event — bypasses WKWebView sandbox file access
+        picker.dismiss(animated: true) {
+            SonoPilot.webView.evaluateJavaScript(
+                "window.dispatchEvent(new CustomEvent('native-image-selected',{detail:'data:image/jpeg;base64,\(base64)'}));"
+            ) { _, _ in }
+            completion?(nil)
+        }
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
