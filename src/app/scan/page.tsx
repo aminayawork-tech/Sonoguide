@@ -203,19 +203,28 @@ function ScanContent() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const raw = e.target?.result as string;
+      if (!raw) return;
       const img = new window.Image();
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext("2d")!;
-        ctx.drawImage(img, 0, 0);
-        ctx.fillStyle = "#000000";
-        ctx.fillRect(0, 0, img.width, Math.round(img.height * 0.13));
-        setImage(canvas.toDataURL("image/jpeg", 0.92));
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) { setImage(raw); return; }
+          ctx.drawImage(img, 0, 0);
+          ctx.fillStyle = "#000000";
+          ctx.fillRect(0, 0, img.width, Math.round(img.height * 0.13));
+          const result = canvas.toDataURL("image/jpeg", 0.92);
+          setImage(result || raw);
+        } catch {
+          setImage(raw);
+        }
       };
+      img.onerror = () => setImage(raw);
       img.src = raw;
     };
+    reader.onerror = () => {};
     reader.readAsDataURL(file);
   }
 
