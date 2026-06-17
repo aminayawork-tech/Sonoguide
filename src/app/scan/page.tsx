@@ -200,9 +200,12 @@ function ScanContent() {
 
   function handleFile(file: File) {
     if (!file.type.startsWith("image/")) return;
-    // Use blob URL for instant preview — no canvas needed here
-    const url = URL.createObjectURL(file);
-    setImage(url);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      if (dataUrl) setImage(dataUrl);
+    };
+    reader.readAsDataURL(file);
   }
 
   function handleDrop(e: React.DragEvent) {
