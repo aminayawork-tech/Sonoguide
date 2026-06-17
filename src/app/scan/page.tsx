@@ -200,32 +200,9 @@ function ScanContent() {
 
   function handleFile(file: File) {
     if (!file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const raw = e.target?.result as string;
-      if (!raw) return;
-      const img = new window.Image();
-      img.onload = () => {
-        try {
-          const canvas = document.createElement("canvas");
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext("2d");
-          if (!ctx) { setImage(raw); return; }
-          ctx.drawImage(img, 0, 0);
-          ctx.fillStyle = "#000000";
-          ctx.fillRect(0, 0, img.width, Math.round(img.height * 0.13));
-          const result = canvas.toDataURL("image/jpeg", 0.92);
-          setImage(result || raw);
-        } catch {
-          setImage(raw);
-        }
-      };
-      img.onerror = () => setImage(raw);
-      img.src = raw;
-    };
-    reader.onerror = () => {};
-    reader.readAsDataURL(file);
+    // Use blob URL for instant preview — no canvas needed here
+    const url = URL.createObjectURL(file);
+    setImage(url);
   }
 
   function handleDrop(e: React.DragEvent) {
@@ -235,20 +212,28 @@ function ScanContent() {
     if (file) handleFile(file);
   }
 
-  function compressImage(dataUrl: string, maxPx = 1024, quality = 0.82) {
-    return new Promise<{ dataUrl: string; base64: string; mediaType: string }>((resolve) => {
+  function compressImage(src: string, maxPx = 1024, quality = 0.82) {
+    return new Promise<{ dataUrl: string; base64: string; mediaType: string }>((resolve, reject) => {
       const img = new window.Image();
       img.onload = () => {
-        const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
-        const w = Math.round(img.width * scale);
-        const h = Math.round(img.height * scale);
-        const canvas = document.createElement("canvas");
-        canvas.width = w; canvas.height = h;
-        canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
-        const compressed = canvas.toDataURL("image/jpeg", quality);
-        resolve({ dataUrl: compressed, base64: compressed.split(",")[1], mediaType: "image/jpeg" });
+        try {
+          const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) { reject(new Error("canvas")); return; }
+          ctx.drawImage(img, 0, 0, w, h);
+          // Redact top 13% — covers machine overlay (patient name/DOB area)
+          ctx.fillStyle = "#000000";
+          ctx.fillRect(0, 0, w, Math.round(h * 0.13));
+          const compressed = canvas.toDataURL("image/jpeg", quality);
+          resolve({ dataUrl: compressed, base64: compressed.split(",")[1], mediaType: "image/jpeg" });
+        } catch (e) { reject(e); }
       };
-      img.src = dataUrl;
+      img.onerror = () => reject(new Error("load"));
+      img.src = src;
     });
   }
 
