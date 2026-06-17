@@ -2,12 +2,8 @@
 platform :ios, '15.0'
 
 target 'SonoPilot' do
-  # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-
-  # Add the pod for Firebase Cloud Messaging
-  pod 'Firebase/Messaging'
-
+  # No external pods required for the WebView wrapper
 end
 
 post_install do |installer|
