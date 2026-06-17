@@ -39,7 +39,7 @@ export default function AuthModal({ onClose, reason, initialMode = "signin" }: A
         setSent(true);
       } else if (mode === "forgot") {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
         });
         if (error) throw error;
         setSent(true);
