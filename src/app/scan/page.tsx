@@ -199,7 +199,8 @@ function ScanContent() {
   }, [searchParams, refreshProfile, router]);
 
   function handleFile(file: File) {
-    if (!file.type.startsWith("image/")) return;
+    // iOS Safari reports empty MIME type for HEIC/iCloud gallery photos — allow those through
+    if (file.type && !file.type.startsWith("image/")) return;
     const reader = new FileReader();
     reader.onload = (e) => {
       const dataUrl = e.target?.result as string;
