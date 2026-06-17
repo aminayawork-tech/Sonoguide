@@ -356,6 +356,35 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
         self.documentController?.presentPreview(animated: true)
     }
 
+    // Required for <input type="file"> to work in WKWebView
+    func webView(_ webView: WKWebView,
+                 runOpenPanelWith parameters: WKOpenPanelParameters,
+                 initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping ([URL]?) -> Void) {
+        filePickerCompletion = completionHandler
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            alert.addAction(UIAlertAction(title: "Camera", style: .default) { [weak self] _ in
+                self?.presentImagePicker(sourceType: .camera)
+            })
+        }
+        alert.addAction(UIAlertAction(title: "Photo Library", style: .default) { [weak self] _ in
+            self?.presentImagePicker(sourceType: .photoLibrary)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.filePickerCompletion?(nil)
+            self?.filePickerCompletion = nil
+        })
+        present(alert, animated: true)
+    }
+
+    func presentImagePicker(sourceType: UIImagePickerController.SourceType) {
+        let picker = UIImagePickerController()
+        picker.sourceType = sourceType
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+
     func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
         download.delegate = self
     }
@@ -374,5 +403,28 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
 
         self.openFile(url: fileURL)
         completionHandler(fileURL)
+    }
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true)
+        let tempDir = FileManager.default.temporaryDirectory
+        let fileURL = tempDir.appendingPathComponent(UUID().uuidString + ".jpg")
+        if let image = (info[.editedImage] ?? info[.originalImage]) as? UIImage,
+           let data = image.jpegData(compressionQuality: 0.9) {
+            try? data.write(to: fileURL)
+            filePickerCompletion?([fileURL])
+        } else {
+            filePickerCompletion?(nil)
+        }
+        filePickerCompletion = nil
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+        filePickerCompletion?(nil)
+        filePickerCompletion = nil
     }
 }

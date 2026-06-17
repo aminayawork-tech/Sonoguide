@@ -14,7 +14,9 @@ class ViewController: UIViewController, WKNavigationDelegate, UIDocumentInteract
         return self
     }
     
-    @IBOutlet weak var loadingView: UIView!
+    var filePickerCompletion: (([URL]?) -> Void)?
+
+  @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var connectionProblemView: UIImageView!
     @IBOutlet weak var webviewView: UIView!
