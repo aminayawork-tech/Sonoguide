@@ -144,9 +144,7 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
                 }
                 if (navigationAction.navigationType == .other &&
                     navigationAction.value(forKey: "syntheticClickType") as! Int == 0 &&
-                    (navigationAction.targetFrame != nil) &&
-                    // no error here, fake warning
-                    (navigationAction.sourceFrame != nil)
+                    (navigationAction.targetFrame != nil)
                 ) {
                     decisionHandler(.allow)
                     return
@@ -356,7 +354,9 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
         self.documentController?.presentPreview(animated: true)
     }
 
-    // Required for <input type="file"> to work in WKWebView
+    // Custom file picker for <input type="file"> — requires iOS 18.4+
+    // On iOS 15–18.3 the native WKWebView photo picker handles it automatically
+    @available(iOS 18.4, *)
     func webView(_ webView: WKWebView,
                  runOpenPanelWith parameters: WKOpenPanelParameters,
                  initiatedByFrame frame: WKFrameInfo,

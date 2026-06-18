@@ -210,12 +210,6 @@
       "scale" : "2x",
       "size" : "512x512"
     },
-    {
-      "filename" : "192.png",
-      "idiom" : "mac",
-      "scale" : "1x",
-      "size" : "192x192"
-    }
   ],
   "info" : {
     "author" : "xcode",
