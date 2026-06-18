@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Eye, EyeOff, Loader2, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -14,6 +15,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ onClose, reason, initialMode = "signin" }: AuthModalProps) {
+  const router = useRouter();
   const [mode,     setMode]     = useState<"signin" | "signup" | "forgot">(initialMode);
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
@@ -47,6 +49,7 @@ export default function AuthModal({ onClose, reason, initialMode = "signin" }: A
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         onClose();
+        router.push("/scan");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed");

@@ -268,5 +268,11 @@ extension ViewController: WKScriptMessageHandler {
         if message.name == "push-permission-state" {
             handlePushState()
         }
+        if message.name == "openCamera" {
+            presentImagePicker(sourceType: .camera)
+        }
+        if message.name == "openGallery" {
+            presentImagePicker(sourceType: .photoLibrary)
+        }
   }
 }

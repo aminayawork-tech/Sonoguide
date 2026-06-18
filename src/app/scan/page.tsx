@@ -208,6 +208,19 @@ function ScanContent() {
     return () => window.removeEventListener("native-image-selected", onNativeImage);
   }, []);
 
+  // Use native iOS message handler if available (bypasses action sheet popup),
+  // otherwise fall back to the hidden file input
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const nativeMH = typeof window !== "undefined" ? (window as any).webkit?.messageHandlers : null;
+  function openNativeCamera() {
+    if (nativeMH?.openCamera) { nativeMH.openCamera.postMessage(null); }
+    else { cameraInputRef.current?.click(); }
+  }
+  function openNativeGallery() {
+    if (nativeMH?.openGallery) { nativeMH.openGallery.postMessage(null); }
+    else { fileInputRef.current?.click(); }
+  }
+
   function handleFile(file: File) {
     // iOS Safari reports empty MIME type for HEIC/iCloud gallery photos — allow those through
     if (file.type && !file.type.startsWith("image/")) return;
@@ -439,7 +452,7 @@ function ScanContent() {
                   style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
                   <Edit3 size={13} /> Retake
                 </button>
-                <button onClick={() => fileInputRef.current?.click()}
+                <button onClick={() => openNativeGallery()}
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-medium hover:bg-slate-50"
                   style={{ borderColor: "#e2e8f0", color: "#64748b" }}>
                   <Upload size={13} /> Different image
@@ -451,7 +464,7 @@ function ScanContent() {
               onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => openNativeGallery()}
               className="cursor-pointer p-10 text-center transition-all select-none"
               style={{
                 background: isDragging ? "#eff6ff" : "#ffffff",
@@ -467,12 +480,12 @@ function ScanContent() {
               </p>
               <p className="mb-5 text-sm" style={{ color: "#94a3b8" }}>or drag & drop an image here</p>
               <div className="flex justify-center gap-3">
-                <button onClick={(e) => { e.stopPropagation(); cameraInputRef.current?.click(); }}
+                <button onClick={(e) => { e.stopPropagation(); openNativeCamera(); }}
                   className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium hover:bg-slate-100"
                   style={{ borderColor: "#e2e8f0", color: "#64748b", background: "#f8fafc" }}>
                   <Camera size={13} /> Camera
                 </button>
-                <button onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                <button onClick={(e) => { e.stopPropagation(); openNativeGallery(); }}
                   className="flex items-center gap-1.5 rounded-xl border px-4 py-2 text-xs font-medium hover:bg-slate-100"
                   style={{ borderColor: "#e2e8f0", color: "#64748b", background: "#f8fafc" }}>
                   <Upload size={13} /> Gallery
