@@ -59,16 +59,19 @@ function ScanCard({ scan, onDelete }: { scan: ScanRecord; onDelete: () => void }
   }
 
   function onTouchStart(e: React.TouchEvent) {
+    if (expanded) return;
     touchStartX.current = e.touches[0].clientX;
   }
 
   function onTouchMove(e: React.TouchEvent) {
+    if (expanded) return;
     const delta = e.touches[0].clientX - touchStartX.current;
     if (delta < 0) setSwipeOffset(Math.max(delta, -DELETE_WIDTH));
     else if (swipeOffset < 0) setSwipeOffset(Math.min(0, swipeOffset + delta));
   }
 
   function onTouchEnd() {
+    if (expanded) return;
     setSwipeOffset(swipeOffset < -DELETE_WIDTH / 2 ? -DELETE_WIDTH : 0);
   }
 
@@ -100,7 +103,7 @@ function ScanCard({ scan, onDelete }: { scan: ScanRecord; onDelete: () => void }
         {/* Header row */}
         <div
           className="flex items-center gap-3 px-4 py-3.5 cursor-pointer"
-          onClick={() => { if (swipeOffset !== 0) { setSwipeOffset(0); return; } setExpanded((v) => !v); }}
+          onClick={() => { setSwipeOffset(0); setExpanded((v) => !v); }}
         >
           {scan.protocol_icon && (
             <span className="text-2xl flex-shrink-0">{scan.protocol_icon}</span>
