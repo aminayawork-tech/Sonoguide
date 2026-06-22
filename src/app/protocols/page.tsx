@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -66,7 +66,15 @@ function ProtocolCard({ protocol }: { protocol: Protocol }) {
 export default function ProtocolsPage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<Category | "All">("All");
-  const [favorites, setFavorites] = useState<Set<string>>(new Set(["efast", "cardiac-plax"]));
+  const [favorites, setFavorites] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set(["efast", "cardiac-plax"]);
+    try {
+      const stored = localStorage.getItem("pinnedProtocols");
+      return stored ? new Set<string>(JSON.parse(stored)) : new Set(["efast", "cardiac-plax"]);
+    } catch {
+      return new Set(["efast", "cardiac-plax"]);
+    }
+  });
 
   const filtered = PROTOCOLS.filter((p) => {
     const matchesSearch =
@@ -79,6 +87,10 @@ export default function ProtocolsPage() {
   }).sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
 
   const favoriteProtocols = PROTOCOLS.filter((p) => favorites.has(p.id));
+
+  useEffect(() => {
+    localStorage.setItem("pinnedProtocols", JSON.stringify([...favorites]));
+  }, [favorites]);
 
   function toggleFavorite(id: string, e: React.MouseEvent) {
     e.preventDefault();
@@ -173,9 +185,10 @@ export default function ProtocolsPage() {
                 <div key={p.id} className="relative">
                   <button
                     onClick={(e) => toggleFavorite(p.id, e)}
-                    className="absolute right-3 top-3 z-10"
+                    className="absolute right-1.5 top-1.5 z-10 p-2 rounded-full"
+                    style={{ touchAction: "manipulation" }}
                   >
-                    <Star size={14} style={{ color: "#f59e0b", fill: "#f59e0b" }} />
+                    <Star size={20} style={{ color: "#f59e0b", fill: "#f59e0b" }} />
                   </button>
                   <ProtocolCard protocol={p} />
                 </div>
@@ -204,9 +217,13 @@ export default function ProtocolsPage() {
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {filtered.map((p) => (
                 <div key={p.id} className="relative">
-                  <button onClick={(e) => toggleFavorite(p.id, e)} className="absolute right-3 top-3 z-10">
+                  <button
+                    onClick={(e) => toggleFavorite(p.id, e)}
+                    className="absolute right-1.5 top-1.5 z-10 p-2 rounded-full"
+                    style={{ touchAction: "manipulation" }}
+                  >
                     <Star
-                      size={14}
+                      size={20}
                       style={
                         favorites.has(p.id)
                           ? { color: "#f59e0b", fill: "#f59e0b" }

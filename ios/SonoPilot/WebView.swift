@@ -144,27 +144,14 @@ extension ViewController: WKUIDelegate, WKDownloadDelegate {
                     }
                     return
                 }
-                if (navigationAction.navigationType == .other &&
-                    navigationAction.value(forKey: "syntheticClickType") as! Int == 0 &&
-                    (navigationAction.targetFrame != nil)
-                ) {
-                    decisionHandler(.allow)
-                    return
-                }
-                else {
-                    decisionHandler(.cancel)
-                }
 
-
+                // External URL — cancel webview navigation, open in Safari
+                decisionHandler(.cancel)
                 if ["http", "https"].contains(requestUrl.scheme?.lowercased() ?? "") {
-                    // Can open with SFSafariViewController
                     let safariViewController = SFSafariViewController(url: requestUrl)
                     self.present(safariViewController, animated: true, completion: nil)
-                } else {
-                    // Scheme is not supported or no scheme is given, use openURL
-                    if (UIApplication.shared.canOpenURL(requestUrl)) {
-                        UIApplication.shared.open(requestUrl)
-                    }
+                } else if UIApplication.shared.canOpenURL(requestUrl) {
+                    UIApplication.shared.open(requestUrl)
                 }
             } else {
                 decisionHandler(.cancel)

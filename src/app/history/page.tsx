@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Clock, ChevronDown, ChevronUp, Trash2, AlertTriangle, CheckCircle, Info, LogIn } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
@@ -46,142 +46,160 @@ function relativeDate(iso: string) {
 function ScanCard({ scan, onDelete }: { scan: ScanRecord; onDelete: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const touchStartX = useRef(0);
   const alert = ALERT_STYLES[scan.alert_level] ?? ALERT_STYLES.none;
+  const DELETE_WIDTH = 80;
 
   async function handleDelete() {
-    if (!confirm("Remove this scan from history?")) return;
     setDeleting(true);
     const supabase = createClient();
     await supabase.from("scan_history").delete().eq("id", scan.id);
     onDelete();
   }
 
+  function onTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+
+  function onTouchMove(e: React.TouchEvent) {
+    const delta = e.touches[0].clientX - touchStartX.current;
+    if (delta < 0) setSwipeOffset(Math.max(delta, -DELETE_WIDTH));
+    else if (swipeOffset < 0) setSwipeOffset(Math.min(0, swipeOffset + delta));
+  }
+
+  function onTouchEnd() {
+    setSwipeOffset(swipeOffset < -DELETE_WIDTH / 2 ? -DELETE_WIDTH : 0);
+  }
+
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: "#ffffff", border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-      {/* Header row */}
+    <div className="relative rounded-2xl overflow-hidden" style={{ background: "#ffffff", border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+      {/* Swipe-to-delete background button */}
       <div
-        className="flex items-center gap-3 px-4 py-3.5 cursor-pointer"
-        onClick={() => setExpanded((v) => !v)}
+        className="absolute inset-y-0 right-0 flex items-center justify-center"
+        style={{ width: DELETE_WIDTH, background: "#ef4444" }}
       >
-        {scan.protocol_icon && (
-          <span className="text-2xl flex-shrink-0">{scan.protocol_icon}</span>
-        )}
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold text-sm truncate" style={{ color: "#1e293b" }}>{scan.protocol_name}</p>
-          <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>{relativeDate(scan.created_at)}</p>
-        </div>
-
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {/* Alert badge */}
-          <span
-            className="flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold capitalize"
-            style={{ background: alert.bg, color: alert.text, border: `1px solid ${alert.border}` }}
-          >
-            {alert.icon}
-            {scan.alert_level === "none" ? "Normal" : scan.alert_level}
-          </span>
-
-          {/* Confidence */}
-          {scan.confidence != null && (
-            <span className="rounded-full px-2 py-0.5 text-xs font-semibold" style={{ background: "#f1f5f9", color: "#64748b" }}>
-              {scan.confidence}%
-            </span>
-          )}
-
-          {expanded ? <ChevronUp size={16} color="#94a3b8" /> : <ChevronDown size={16} color="#94a3b8" />}
-        </div>
+        <button
+          onClick={handleDelete}
+          disabled={deleting}
+          className="flex flex-col items-center gap-1"
+          style={{ color: "#ffffff" }}
+        >
+          <Trash2 size={18} />
+          <span className="text-xs font-semibold">{deleting ? "…" : "Delete"}</span>
+        </button>
       </div>
 
-      {/* Expanded detail */}
-      {expanded && (
-        <div style={{ borderTop: "1px solid #f1f5f9" }}>
-          {/* Summary */}
-          {scan.summary && (
-            <div className="px-4 py-3" style={{ background: "#f8fafc" }}>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#94a3b8" }}>AI Summary</p>
-              <p className="text-sm" style={{ color: "#334155" }}>{scan.summary}</p>
-            </div>
+      {/* Card content — slides left on swipe */}
+      <div
+        style={{ transform: `translateX(${swipeOffset}px)`, transition: swipeOffset === 0 || swipeOffset === -DELETE_WIDTH ? "transform 0.2s ease" : "none", background: "#ffffff", position: "relative", zIndex: 1 }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {/* Header row */}
+        <div
+          className="flex items-center gap-3 px-4 py-3.5 cursor-pointer"
+          onClick={() => { if (swipeOffset !== 0) { setSwipeOffset(0); return; } setExpanded((v) => !v); }}
+        >
+          {scan.protocol_icon && (
+            <span className="text-2xl flex-shrink-0">{scan.protocol_icon}</span>
           )}
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-sm truncate" style={{ color: "#1e293b" }}>{scan.protocol_name}</p>
+            <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>{relativeDate(scan.created_at)}</p>
+          </div>
 
-          {/* Findings */}
-          {scan.findings.length > 0 && (
-            <div className="px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Findings</p>
-              <div className="space-y-1.5">
-                {scan.findings.map((f, i) => {
-                  const sevColor = f.severity === "critical" ? "#dc2626" : f.severity === "warning" ? "#ea580c" : f.severity === "normal" ? "#16a34a" : "#0284c7";
-                  return (
-                    <div key={i} className="flex items-start gap-2 text-sm">
-                      <span className="font-medium min-w-[110px] flex-shrink-0" style={{ color: "#475569" }}>{f.label}</span>
-                      <span style={{ color: sevColor }}>{f.value}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Measurements */}
-          {scan.measurements.length > 0 && (
-            <div className="px-4 py-3" style={{ borderTop: "1px solid #f1f5f9" }}>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Measurements</p>
-              <div className="space-y-1.5">
-                {scan.measurements.map((m, i) => (
-                  <div key={i} className="flex items-center justify-between text-sm">
-                    <span style={{ color: "#475569" }}>{m.name}</span>
-                    <span className="font-semibold" style={{ color: m.status === "abnormal" ? "#dc2626" : m.status === "borderline" ? "#ea580c" : "#16a34a" }}>
-                      {m.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Structures identified */}
-          {scan.labels.length > 0 && (
-            <div className="px-4 py-3" style={{ borderTop: "1px solid #f1f5f9" }}>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Structures Identified</p>
-              <div className="flex flex-wrap gap-1.5">
-                {scan.labels.map((l, i) => (
-                  <span key={i} className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: `${l.color}20`, color: l.color, border: `1px solid ${l.color}40` }}>
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: l.color }} />
-                    {l.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Recommendations */}
-          {scan.recommendations.length > 0 && (
-            <div className="px-4 py-3" style={{ borderTop: "1px solid #f1f5f9" }}>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Recommendations</p>
-              <ul className="space-y-1">
-                {scan.recommendations.map((r, i) => (
-                  <li key={i} className="flex items-start gap-1.5 text-sm" style={{ color: "#334155" }}>
-                    <span className="mt-1.5 w-1 h-1 rounded-full flex-shrink-0" style={{ background: "#2563eb" }} />
-                    {r}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Delete */}
-          <div className="px-4 py-3" style={{ borderTop: "1px solid #f1f5f9" }}>
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="flex items-center gap-1.5 text-xs font-medium transition-opacity active:opacity-60"
-              style={{ color: "#ef4444" }}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span
+              className="flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold capitalize"
+              style={{ background: alert.bg, color: alert.text, border: `1px solid ${alert.border}` }}
             >
-              <Trash2 size={13} />
-              {deleting ? "Removing…" : "Remove from history"}
-            </button>
+              {alert.icon}
+              {scan.alert_level === "none" ? "Normal" : scan.alert_level}
+            </span>
+            {scan.confidence != null && (
+              <span className="rounded-full px-2 py-0.5 text-xs font-semibold" style={{ background: "#f1f5f9", color: "#64748b" }}>
+                {scan.confidence}%
+              </span>
+            )}
+            {expanded ? <ChevronUp size={16} color="#94a3b8" /> : <ChevronDown size={16} color="#94a3b8" />}
           </div>
         </div>
-      )}
+
+        {/* Expanded detail */}
+        {expanded && (
+          <div style={{ borderTop: "1px solid #f1f5f9" }}>
+            {scan.summary && (
+              <div className="px-4 py-3" style={{ background: "#f8fafc" }}>
+                <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#94a3b8" }}>AI Summary</p>
+                <p className="text-sm leading-relaxed" style={{ color: "#334155" }}>{scan.summary}</p>
+              </div>
+            )}
+
+            {scan.findings.length > 0 && (
+              <div className="px-4 py-3">
+                <p className="text-xs font-semibold uppercase tracking-wide mb-2.5" style={{ color: "#94a3b8" }}>Findings</p>
+                <div className="space-y-3">
+                  {scan.findings.map((f, i) => {
+                    const sevColor = f.severity === "critical" ? "#dc2626" : f.severity === "warning" ? "#ea580c" : f.severity === "normal" ? "#16a34a" : "#0284c7";
+                    return (
+                      <div key={i}>
+                        <p className="text-xs font-semibold mb-0.5" style={{ color: "#475569" }}>{f.label}</p>
+                        <p className="text-sm leading-relaxed break-words" style={{ color: sevColor }}>{f.value}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {scan.measurements.length > 0 && (
+              <div className="px-4 py-3" style={{ borderTop: "1px solid #f1f5f9" }}>
+                <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Measurements</p>
+                <div className="space-y-1.5">
+                  {scan.measurements.map((m, i) => (
+                    <div key={i} className="flex items-baseline justify-between gap-3 text-sm">
+                      <span className="flex-1 min-w-0 break-words" style={{ color: "#475569" }}>{m.name}</span>
+                      <span className="font-semibold flex-shrink-0" style={{ color: m.status === "abnormal" ? "#dc2626" : m.status === "borderline" ? "#ea580c" : "#16a34a" }}>
+                        {m.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {scan.labels.length > 0 && (
+              <div className="px-4 py-3" style={{ borderTop: "1px solid #f1f5f9" }}>
+                <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Structures Identified</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {scan.labels.map((l, i) => (
+                    <span key={i} className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium" style={{ background: `${l.color}20`, color: l.color, border: `1px solid ${l.color}40` }}>
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: l.color }} />
+                      {l.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {scan.recommendations.length > 0 && (
+              <div className="px-4 py-3" style={{ borderTop: "1px solid #f1f5f9" }}>
+                <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "#94a3b8" }}>Recommendations</p>
+                <ul className="space-y-1.5">
+                  {scan.recommendations.map((r, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm leading-relaxed" style={{ color: "#334155" }}>
+                      <span className="mt-2 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#2563eb" }} />
+                      {r}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
