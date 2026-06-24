@@ -23,6 +23,43 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
   async function handleUpgrade() {
     setLoading(true);
     setErrorMsg(null);
+
+    // Map planKey to iOS IAP product ID
+    const iapProductID = planKey === "pro_yearly" ? "sonopilot_pro_yearly" : "sonopilot_pro_monthly";
+    const nativeMH = typeof window !== "undefined" ? (window as any).webkit?.messageHandlers : null;
+
+    if (nativeMH?.openPurchase) {
+      // Native iOS — trigger StoreKit sheet
+      const onComplete = async (e: Event) => {
+        window.removeEventListener("iap-purchase-complete", onComplete);
+        window.removeEventListener("iap-purchase-error", onError);
+        const payload = (e as CustomEvent).detail as string;
+        try {
+          await fetch("/api/ios/purchase", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ payload }),
+          });
+          onClose();
+          window.location.reload();
+        } catch {
+          setErrorMsg("Purchase succeeded but sync failed. Please restart the app.");
+          setLoading(false);
+        }
+      };
+      const onError = (e: Event) => {
+        window.removeEventListener("iap-purchase-complete", onComplete);
+        window.removeEventListener("iap-purchase-error", onError);
+        setErrorMsg((e as CustomEvent).detail ?? "Purchase failed.");
+        setLoading(false);
+      };
+      window.addEventListener("iap-purchase-complete", onComplete);
+      window.addEventListener("iap-purchase-error", onError);
+      nativeMH.openPurchase.postMessage(iapProductID);
+      return; // keep loading=true until event fires
+    }
+
+    // Web — use Stripe checkout
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
@@ -167,7 +204,9 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
         </div>
 
         <p className="pb-4 text-center text-xs" style={{ color: "#94a3b8" }}>
-          Cancel anytime. Billed securely via Stripe.
+          {typeof window !== "undefined" && (window as any).webkit?.messageHandlers?.openPurchase
+            ? "Billed via Apple In-App Purchase. Cancel anytime in Settings."
+            : "Cancel anytime. Billed securely via Stripe."}
         </p>
       </div>
     </div>

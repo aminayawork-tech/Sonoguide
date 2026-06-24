@@ -16,6 +16,7 @@ func createWebView(container: UIView, WKSMH: WKScriptMessageHandler, WKND: WKNav
     userContentController.add(WKSMH, name: "push-token")
     userContentController.add(WKSMH, name: "openCamera")
     userContentController.add(WKSMH, name: "openGallery")
+    userContentController.add(WKSMH, name: "openPurchase")
 
     config.userContentController = userContentController
 

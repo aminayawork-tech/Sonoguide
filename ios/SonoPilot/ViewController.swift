@@ -274,5 +274,32 @@ extension ViewController: WKScriptMessageHandler {
         if message.name == "openGallery" {
             presentImagePicker(sourceType: .photoLibrary)
         }
+        if message.name == "openPurchase" {
+            let productID = message.body as? String ?? "sonopilot_pro_monthly"
+            handleIAPPurchase(productID: productID)
+        }
   }
+}
+
+extension ViewController {
+    func handleIAPPurchase(productID: String) {
+        Task { @MainActor in
+            await StoreManager.shared.loadProducts()
+            StoreManager.shared.purchase(productID: productID) { success, payload in
+                DispatchQueue.main.async {
+                    if success, let payload = payload {
+                        // Notify web app and sync with server
+                        let js = "window.dispatchEvent(new CustomEvent('iap-purchase-complete', { detail: '\(payload)' }));"
+                        SonoPilot.webView.evaluateJavaScript(js) { _, _ in }
+                    } else if let payload = payload {
+                        // payload is error message when success == false
+                        let escaped = payload.replacingOccurrences(of: "'", with: "\\'")
+                        let js = "window.dispatchEvent(new CustomEvent('iap-purchase-error', { detail: '\(escaped)' }));"
+                        SonoPilot.webView.evaluateJavaScript(js) { _, _ in }
+                    }
+                    // nil payload = user cancelled — do nothing
+                }
+            }
+        }
+    }
 }
