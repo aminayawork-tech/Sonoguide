@@ -24,6 +24,14 @@ export default function UserMenu() {
   }, []);
 
   async function openPortal() {
+    const isNative = typeof window !== "undefined" && !!(window as any).webkit?.messageHandlers;
+
+    if (isNative) {
+      setOpen(false);
+      window.location.href = "https://apps.apple.com/account/subscriptions";
+      return;
+    }
+
     setPortalLoading(true);
     try {
       const res = await fetch("/api/stripe/portal", { method: "POST" });

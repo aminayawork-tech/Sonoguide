@@ -43,6 +43,16 @@ export default function MobileMenu({ onSignIn, onClose }: Props) {
   const [loadingPortal, setLoadingPortal] = useState(false);
 
   async function handlePortal() {
+    const isNative = typeof window !== "undefined" && !!(window as any).webkit?.messageHandlers;
+
+    // iOS native app — subscriptions are managed through Apple, not Stripe
+    if (isNative) {
+      onClose();
+      window.location.href = "https://apps.apple.com/account/subscriptions";
+      return;
+    }
+
+    // Web — use Stripe billing portal
     setLoadingPortal(true);
     try {
       const res = await fetch("/api/stripe/portal", { method: "POST" });
