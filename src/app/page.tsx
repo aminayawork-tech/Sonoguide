@@ -188,8 +188,17 @@ export default function HomePage() {
       {/* ── Footer ──────────────────────────────────────────────── */}
       <footer className="border-t py-8 pb-24 md:pb-8" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
         <div className="mx-auto max-w-4xl px-4 text-center text-xs" style={{ color: "#94a3b8" }}>
-          <p className="mb-1">
+          <p className="mb-2">
             SonoPilot is not FDA-cleared for primary diagnosis. For educational and supportive use only.
+          </p>
+          <p className="mb-2">
+            <Link href="/privacy" className="hover:underline" style={{ color: "#2563eb" }}>
+              Privacy Policy
+            </Link>
+            {" • "}
+            <Link href="/terms" className="hover:underline" style={{ color: "#2563eb" }}>
+              Terms of Use
+            </Link>
           </p>
           <p>© 2026 SonoPilot. All rights reserved.</p>
         </div>
