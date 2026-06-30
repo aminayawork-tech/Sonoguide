@@ -203,11 +203,21 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
           </div>
         </div>
 
-        <p className="pb-4 text-center text-xs" style={{ color: "#94a3b8" }}>
-          {typeof window !== "undefined" && (window as any).webkit?.messageHandlers?.openPurchase
-            ? "Billed via Apple In-App Purchase. Cancel anytime in Settings."
-            : "Cancel anytime. Billed securely via Stripe."}
-        </p>
+        <div className="pb-4 px-6 text-center text-xs space-y-2" style={{ color: "#94a3b8" }}>
+          <p>
+            {typeof window !== "undefined" && (window as any).webkit?.messageHandlers?.openPurchase
+              ? "Billed via Apple In-App Purchase. Cancel anytime in Settings."
+              : "Cancel anytime. Billed securely via Stripe."}
+          </p>
+          <p>
+            By subscribing, you agree to our{" "}
+            <a href="/terms" target="_blank" rel="noopener noreferrer"
+              style={{ color: "#2563eb", textDecoration: "underline" }}>Terms of Use</a>
+            {" "}and{" "}
+            <a href="/privacy" target="_blank" rel="noopener noreferrer"
+              style={{ color: "#2563eb", textDecoration: "underline" }}>Privacy Policy</a>.
+          </p>
+        </div>
       </div>
     </div>
   );
