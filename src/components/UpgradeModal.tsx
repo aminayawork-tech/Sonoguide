@@ -158,8 +158,20 @@ export default function UpgradeModal({ onClose, limitReached }: UpgradeModalProp
           </div>
         )}
 
+        {/* Subscription details (for App Review) */}
+        <div className="px-6 pt-3 pb-3">
+          <div className="rounded-xl border p-3 text-xs space-y-1.5" style={{ borderColor: "#e2e8f0", background: "#f8fafc" }}>
+            <div className="font-semibold" style={{ color: "#0f172a" }}>SonoPilot {billing === "yearly" ? "Pro Yearly" : "Pro Monthly"}</div>
+            <div style={{ color: "#64748b" }}>
+              <div>Billing Period: {billing === "yearly" ? "1 year" : "1 month"}</div>
+              <div>Price: {plan.price}/{plan.period}</div>
+              <div>Auto-renews unless canceled in App Settings</div>
+            </div>
+          </div>
+        </div>
+
         {/* Pro plan card */}
-        <div className="px-6 pb-6 pt-3">
+        <div className="px-6 pb-6">
           <div className="rounded-xl border p-4"
             style={{ borderColor: "#2563eb", background: "#eff6ff" }}>
             <div className="flex items-start justify-between mb-3">
