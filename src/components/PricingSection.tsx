@@ -1,17 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { CheckCircle, Loader2, Sparkles } from "lucide-react";
+import UpgradeModal from "./UpgradeModal";
 
 type BillingCycle = "monthly" | "yearly";
 type PlanKey = "pro_monthly" | "pro_yearly";
 
 function PaidButton({ planKey, label }: { planKey: PlanKey; label: string }) {
-  const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState<string | null>(null);
+  const [loading,      setLoading]      = useState(false);
+  const [error,        setError]        = useState<string | null>(null);
+  const [showModal,    setShowModal]    = useState(false);
 
   async function startCheckout() {
+    // Native iOS — subscriptions must go through Apple IAP, so open the upgrade modal instead of Stripe.
+    const isNative = typeof window !== "undefined" && !!(window as any).webkit?.messageHandlers?.openPurchase;
+    if (isNative) {
+      setShowModal(true);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -35,6 +45,10 @@ function PaidButton({ planKey, label }: { planKey: PlanKey; label: string }) {
 
   return (
     <>
+      {showModal && typeof document !== "undefined" && createPortal(
+        <UpgradeModal onClose={() => setShowModal(false)} />,
+        document.body
+      )}
       <button
         onClick={startCheckout}
         disabled={loading}
