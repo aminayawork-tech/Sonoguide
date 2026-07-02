@@ -22,21 +22,22 @@ export default function HomePage() {
         <div className="relative mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium"
           style={{ borderColor: "#bfdbfe", background: "#eff6ff", color: "#2563eb" }}>
           <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: "#2563eb" }} />
-          AI-Powered Ultrasound Interpretation
+          AI-Guided Ultrasound Study Companion
         </div>
 
         {/* Headline */}
         <h1 className="relative mb-5 max-w-3xl text-5xl font-extrabold leading-[1.1] tracking-tight md:text-7xl"
           style={{ color: "#0f172a" }}>
           Snap a photo.{" "}
-          <span style={{ color: "#2563eb" }}>Understand<br />in seconds.</span>
+          <span style={{ color: "#2563eb" }}>Study<br />in seconds.</span>
         </h1>
 
         {/* Subheadline */}
         <p className="relative mx-auto mb-10 max-w-xl text-lg leading-relaxed md:text-xl"
           style={{ color: "#64748b" }}>
           Point your phone at any ultrasound screen. AI labels structures,
-          takes measurements, and flags findings in seconds.
+          walks through reference measurements, and highlights areas worth
+          further study — for educational use only.
         </p>
 
         {/* Primary CTA */}
@@ -45,7 +46,7 @@ export default function HomePage() {
           className="relative inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:opacity-90 hover:shadow-xl active:scale-95"
           style={{ background: "#2563eb" }}>
           <Camera size={20} />
-          Start Scanning Now
+          Start Studying Now
           <ArrowRight size={18} />
         </Link>
 
@@ -53,9 +54,9 @@ export default function HomePage() {
         <div className="relative mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm"
           style={{ color: "#94a3b8" }}>
           {[
-            "Used by clinicians",
+            "Used by learners",
             "HIPAA-ready",
-            "Not for primary diagnosis",
+            "Educational use only",
           ].map((item) => (
             <span key={item} className="flex items-center gap-1.5">
               <CheckCircle size={13} style={{ color: "#2563eb" }} />
@@ -87,16 +88,16 @@ export default function HomePage() {
                 icon: Zap,
                 iconBg: "#fefce8",
                 iconColor: "#ca8a04",
-                title: "AI analyzes instantly",
-                desc: "Structures labeled, measurements calculated, anomalies flagged — all in seconds.",
+                title: "AI walks you through it",
+                desc: "Structures labeled, reference measurements shown, areas worth study highlighted — all in seconds.",
               },
               {
                 step: "03",
                 icon: ClipboardList,
                 iconBg: "#f0fdf4",
                 iconColor: "#059669",
-                title: "Instant insights",
-                desc: "Annotated image, clinical summary, key findings, and a one-tap PDF report ready to share.",
+                title: "Study the results",
+                desc: "Annotated image, educational summary, study notes, and a one-tap PDF ready to share.",
               },
             ].map(({ step, icon: Icon, iconBg, iconColor, title, desc }) => (
               <div key={step} className="relative rounded-2xl border p-8 text-center shadow-sm"
@@ -122,10 +123,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-4xl px-4">
           <div className="mb-12 text-center">
             <h2 className="mb-3 text-3xl font-bold" style={{ color: "#0f172a" }}>
-              Powerful AI, simple experience
+              Powerful AI, simple study experience
             </h2>
             <p style={{ color: "#64748b" }}>
-              All the precision of expert analysis — without the complexity.
+              Educational walkthroughs of ultrasound anatomy — without the complexity.
             </p>
           </div>
 
@@ -133,8 +134,8 @@ export default function HomePage() {
             {[
               {
                 icon: Zap,
-                title: "Instant AI Analysis",
-                desc: "Structure labels, automated measurements, and anomaly detection in seconds.",
+                title: "Instant AI Walkthrough",
+                desc: "Structure labels, reference measurements, and study highlights in seconds.",
               },
               {
                 icon: Shield,
@@ -144,7 +145,7 @@ export default function HomePage() {
               {
                 icon: Camera,
                 title: "31 Protocols Available",
-                desc: "eFAST, cardiac echo, OB, vascular, MSK, and more — all accessible after your first scan.",
+                desc: "eFAST, cardiac echo, OB, vascular, MSK, and more — all accessible after your first study session.",
               },
             ].map(({ icon: Icon, title, desc }) => (
               <div key={title} className="rounded-2xl border p-6 shadow-sm"
@@ -169,17 +170,17 @@ export default function HomePage() {
       <section className="border-t py-20" style={{ borderColor: "#f1f5f9", background: "#f8fafc" }}>
         <div className="mx-auto max-w-xl px-4 text-center">
           <h2 className="mb-4 text-3xl font-bold" style={{ color: "#0f172a" }}>
-            Ready to scan smarter?
+            Ready to study smarter?
           </h2>
           <p className="mb-8" style={{ color: "#64748b" }}>
-            Join clinicians using SonoPilot to deliver better care at the bedside.
+            Join learners using SonoPilot to study ultrasound anatomy.
           </p>
           <Link
             href="/scan"
             className="inline-flex items-center gap-2 rounded-2xl px-8 py-4 font-bold text-white shadow-lg transition-all hover:opacity-90"
             style={{ background: "#2563eb" }}>
             <Camera size={18} />
-            Start Your First Scan Free
+            Start Your First Study Session Free
             <ArrowRight size={17} />
           </Link>
         </div>
@@ -189,7 +190,8 @@ export default function HomePage() {
       <footer className="border-t py-8 pb-24 md:pb-8" style={{ borderColor: "#e2e8f0", background: "#ffffff" }}>
         <div className="mx-auto max-w-4xl px-4 text-center text-xs" style={{ color: "#94a3b8" }}>
           <p className="mb-2">
-            SonoPilot is not FDA-cleared for primary diagnosis. For educational and supportive use only.
+            SonoPilot is an educational tool only. It does not provide medical advice, diagnosis, or
+            treatment. Always consult a licensed physician for medical decisions.
           </p>
           <p className="mb-2">
             <Link href="/privacy" className="hover:underline" style={{ color: "#2563eb" }}>

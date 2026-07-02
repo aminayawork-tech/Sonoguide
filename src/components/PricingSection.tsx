@@ -110,7 +110,7 @@ export default function PricingSection() {
             <p className="mb-1 text-xs font-semibold uppercase tracking-wide" style={{ color: "#94a3b8" }}>Free</p>
             <p className="mb-5 text-3xl font-extrabold" style={{ color: "#0f172a" }}>$0</p>
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#475569" }}>
-              {["5 AI analyses/month", "All 31 protocols", "Structure labeling", "Anomaly detection", "PHI auto-redaction"].map((f) => (
+              {["5 AI study sessions/month", "All 31 protocols", "Structure labeling", "Study highlights", "PHI auto-redaction"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />
                   {f}
@@ -152,7 +152,7 @@ export default function PricingSection() {
               </>
             )}
             <ul className="mb-6 flex-1 space-y-2.5 text-xs" style={{ color: "#1e40af" }}>
-              {["Unlimited AI analyses", "All 31 protocols", "Full measurements suite", "AI chat", "PDF report export", "PHI auto-redaction", "Priority AI queue"].map((f) => (
+              {["Unlimited AI study sessions", "All 31 protocols", "Full reference measurements", "AI chat", "PDF study export", "PHI auto-redaction", "Priority AI queue"].map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckCircle size={13} style={{ color: "#2563eb", flexShrink: 0 }} />
                   {f}

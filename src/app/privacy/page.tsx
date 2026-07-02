@@ -39,7 +39,7 @@ export default function PrivacyPage() {
         </Section>
 
         <Section title="4. Medical Disclaimer">
-          SonoPilot is designed as an educational and decision-support tool for trained healthcare professionals. It is <strong>not a substitute for professional medical judgment</strong>, clinical diagnosis, or treatment. AI-generated analysis should always be interpreted by a qualified clinician. Do not use SonoPilot as the sole basis for clinical decisions.
+          SonoPilot is an educational study tool only. It is <strong>not a substitute for professional medical care</strong> and does not provide medical advice, diagnosis, or treatment. Always seek the advice of a licensed physician or other qualified healthcare provider with any questions regarding a medical condition. Do not use SonoPilot as the basis for any medical decision.
         </Section>
 
         <Section title="5. Data Sharing and Third Parties">

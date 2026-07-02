@@ -11,9 +11,9 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://sonopilot.app";
 export const metadata: Metadata = {
   title: "SonoPilot — AI Ultrasound Guide",
   description:
-    "AI-powered point-of-care ultrasound interpreter. Protocol-first image analysis, automated measurements, and educational guidance for clinicians.",
+    "AI-guided ultrasound study companion. Protocol-first educational walkthroughs, reference measurements, and study guidance for learners. Educational use only — not medical advice.",
   keywords:
-    "POCUS AI, ultrasound AI analyzer, point of care ultrasound, ultrasound interpretation, bedside ultrasound",
+    "POCUS study, ultrasound AI study tool, point of care ultrasound education, ultrasound learning, sonography study",
   metadataBase: new URL(APP_URL),
   manifest: "/manifest.json",
   appleWebApp: {
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
     apple: [{ url: "/sonopilot-favicon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "SonoPilot — AI Ultrasound Interpretation",
+    title: "SonoPilot — AI Ultrasound Study Companion",
     description:
-      "Snap a photo of any ultrasound screen. AI labels structures, takes measurements, and flags findings in seconds.",
+      "Snap a photo of any ultrasound screen. AI labels structures, walks through reference measurements, and highlights study areas in seconds. Educational use only.",
     url: APP_URL,
     siteName: "SonoPilot",
     type: "website",
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "SonoPilot — AI Ultrasound Interpretation",
+    title: "SonoPilot — AI Ultrasound Study Companion",
     description:
-      "Protocol-first AI ultrasound interpretation for clinicians and sonographers.",
+      "Protocol-first AI ultrasound study walkthroughs for learners and sonography students. Educational use only.",
     images: ["/opengraph-image.png"],
   },
 };

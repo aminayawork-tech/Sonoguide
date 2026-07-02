@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "SonoPilot",
     short_name: "SonoPilot",
-    description: "AI-Powered Ultrasound Interpretation",
+    description: "AI-Guided Ultrasound Study Companion",
     start_url: "/",
     display: "standalone",
     background_color: "#eef3f8",

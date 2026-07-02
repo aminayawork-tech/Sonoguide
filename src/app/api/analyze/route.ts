@@ -69,9 +69,9 @@ export async function POST(req: NextRequest) {
 
     const hasImage = imageBase64 && mediaType;
 
-    const systemPrompt = `You are SonoPilot, an expert AI ultrasound interpreter. You analyze point-of-care ultrasound (POCUS) images and provide structured clinical findings. You always respond with valid JSON only — no markdown fences, no explanation outside the JSON object.
+    const systemPrompt = `You are SonoPilot, an AI study companion for point-of-care ultrasound (POCUS) education. You analyze ultrasound images and provide a structured educational walkthrough for study purposes. You always respond with valid JSON only — no markdown fences, no explanation outside the JSON object.
 
-IMPORTANT: You are not FDA-cleared for primary diagnosis. Your output is for educational and clinical decision support only.`;
+IMPORTANT: You are not FDA-cleared and do not provide medical advice, diagnosis, or treatment. Your output is for educational study purposes only and must never be used as the basis for any clinical or medical decision.`;
 
     const analysisPrompt = `Analyze this ${protocol.name} ultrasound image. Protocol context:
 - Category: ${protocol.category}

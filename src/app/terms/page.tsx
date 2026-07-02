@@ -20,11 +20,11 @@ export default function TermsPage() {
         </Section>
 
         <Section title="2. Medical Disclaimer">
-          SonoPilot is an educational and clinical decision-support tool intended for use by licensed healthcare professionals. It does <strong>not</strong> constitute medical advice, diagnosis, or treatment. All AI-generated output must be reviewed and validated by a qualified clinician before any clinical action is taken. SonoPilot is <strong>not for primary diagnosis</strong>.
+          SonoPilot is an educational study tool only. It does <strong>not</strong> constitute medical advice, diagnosis, or treatment, and is not a substitute for professional medical care. All AI-generated output is for educational study purposes only and must never be used as the basis for any clinical or medical decision. Always seek the advice of a licensed physician or other qualified healthcare provider with any questions regarding a medical condition.
         </Section>
 
         <Section title="3. Eligibility">
-          You must be at least 18 years of age and a licensed or training healthcare professional to use SonoPilot. By creating an account, you represent that you meet these requirements.
+          You must be at least 18 years of age to use SonoPilot. By creating an account, you represent that you meet this requirement.
         </Section>
 
         <Section title="4. Account Responsibilities">

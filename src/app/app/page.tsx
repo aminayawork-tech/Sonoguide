@@ -29,10 +29,10 @@ export default function AppHomePage() {
         />
         <h1 className="text-4xl font-extrabold text-white tracking-tight">SonoPilot</h1>
         <p className="mt-3 text-lg font-medium" style={{ color: "#bfdbfe" }}>
-          AI-Powered Ultrasound Interpretation
+          AI-Guided Ultrasound Study Companion
         </p>
         <p className="mt-2 text-sm" style={{ color: "#93c5fd" }}>
-          Snap a photo. Understand in seconds.
+          Snap a photo. Study in seconds.
         </p>
       </div>
 

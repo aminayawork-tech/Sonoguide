@@ -247,7 +247,7 @@ function ResultsContent() {
           </div>
           <div className="text-right text-xs" style={{ color: "#94a3b8" }}>
             <p>{timestamp}</p>
-            <p className="mt-0.5">Not FDA-cleared for primary diagnosis</p>
+            <p className="mt-0.5">Educational use only — not medical advice</p>
           </div>
         </div>
 
@@ -437,18 +437,18 @@ function ResultsContent() {
           <div className="flex items-start gap-3">
             <ShieldAlert size={17} className="mt-0.5 shrink-0" style={{ color: "#ca8a04" }} />
             <div>
-              <p className="text-sm font-bold" style={{ color: "#92400e" }}>Important Medical Disclaimer</p>
+              <p className="text-sm font-bold" style={{ color: "#92400e" }}>Important Disclaimer</p>
               <p className="mt-1 text-xs leading-relaxed" style={{ color: "#92400e", opacity: 0.85 }}>
-                SonoPilot is not FDA-cleared for primary diagnosis. All findings must be reviewed by a
-                qualified clinician before influencing any clinical decision.
+                SonoPilot is an educational tool only and does not provide medical advice, diagnosis,
+                or treatment. Always consult a licensed physician for any medical decisions.
               </p>
               <label className="mt-3 flex cursor-pointer items-start gap-2">
                 <input type="checkbox" checked={reviewConfirmed}
                   onChange={(e) => setReviewConfirmed(e.target.checked)}
                   className="mt-0.5" style={{ accentColor: "#ca8a04" }} />
                 <span className="text-xs font-medium" style={{ color: "#92400e" }}>
-                  I confirm a qualified clinician has assessed or will assess this patient before
-                  acting on these findings.
+                  I understand this is an educational study tool and does not provide medical
+                  advice, diagnosis, or treatment.
                 </span>
               </label>
             </div>

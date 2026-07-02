@@ -355,16 +355,16 @@ function Screen1({ onNext, onSkip }: ScreenProps) {
       <div>
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-medium text-white/80">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-          AI-Powered Ultrasound
+          AI-Guided Ultrasound Study
         </div>
         <h1 className="mb-2 text-3xl font-extrabold leading-tight text-white">
           Welcome to SonoPilot
         </h1>
         <p className="mb-2 text-base font-semibold text-white/90">
-          AI-Powered Ultrasound Interpretation in Seconds
+          AI-Guided Ultrasound Study Companion
         </p>
         <p className="mb-8 text-sm leading-relaxed text-white/70">
-          Point your phone at any ultrasound screen. Get instant labels, measurements, and insights.
+          Point your phone at any ultrasound screen. Get instant labels, reference measurements, and study highlights.
         </p>
         <button
           onClick={onNext}
@@ -569,7 +569,7 @@ function Screen4({ onNext, onBack, onSkip, current }: ScreenProps) {
             className="rounded-full px-3 py-1.5 text-xs font-semibold"
             style={{ background: "#fff7ed", color: "#c2410c" }}
           >
-            Not for primary diagnosis
+            Educational use only
           </div>
         </div>
       </div>
@@ -622,17 +622,17 @@ function Screen5({ onComplete, onSkip }: ScreenProps) {
           </div>
         </div>
         <h2 className="mb-3 text-3xl font-extrabold text-white">
-          Ready to scan smarter?
+          Ready to study smarter?
         </h2>
         <p className="mb-10 max-w-xs text-base leading-relaxed text-white/75">
-          Join thousands of clinicians improving bedside care with AI-powered ultrasound interpretation.
+          Join thousands of learners studying ultrasound anatomy with an AI-guided study companion.
         </p>
         <button
           onClick={onComplete}
           className="mb-4 w-full max-w-xs rounded-2xl py-4 text-base font-extrabold text-blue-700 shadow-xl transition-all active:scale-95"
           style={{ background: "#ffffff" }}
         >
-          Start Your First Free Scan
+          Start Your First Free Study Session
         </button>
         <button
           onClick={onSkip}
@@ -643,7 +643,7 @@ function Screen5({ onComplete, onSkip }: ScreenProps) {
       </div>
 
       <p className="text-[10px] text-white/40">
-        Not for primary diagnosis. Educational use only.
+        Educational use only. Not medical advice.
       </p>
     </div>
   );

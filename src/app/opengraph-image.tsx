@@ -38,7 +38,7 @@ export default async function Image() {
             marginTop: 8,
           }}
         >
-          AI-Powered Ultrasound Interpretation
+          AI-Guided Ultrasound Study Companion
         </div>
       </div>
     ),
