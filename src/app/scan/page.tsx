@@ -309,8 +309,9 @@ function ScanContent() {
       if (!res.ok) {
         const data = await res.json();
         const msg = data.error ?? "Analysis failed";
+        const isMissingKey = /anthropic_api_key.*(missing|empty)|x-api-key/i.test(msg);
         throw new Error(
-          msg.toLowerCase().includes("auth") || msg.toLowerCase().includes("api") || msg.toLowerCase().includes("key")
+          isMissingKey
             ? "API key error: Make sure ANTHROPIC_API_KEY is set in your environment variables."
             : msg,
         );
